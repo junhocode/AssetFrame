@@ -1,73 +1,45 @@
-# React + TypeScript + Vite
+# AssetFrame
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🤕 개요 / Pain Point
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+이번 오픈 미션으로 제가 선택한 주제는 올해 풀지 못하고 미뤄왔던, 차트와 실시간 자산 가격의 파싱에 관한 과제입니다.
 
-## React Compiler
+저는 현재 주식 / 암호화폐 등의 자산을 기반으로 한 커뮤니티 프로젝트를 진행 중입니다. 커뮤니티의 성격상 다양한 자산의 실시간 정보를 차트 위에 가시성 좋게 띄우는 것이 프로젝트의 주요 기능 중 하나입니다.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+커뮤니티의 목적에 부합하는 차트 기능을 구현하려면 다음과 같은 조건이 필요합니다 :
 
-## Expanding the ESLint configuration
+1. 국내외 주식 / 암호화폐 / 금, 은을 포함한 원자재 등의 다양한 자산군을 지원할 것
+2. 1일부터 1초까지 사용자가 지정하는 타임프레임을 기준으로 캔들을 재조정하는 기능이 구현될 것
+3. 이동평균선 긋기 / 거래량 지표 등의 부가 기능 제공
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+다만 다양한 자산군을 한꺼번에 지원하는 외부 api가 없다는 점, 타임 프레임이나 부가 기능을 토글 할 수 있는 기능을 제공하는 차트 라이브러리가 없다는 점 등의 제약이 있어 이 기능은 해당 프로젝트의 가장 구현하기 어려운 기능으로 지금까지도 남아 있었습니다. 이 부분을 저는 이번 프리코스 과제의 일환으로 해결하고자 합니다.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## **✨** 기능 목록
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. 컴포넌트가 DOM 위에 마운트 되면, SSE 연결을 활성화 시키고 디폴트 값의 타임프레임과 자산의 정보를 받기 시작한다.
+2. 내부 라이브러리로 받은 정보를 파싱하고, 차트 컴포넌트에 캔들을 그린다. 가격 정보들은 추후 일어날 수 있는 타임프레임의 변경에 대비해 리스트 형태로 저장된다.
+3. 차트를 감싸고 있는 프레임 객체를 통해 타임프레임이 변경된다면, 기존의 값으로 가격 정보를 재구성해 차트에 띄운다.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## **🛠️ 구현할 기능 목록**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- SSE 관리 컴포넌트
+
+앱의 최초 렌더링 시 SSE 설정을 초기화하고 연결한다. heartbeat등의 기능을 통해 연결 상태를 감지하고, 재연결을 관리한다. SSE의 destination 등도 함께 관리한다.
+
+- 로컬 가격 정보 라이브러리
+
+받은 가격 정보들을 추후 사용을 대비해 로컬로 저장한다. 
+
+- 차트 컴포넌트
+
+받은 정보들로 차트를 그리는 컴포넌트.
+
+- 차트 래퍼 컴포넌트
+
+차트의 외부를 감싸고 차트에게 자산의 종류, 타임 프레임 등을 주입하는 부모 객체 역할을 한다.
