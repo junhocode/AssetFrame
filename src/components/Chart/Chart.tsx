@@ -1,5 +1,6 @@
 import { CrosshairMode } from 'lightweight-charts';
 import { Chart, CandlestickSeries } from 'lightweight-charts-react-wrapper';
+import ChartVolume from '../ChartVolume/ChartVolume';
 
 export default function CandlestickChart() {
     return (
@@ -14,6 +15,7 @@ export default function CandlestickChart() {
                     wickDownColor="rgba(255, 144, 0, 1)"
                     wickUpColor="rgba(255, 144, 0, 1)"
                 />
+                <ChartVolume />
             </Chart>
         </>
     )
