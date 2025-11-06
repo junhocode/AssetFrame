@@ -1,7 +1,7 @@
-import { CrosshairMode } from "lightweight-charts";
 import { Chart, CandlestickSeries, HistogramSeries, PriceScale } from "lightweight-charts-react-wrapper";
 import { useCandlesQuery, useVolumesQuery } from "@/queries/useKlineQuery";
 import type { GetKlinesParams } from "@/types/kline.type";
+import * as S from "./KlineChart.styles"
 
 interface KlineChartProps {
   params: GetKlinesParams;
@@ -13,7 +13,7 @@ export default function KlineChart({ params }: KlineChartProps) {
 
   if (isCandlesLoading || isVolumesLoading) {
     return (
-      <div style={{ ...options.layout, width: options.width, height: options.height, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className={S.statusContainer}>
         Loading Chart...
       </div>
     );
@@ -21,18 +21,21 @@ export default function KlineChart({ params }: KlineChartProps) {
 
   if (isCandlesError || isVolumesError) {
     return (
-      <div style={{ ...options.layout, width: options.width, height: options.height, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'red' }}>
+      <div className={S.errorContainer}>
         Error: Could not load chart data.
       </div>
     );
   }
   
   if (!candlestickData || !volumeData) {
-    return <div>No data available</div>;
+    return <div className={S.statusContainer}>
+            No data available
+           </div>
   }
 
   return (
-    <Chart {...options}>
+    <Chart
+    {...S.chartOptions}>
       <CandlestickSeries
         reactive={true}
         data={candlestickData}
@@ -52,29 +55,3 @@ export default function KlineChart({ params }: KlineChartProps) {
     </Chart>
   );
 }
-
-const options = {
-  width: 900,
-  height: 600,
-  layout: {
-    backgroundColor: "#1e1e1e",
-    textColor: "rgba(255, 255, 255, 0.9)",
-  },
-  grid: {
-    vertLines: {
-      color: "rgba(197, 203, 206, 0.2)",
-    },
-    horzLines: {
-      color: "rgba(197, 203, 206, 0.2)",
-    },
-  },
-  crosshair: {
-    mode: CrosshairMode.Normal,
-  },
-  rightPriceScale: {
-    borderColor: "rgba(197, 203, 206, 0.8)",
-  },
-  timeScale: {
-    borderColor: "rgba(197, 203, 206, 0.8)",
-  },
-};
