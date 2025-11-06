@@ -1,7 +1,7 @@
-import type { CryptoEventType } from "@/types/ws.type";
+import type { BinanceWSKline } from "@/types/ws.type";
 import type { CandleData, VolumeData, BinanceRestKline } from "@/types/kline.type";
 
-export const parseWsKlineToCandle = (kline: CryptoEventType): CandleData => ({
+export const parseWsKlineToCandle = (kline: BinanceWSKline): CandleData => ({
   time: (kline.k.t / 1000) as CandleData['time'],
   open: parseFloat(kline.k.o),
   high: parseFloat(kline.k.h),
@@ -9,7 +9,7 @@ export const parseWsKlineToCandle = (kline: CryptoEventType): CandleData => ({
   close: parseFloat(kline.k.c),
 });
 
-export const parseWsKlineToVolume = (kline: CryptoEventType): VolumeData => ({
+export const parseWsKlineToVolume = (kline: BinanceWSKline): VolumeData => ({
   time: (kline.k.t / 1000) as VolumeData['time'],
   value: parseFloat(kline.k.v),
   color: parseFloat(kline.k.c) >= parseFloat(kline.k.o) 
