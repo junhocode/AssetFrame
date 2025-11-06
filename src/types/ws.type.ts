@@ -1,13 +1,24 @@
 export interface BinanceWSKline {
   e: string; // Event type 
   E: number; // Event time    
-  s: string; // Symbol     
-  a: number; // Aggregate trade ID
-  p: string; // Price
-  q: string; // Quantity
-  f: number; // First trade ID
-  l: number; // Last trade ID
-  T: number; // Trade time
-  m: boolean; // Is the buyer the market maker?
-  M: boolean; // Ignore
+  s: string; // Symbol
+  k: {
+    t: number;
+    T: number;
+    s: string;
+    i: string;
+    f: number;
+    L: number;
+    o: string;
+    c: string;
+    h: string;
+    l: string;
+    v: string;
+    n: number;
+    x: boolean;
+    q: string;
+    V: string;
+    Q: string;
+    B: string;
+  };
 }
