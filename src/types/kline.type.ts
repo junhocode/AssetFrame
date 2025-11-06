@@ -17,7 +17,7 @@ export type BinanceRestKline = [
 
 export interface GetKlinesParams {
   symbol: string;
-  interval?: string; 
+  interval: string; 
   limit?: number;    
 }
 
