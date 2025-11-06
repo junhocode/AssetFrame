@@ -32,21 +32,29 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
       };
 
       queryClient.setQueryData<CandleData[]>(QUERY_KEYS.candles.list(queryKeyParams), (oldData = []) => {
-        const lastCandle = oldData.at(-1); 
+        const data = [...oldData];
+        const existingCandleIndex = data.findIndex(candle => candle.time === newCandle.time);
 
-        if (lastCandle?.time === newCandle.time) {
-          return [...oldData.slice(0, -1), newCandle];
+        if (existingCandleIndex !== -1) {
+          data[existingCandleIndex] = newCandle;
+        } else {
+          data.push(newCandle);
         }
-        return [...oldData, newCandle];
+
+        return data.sort((a, b) => +a.time - +b.time);
       });
 
       queryClient.setQueryData<VolumeData[]>(QUERY_KEYS.volumes.list(queryKeyParams), (oldData = []) => {
-        const lastVolume = oldData.at(-1); 
+        const data = [...oldData];
+        const existingVolumeIndex = data.findIndex(item => item.time === newVolume.time);
 
-        if (lastVolume?.time === newVolume.time) {
-          return [...oldData.slice(0, -1), newVolume];
+        if (existingVolumeIndex !== -1) {
+          data[existingVolumeIndex] = newVolume;
+        } else {
+          data.push(newVolume);
         }
-        return [...oldData, newVolume];
+
+        return data.sort((a, b) => +a.time - +b.time);
       });
     },
     shouldReconnect: () => true,

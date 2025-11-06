@@ -34,6 +34,7 @@ export default function KlineChart({ params }: KlineChartProps) {
   return (
     <Chart {...options}>
       <CandlestickSeries
+        reactive={true}
         data={candlestickData}
         upColor="rgba(0, 150, 136, 1)"  
         downColor="rgba(255, 82, 82, 1)"
