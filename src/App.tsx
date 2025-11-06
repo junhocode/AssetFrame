@@ -7,14 +7,13 @@ export default function App() {
   const [chartParams, setChartParams] = useState<GetKlinesParams>({
     symbol: 'BTCUSDT',
     interval: '1m',
-    limit: 100,
   });
 
   useRealtimeChartData(chartParams);
 
   return (
-    <div className="App">
-        <KlineChart params={chartParams} />
+    <div className="flex justify-center items-center h-screen w-screen bg-gray-500">
+      <KlineChart params={chartParams} />
     </div>
   );
 }
