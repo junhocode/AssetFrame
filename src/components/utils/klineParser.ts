@@ -1,4 +1,4 @@
-import type { CryptoEventType } from "@/types/wss.type";
+import type { CryptoEventType } from "@/types/ws.type";
 import type { CandleData, VolumeData, BinanceRestKline } from "@/types/kline.type";
 
 export const parseWsKlineToCandle = (kline: CryptoEventType): CandleData => ({
