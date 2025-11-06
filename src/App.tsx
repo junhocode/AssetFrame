@@ -1,14 +1,20 @@
-import "./App.css";
-import KlineChart from "./components/KlineChart/KlineChart";
+import { useState } from 'react';
+import KlineChart from './components/KlineChart/KlineChart';
+import { useRealtimeChartData } from '@/hooks/useRealtimeChartData';
+import type { GetKlinesParams } from '@/types/kline.type';
 
-export function App() {
-  const chartParams = { symbol: 'BTCUSDT', interval: '1m', limit: 100 };
-  
+export default function App() {
+  const [chartParams, setChartParams] = useState<GetKlinesParams>({
+    symbol: 'BTCUSDT',
+    interval: '1m',
+    limit: 100,
+  });
+
+  useRealtimeChartData(chartParams);
+
   return (
-    <div className="w-[500px] h-[300px] m-[50px] border">
-      <KlineChart params={chartParams}/>
+    <div className="App">
+        <KlineChart params={chartParams} />
     </div>
   );
 }
-
-export default App;
