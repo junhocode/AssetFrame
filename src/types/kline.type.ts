@@ -24,3 +24,8 @@ export interface GetKlinesParams {
 
 export type CandleData = CandlestickData<Time>;
 export type VolumeData = HistogramData<Time>;
+
+export interface KlinesData {
+  candles: CandleData[];
+  volumes: VolumeData[];
+}
