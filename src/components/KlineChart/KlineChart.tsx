@@ -28,8 +28,13 @@ export default function KlineChart({ params }: KlineChartProps) {
     isError,
   } = useInfiniteKlinesQuery(params);
 
-  const candlestickData = data?.pages.flatMap((page) => page.candles);
-  const volumeData = data?.pages.flatMap((page) => page.volumes);
+  const candlestickData = data?.pages
+    .flatMap((page) => page.candles)
+    .sort((a, b) => (a.time as number) - (b.time as number)); 
+
+  const volumeData = data?.pages
+    .flatMap((page) => page.volumes)
+    .sort((a, b) => (a.time as number) - (b.time as number));
 
   const handleVisibleLogicalRangeChange = useCallback((logicalRange: LogicalRange | null) => {
     if (!logicalRange) return;
