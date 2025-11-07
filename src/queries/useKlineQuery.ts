@@ -1,62 +1,53 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  type QueryKey,
+  type InfiniteData,
+} from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { getKlines } from "@/apis/klines.api";
 import {
   parseRestKlineToCandle,
   parseRestKlineToVolume,
-} from "@/components/utils/klineParser";
+} from "@/utils/klineParser";
 import type { GetKlinesParams } from "@/types/kline.type";
+import type { KlinesData } from "@/types/kline.type";
 
-export const useInfiniteCandlesQuery = (params: GetKlinesParams) => {
-  return useInfiniteQuery({
-    queryKey: QUERY_KEYS.candles.list(params),
+export const useInfiniteKlinesQuery = (params: GetKlinesParams) => {
+  return useInfiniteQuery<
+    KlinesData,
+    Error,
+    InfiniteData<KlinesData>,
+    QueryKey,
+    number | undefined
+  >({
+    queryKey: QUERY_KEYS.klines.list(params),
 
     queryFn: async ({ pageParam }) => {
       const rawData = await getKlines({ ...params, endTime: pageParam });
-      const parsedData = rawData.map(parseRestKlineToCandle);
-      return parsedData;
+      const sortedData = rawData.sort((a, b) => a[0] - b[0]);
+      
+      const candles = sortedData.map(parseRestKlineToCandle);
+      const volumes = sortedData.map(parseRestKlineToVolume);
+      return { candles, volumes };
     },
 
     getNextPageParam: (lastPage) => {
-      if (typeof params.limit !== "number") {
+      const lastCandles = lastPage.candles;
+
+      if (typeof params.limit !== "number" || lastCandles.length < params.limit) {
         return undefined;
       }
-      if (lastPage.length < params.limit) {
+      
+      const oldestCandleTime = lastCandles[0]?.time as number;
+
+      if (!oldestCandleTime) {
         return undefined;
       }
 
-      const oldestCandleTime = lastPage[0].time as number;
-
-      return oldestCandleTime;
+      return oldestCandleTime - 1;
     },
 
-    enabled: !!params.symbol,
-  });
-};
-
-export const useInfiniteVolumesQuery = (params: GetKlinesParams) => {
-  return useInfiniteQuery({
-    queryKey: QUERY_KEYS.volumes.list(params),
-
-    queryFn: async () => {
-      const rawData = await getKlines(params);
-      const parsedData = rawData.map(parseRestKlineToVolume);
-      return parsedData;
-    },
-
-    getNextPageParam: (lastPage) => {
-      if (typeof params.limit !== "number") {
-        return undefined;
-      }
-      if (lastPage.length < params.limit) {
-        return undefined;
-      }
-
-      const oldestVolumeTime = lastPage[0].time as number;
-
-      return oldestVolumeTime;
-    },
-
-    enabled: !!params.symbol,
+    initialPageParam: undefined,
+    enabled: !!params.symbol && typeof params.limit === "number",
   });
 };

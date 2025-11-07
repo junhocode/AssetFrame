@@ -1,9 +1,8 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import useWebSocket from 'react-use-websocket';
 import { QUERY_KEYS } from '@/constants/queryKeys';
-import { parseWsKlineToCandle, parseWsKlineToVolume } from '@/components/utils/klineParser';
-import type { CandleData, VolumeData, GetKlinesParams } from '@/types/kline.type';
-import type { BinanceWSKline } from '@/types/ws.type';
+import { parseWsKlineToCandle, parseWsKlineToVolume } from '@/utils/klineParser';
+import type { GetKlinesParams, KlinesData } from '@/types/kline.type';
 
 const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
 
@@ -20,42 +19,45 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
       const message = JSON.parse(event.data);
       if (message.e !== 'kline') return;
 
-      const kline = message as BinanceWSKline;
+      const klineData = message.k; 
       
-      const newCandle = parseWsKlineToCandle(kline);
-      const newVolume = parseWsKlineToVolume(kline);
+      const newCandle = parseWsKlineToCandle(klineData);
+      const newVolume = parseWsKlineToVolume(klineData);
 
-      const queryKeyParams = { 
-        symbol: params.symbol, 
-        interval: params.interval, 
-        limit: params.limit 
-      };
+      queryClient.setQueryData<InfiniteData<KlinesData>>(
+        QUERY_KEYS.klines.list(params),
+        (oldData) => {
+          if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+            return oldData;
+          }
 
-      queryClient.setQueryData<CandleData[]>(QUERY_KEYS.candles.list(queryKeyParams), (oldData = []) => {
-        const data = [...oldData];
-        const existingCandleIndex = data.findIndex(candle => candle.time === newCandle.time);
+          const newData = {
+            ...oldData,
+            pages: oldData.pages.map(page => ({
+              candles: [...page.candles],
+              volumes: [...page.volumes],
+            })),
+          };
 
-        if (existingCandleIndex !== -1) {
-          data[existingCandleIndex] = newCandle;
-        } else {
-          data.push(newCandle);
+          const latestPage = newData.pages[0];
+
+          const existingCandleIndex = latestPage.candles.findIndex(c => c.time === newCandle.time);
+          if (existingCandleIndex !== -1) {
+            latestPage.candles[existingCandleIndex] = newCandle;
+          } else {
+            latestPage.candles.push(newCandle);
+          }
+
+          const existingVolumeIndex = latestPage.volumes.findIndex(v => v.time === newVolume.time);
+          if (existingVolumeIndex !== -1) {
+            latestPage.volumes[existingVolumeIndex] = newVolume;
+          } else {
+            latestPage.volumes.push(newVolume);
+          }
+  
+          return newData;
         }
-
-        return data.sort((a, b) => +a.time - +b.time);
-      });
-
-      queryClient.setQueryData<VolumeData[]>(QUERY_KEYS.volumes.list(queryKeyParams), (oldData = []) => {
-        const data = [...oldData];
-        const existingVolumeIndex = data.findIndex(item => item.time === newVolume.time);
-
-        if (existingVolumeIndex !== -1) {
-          data[existingVolumeIndex] = newVolume;
-        } else {
-          data.push(newVolume);
-        }
-
-        return data.sort((a, b) => +a.time - +b.time);
-      });
+      );
     },
     shouldReconnect: () => true,
     reconnectInterval: 3000,
