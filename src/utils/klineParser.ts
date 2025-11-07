@@ -18,7 +18,7 @@ export const parseWsKlineToVolume = (kline: BinanceWSKline): VolumeData => ({
 });
 
 export const parseRestKlineToCandle = (kline: BinanceRestKline): CandleData => ({
-  time: (kline[0] / 1000) as CandleData['time'],
+  time: (kline[0]) as CandleData['time'],
   open: parseFloat(kline[1]),
   high: parseFloat(kline[2]),
   low: parseFloat(kline[3]),
@@ -26,7 +26,7 @@ export const parseRestKlineToCandle = (kline: BinanceRestKline): CandleData => (
 });
 
 export const parseRestKlineToVolume = (kline: BinanceRestKline): VolumeData => ({
-  time: (kline[0] / 1000) as VolumeData['time'],
+  time: (kline[0]) as VolumeData['time'],
   value: parseFloat(kline[5]),
   color: parseFloat(kline[4]) >= parseFloat(kline[1]) 
     ? 'rgba(0, 150, 136, 0.8)' 
