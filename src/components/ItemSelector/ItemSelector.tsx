@@ -1,11 +1,8 @@
 import { NativeSelect, NativeSelectOption } from "../ui/native-select";
+import type { SelectorProps } from "@/types/selector.type";
 
-interface ItemSelectorProps {
-  value: string;
-  onChange: (value: string) => void;
-}
 
-export function ItemSelector({ value, onChange }: ItemSelectorProps) {
+export function ItemSelector({ value, onChange }: SelectorProps) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value);
   };
