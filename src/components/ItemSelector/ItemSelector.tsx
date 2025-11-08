@@ -1,11 +1,19 @@
-import { NativeSelect, NativeSelectOption } from "../ui/native-select"
+import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 
-export function ItemSelector() {
+interface ItemSelectorProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export function ItemSelector({ value, onChange }: ItemSelectorProps) {
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    onChange(event.target.value);
+  };
+
   return (
-    <NativeSelect>
-      <NativeSelectOption value="BTCUSDT">종목을 선택해 주세요.</NativeSelectOption>
+    <NativeSelect value={value} onChange={handleChange}>
       <NativeSelectOption value="BTCUSDT">Bitcoin</NativeSelectOption>
       <NativeSelectOption value="ETHUSDT">Ethereum</NativeSelectOption>
     </NativeSelect>
-  )
+  );
 }
