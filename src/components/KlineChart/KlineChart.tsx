@@ -12,21 +12,7 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
   const visibleRangeRef = useRef<{ from: Time; to: Time } | null>(null)
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteKlinesQuery(params);
-
-  const chartData = useMemo(() => {
-    if (!data?.pages) return { candlestickData: [], volumeData: []}
-
-  const candlestickData = data?.pages
-    .flatMap((page) => page.candles)
-    .sort((a, b) => (a.time as number) - (b.time as number)); 
-
-  const volumeData = data?.pages
-    .flatMap((page) => page.volumes)
-    .sort((a, b) => (a.time as number) - (b.time as number));
-
-  return { candlestickData, volumeData };
-  }, [data]);  
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteKlinesQuery(params); 
 
   useMovingAverage({
     chart: chartRef.current,
