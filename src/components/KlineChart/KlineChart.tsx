@@ -1,6 +1,6 @@
 import { useRef, useMemo, useEffect, useCallback } from "react";
 import { createChart } from "lightweight-charts";
-import type { IChartApi, ISeriesApi, LogicalRange, CandlestickData } from "lightweight-charts";
+import type { IChartApi, ISeriesApi, LogicalRange, CandlestickData, Time } from "lightweight-charts";
 import { useInfiniteKlinesQuery } from "@/queries/useKlineQuery";
 import { useMovingAverage } from "@/hooks/useMovingAverage";
 import type { KlineChartProps } from "@/types/chart.type";
@@ -11,7 +11,7 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
-
+  const visibleRangeRef = useRef<{ from: Time; to: Time } | null>(null)
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteKlinesQuery(params);
 
   const chartData = useMemo(() => {
@@ -35,7 +35,6 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
     visible: showMA20,
   });
 
-  // 60일 이평선
   useMovingAverage({
     chart: chartRef.current,
     data: chartData.candlestickData as CandlestickData[], 
@@ -53,6 +52,7 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
       hasNextPage &&
       !isFetchingNextPage
     ) {
+      visibleRangeRef.current = chartRef.current.timeScale().getVisibleRange();
       fetchNextPage();
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
@@ -98,6 +98,10 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
     }
     if (chartData.volumeData.length > 0 && volumeSeriesRef.current) {
       volumeSeriesRef.current.setData(chartData.volumeData);
+    }
+    if (visibleRangeRef.current && chartRef.current) {
+      chartRef.current.timeScale().setVisibleRange(visibleRangeRef.current);
+      visibleRangeRef.current = null; 
     }
   }, [chartData]);
 
