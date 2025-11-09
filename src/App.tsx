@@ -25,13 +25,15 @@ export default function App() {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen w-screen bg-gray-500">
+    <div className="flex justify-center items-center h-screen w-screen">
       <div className="flex flex-col items-start gap-4">
         <div className='flex gap-3'>
         <ItemSelector value={symbol} onChange={handleSymbolChange}/>
         <TimeScaleSelector value={timeScale} onChange={handleTimeScaleChange}/>
         </div>
+        <div className='border rounded-xl'>
         <KlineChart params={chartParams} />
+        </div>
       </div>
     </div>
   );
