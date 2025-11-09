@@ -7,6 +7,8 @@ interface MovingAverageHookOptions extends SeriesOptionsCommon {
 
 export interface KlineChartProps {
   params: GetKlinesParams;
+  showMA20: boolean;
+  showMA60: boolean;
 }
 
 export interface MovingAverageFunctionProps {
