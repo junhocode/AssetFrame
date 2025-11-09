@@ -6,12 +6,8 @@ import {
   type LogicalRange,
 } from "lightweight-charts";
 import { useInfiniteKlinesQuery } from "@/queries/useKlineQuery";
-import type { GetKlinesParams } from "@/types/kline.type";
+import type { KlineChartProps } from "@/types/chart.type";
 import * as S from "./KlineChart.styles";
-
-interface KlineChartProps {
-  params: GetKlinesParams;
-}
 
 export default function KlineChart({ params }: KlineChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
