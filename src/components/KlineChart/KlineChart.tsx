@@ -1,28 +1,21 @@
-import { useRef, useEffect, useCallback } from "react";
-import {
-  createChart,
-  type IChartApi,
-  type ISeriesApi,
-  type LogicalRange,
-} from "lightweight-charts";
+import { useRef, useMemo, useEffect, useCallback } from "react";
+import { createChart } from "lightweight-charts";
+import type { IChartApi, ISeriesApi, LogicalRange, CandlestickData } from "lightweight-charts";
 import { useInfiniteKlinesQuery } from "@/queries/useKlineQuery";
+import { useMovingAverage } from "@/hooks/useMovingAverage";
 import type { KlineChartProps } from "@/types/chart.type";
 import * as S from "./KlineChart.styles";
 
-export default function KlineChart({ params }: KlineChartProps) {
+export default function KlineChart({ params, showMA20, showMA60 }: KlineChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-  } = useInfiniteKlinesQuery(params);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteKlinesQuery(params);
+
+  const chartData = useMemo(() => {
+    if (!data?.pages) return { candlestickData: [], volumeData: []}
 
   const candlestickData = data?.pages
     .flatMap((page) => page.candles)
@@ -31,6 +24,24 @@ export default function KlineChart({ params }: KlineChartProps) {
   const volumeData = data?.pages
     .flatMap((page) => page.volumes)
     .sort((a, b) => (a.time as number) - (b.time as number));
+
+  return { candlestickData, volumeData };
+  }, [data]);  
+
+  useMovingAverage({
+    chart: chartRef.current,
+    data: chartData.candlestickData as CandlestickData[], 
+    options: { length: 20, color: '#2962FF', lineWidth: 2 },
+    visible: showMA20,
+  });
+
+  // 60일 이평선
+  useMovingAverage({
+    chart: chartRef.current,
+    data: chartData.candlestickData as CandlestickData[], 
+    options: { length: 60, color: '#FF6D00', lineWidth: 2 },
+    visible: showMA60,
+  });
 
   const handleVisibleLogicalRangeChange = useCallback((logicalRange: LogicalRange | null) => {
     if (!logicalRange) return;
@@ -81,14 +92,14 @@ export default function KlineChart({ params }: KlineChartProps) {
     };
   }, [handleVisibleLogicalRangeChange]);
 
-  useEffect(() => {
-    if (candlestickData && candleSeriesRef.current) {
-      candleSeriesRef.current.setData(candlestickData);
+   useEffect(() => {
+    if (chartData.candlestickData.length > 0 && candleSeriesRef.current) {
+      candleSeriesRef.current.setData(chartData.candlestickData);
     }
-    if (volumeData && volumeSeriesRef.current) {
-      volumeSeriesRef.current.setData(volumeData);
+    if (chartData.volumeData.length > 0 && volumeSeriesRef.current) {
+      volumeSeriesRef.current.setData(chartData.volumeData);
     }
-  }, [candlestickData, volumeData]);
+  }, [chartData]);
 
   if (isLoading) {
     return <div className={S.statusContainer}>Loading Chart...</div>;
