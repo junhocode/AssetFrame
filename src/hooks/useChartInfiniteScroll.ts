@@ -10,14 +10,17 @@ const useChartInfiniteScroll = ({
   isFetchingNextPage,
 }: InfiniteScrollParams) => {
   const visibleRangeRef = useRef<LogicalRange | null>(null);
+  const scrollLockRef = useRef(false);
 
   const handleVisibleLogicalRangeChange = useCallback(
     (logicalRange: LogicalRange | null) => {
+      if (scrollLockRef.current) return;
       if (!logicalRange || !chartRef.current) return;
 
       const isNearLeftEdge = logicalRange.from < FETCHPAGE_THRESHOLD;
 
       if (isNearLeftEdge && hasNextPage && !isFetchingNextPage) {
+        scrollLockRef.current = true; 
         visibleRangeRef.current = chartRef.current
           .timeScale()
           .getVisibleLogicalRange();
@@ -27,7 +30,7 @@ const useChartInfiniteScroll = ({
     [chartRef, hasNextPage, isFetchingNextPage, fetchNextPage]
   );
 
-  return { handleVisibleLogicalRangeChange, visibleRangeRef };
+  return { handleVisibleLogicalRangeChange, visibleRangeRef, scrollLockRef };
 };
 
 export default useChartInfiniteScroll;

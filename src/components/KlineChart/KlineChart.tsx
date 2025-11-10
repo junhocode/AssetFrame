@@ -19,10 +19,10 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
-  const volumeSeriesRef = useRef<ISeriesApi<'Histogram'> | null>(null);
+  const volumeSeriesRef = useRef<ISeriesApi<'Histogram'> | null>(null)
 
   const { candlestickData, volumeData } = useFormattedChartData(data);
-  const { handleVisibleLogicalRangeChange, visibleRangeRef } = useChartInfiniteScroll({
+  const { handleVisibleLogicalRangeChange, visibleRangeRef, scrollLockRef } = useChartInfiniteScroll({
     chartRef,
     fetchNextPage,
     hasNextPage,
@@ -68,8 +68,11 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
 
         chartRef.current.timeScale().setVisibleLogicalRange({ from: newFrom, to: newTo });
         visibleRangeRef.current = null;
-    }
 
+         setTimeout(() => {
+        scrollLockRef.current = false;
+      }, 100); 
+    }
   }, [data]);
 
 
