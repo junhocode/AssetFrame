@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useLayoutEffect } from 'react';
 import { createChart } from 'lightweight-charts';
 import type { IChartApi, ISeriesApi } from 'lightweight-charts';
 import useFormattedChartData from '@/hooks/useFormattedChartData';
@@ -22,8 +22,7 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
   const volumeSeriesRef = useRef<ISeriesApi<'Histogram'> | null>(null);
 
   const { candlestickData, volumeData } = useFormattedChartData(data);
-  const { handleVisibleLogicalRangeChange } = useChartInfiniteScroll({
-    data,
+  const { handleVisibleLogicalRangeChange, visibleRangeRef } = useChartInfiniteScroll({
     chartRef,
     fetchNextPage,
     hasNextPage,
@@ -67,14 +66,26 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
     };
   }, [handleVisibleLogicalRangeChange]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const chart = chartRef.current;
+    const candleSeries = candleSeriesRef.current;
+    const volumeSeries = volumeSeriesRef.current;
+
+    if (!chart || !candleSeries || !volumeSeries) return;
+
+    const isInfiniteScrollAction = !!visibleRangeRef.current;
+
     if (candlestickData.length > 0 && candleSeriesRef.current) {
       candleSeriesRef.current.setData(candlestickData);
     }
     if (volumeData.length > 0 && volumeSeriesRef.current) {
       volumeSeriesRef.current.setData(volumeData);
     }
-  }, [candlestickData, volumeData]); 
+    if (isInfiniteScrollAction) {
+      chart.timeScale().setVisibleRange(visibleRangeRef.current!);
+      visibleRangeRef.current = null;
+    }
+  }, [candlestickData, volumeData, visibleRangeRef]); 
 
   return <div ref={chartContainerRef} />;
 }
