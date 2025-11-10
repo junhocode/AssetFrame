@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import KlineChart from '@/components/KlineChart/KlineChart';
+import { Spinner } from '@/components/ui/spinner';
 import { useRealtimeChartData } from '@/hooks/useRealtimeChartData';
 import { ItemSelector } from '@/components/ItemSelector/ItemSelector';
+import { useInfiniteKlinesQuery } from '@/queries/useKlineQuery';
 import { TimeScaleSelector } from '@/components/TimeScaleSelector/TimeScaleSelector';
 import { IndicatorSelector } from '@/components/IndicatorSelector/IndicatorSelector';
 
@@ -15,6 +17,15 @@ export default function ChartPage() {
     interval: timeScale,
     limit: 200
   };
+
+  const { 
+    data, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage, 
+    isLoading, 
+    isError 
+  } = useInfiniteKlinesQuery(chartParams);
 
   const showMA20 = indicator === 'MA20';
   const showMA60 = indicator === 'MA60';
@@ -33,6 +44,23 @@ export default function ChartPage() {
     setIndicator(indicator)
   }
 
+  if (isLoading) {
+  return (
+    <div className="flex flex-col justify-center items-center gap-4 h-screen w-screen">
+      <Spinner />
+      <span>Loading Chart...</span>
+    </div>
+  );
+}
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-screen w-screen">
+        Sorry, there has been an error.. Please refresh!
+      </div>
+    );
+  }
+
   return (
     <div className="flex justify-center items-center h-screen w-screen">
       <div className="flex flex-col items-start gap-4">
@@ -43,9 +71,12 @@ export default function ChartPage() {
         </div>
         <div className='border rounded-xl'>
         <KlineChart 
-        params={chartParams}
-        showMA20={showMA20}
-        showMA60={showMA60}
+        data={data}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            showMA20={showMA20}
+            showMA60={showMA60}
         /> </div>
       </div>
     </div>

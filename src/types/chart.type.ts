@@ -1,5 +1,5 @@
 import type { IChartApi, LineSeriesPartialOptions, CandlestickData } from "lightweight-charts";
-import type { GetKlinesParams, KlinesData } from "./kline.type";
+import type { KlinesData } from "./kline.type";
 import type { InfiniteData } from "@tanstack/react-query";
 
 export interface MovingAverageHookOptions extends LineSeriesPartialOptions {
@@ -7,7 +7,10 @@ export interface MovingAverageHookOptions extends LineSeriesPartialOptions {
   }
 
 export interface KlineChartProps {
-  params: GetKlinesParams;
+  data: InfiniteData<KlinesData> | undefined;
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
   showMA20: boolean;
   showMA60: boolean;
 }

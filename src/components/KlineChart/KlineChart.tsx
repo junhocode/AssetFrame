@@ -1,8 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { createChart } from 'lightweight-charts';
-import { Spinner } from '../ui/spinner';
 import type { IChartApi, ISeriesApi } from 'lightweight-charts';
-import { useInfiniteKlinesQuery } from '@/queries/useKlineQuery';
 import useFormattedChartData from '@/hooks/useFormattedChartData';
 import useChartInfiniteScroll from '@/hooks/useChartInfiniteScroll';
 import { useMovingAverage } from '@/hooks/useMovingAverage';
@@ -17,13 +15,12 @@ import {
 import type { KlineChartProps } from '@/types/chart.type';
 import * as S from './KlineChart.styles'
 
-export default function KlineChart({ params, showMA20, showMA60 }: KlineChartProps) {
+export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchingNextPage, showMA20, showMA60 }: KlineChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<'Histogram'> | null>(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteKlinesQuery(params);
   const { candlestickData, volumeData } = useFormattedChartData(data);
   const { handleVisibleLogicalRangeChange } = useChartInfiniteScroll({
     data,
@@ -77,16 +74,7 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
     if (volumeData.length > 0 && volumeSeriesRef.current) {
       volumeSeriesRef.current.setData(volumeData);
     }
-  }, [candlestickData, volumeData]);
-
-  if (isLoading) {
-    return <div className={S.statusContainer}>
-      <Spinner />
-      Loading Chart...</div>;
-  }
-  if (isError) {
-    return <div className={S.errorContainer}>Error: Could not load chart data.</div>;
-  }
+  }, [candlestickData, volumeData]); 
 
   return <div ref={chartContainerRef} />;
 }
