@@ -1,8 +1,8 @@
-import type { IChartApi, SeriesOptionsCommon, CandlestickData } from "lightweight-charts";
+import type { IChartApi, LineSeriesPartialOptions, CandlestickData } from "lightweight-charts";
 import type { GetKlinesParams, KlinesData } from "./kline.type";
 import type { InfiniteData } from "@tanstack/react-query";
 
-interface MovingAverageHookOptions extends SeriesOptionsCommon {
+interface MovingAverageHookOptions extends LineSeriesPartialOptions {
     length: number;
   }
 
