@@ -1,8 +1,10 @@
-import { useRef, useMemo, useEffect, useCallback } from "react";
+import { useRef, useEffect } from "react";
 import { createChart } from "lightweight-charts";
-import type { IChartApi, ISeriesApi, LogicalRange, CandlestickData, Time } from "lightweight-charts";
+import type { IChartApi, ISeriesApi } from "lightweight-charts";
 import { useInfiniteKlinesQuery } from "@/queries/useKlineQuery";
 import { useMovingAverage } from "@/hooks/useMovingAverage";
+import useFormattedChartData from "@/hooks/useFormattedChartData";
+import useChartInfiniteScroll from "@/hooks/useChartInfiniteScroll";
 import type { KlineChartProps } from "@/types/chart.type";
 import * as S from "./KlineChart.styles";
 
@@ -11,37 +13,32 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
-  const visibleRangeRef = useRef<{ from: Time; to: Time } | null>(null)
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteKlinesQuery(params); 
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteKlinesQuery(params);
+
+  const { candlestickData, volumeData } = useFormattedChartData(data);
+
+  const { handleVisibleLogicalRangeChange } = useChartInfiniteScroll({
+    data, 
+    chartRef,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  });
 
   useMovingAverage({
     chart: chartRef.current,
-    data: chartData.candlestickData as CandlestickData[], 
+    data: candlestickData, 
     options: { length: 20, color: '#2962FF', lineWidth: 2 },
     visible: showMA20,
   });
 
   useMovingAverage({
     chart: chartRef.current,
-    data: chartData.candlestickData as CandlestickData[], 
+    data: candlestickData, 
     options: { length: 60, color: '#FF6D00', lineWidth: 2 },
     visible: showMA60,
   });
-
-  const handleVisibleLogicalRangeChange = useCallback((logicalRange: LogicalRange | null) => {
-    if (!logicalRange) return;
-    
-    const isNearLeftEdge = logicalRange.from < 20;
-
-    if (
-      isNearLeftEdge &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      visibleRangeRef.current = chartRef.current.timeScale().getVisibleRange();
-      fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -78,18 +75,15 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
     };
   }, [handleVisibleLogicalRangeChange]);
 
+
    useEffect(() => {
-    if (chartData.candlestickData.length > 0 && candleSeriesRef.current) {
-      candleSeriesRef.current.setData(chartData.candlestickData);
+    if (candlestickData.length > 0 && candleSeriesRef.current) {
+      candleSeriesRef.current.setData(candlestickData);
     }
-    if (chartData.volumeData.length > 0 && volumeSeriesRef.current) {
-      volumeSeriesRef.current.setData(chartData.volumeData);
+    if (volumeData.length > 0 && volumeSeriesRef.current) {
+      volumeSeriesRef.current.setData(volumeData);
     }
-    if (visibleRangeRef.current && chartRef.current) {
-      chartRef.current.timeScale().setVisibleRange(visibleRangeRef.current);
-      visibleRangeRef.current = null; 
-    }
-  }, [chartData]);
+  }, [candlestickData, volumeData]); 
 
   if (isLoading) {
     return <div className={S.statusContainer}>Loading Chart...</div>;
