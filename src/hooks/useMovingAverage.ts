@@ -1,25 +1,7 @@
 import { useRef, useEffect } from "react";
 import type { ISeriesApi } from "lightweight-charts";
-import type { MovingAverageFunctionProps, MovingAverageHookProps } from "@/types/chart.type";
-
-function calculateMovingAverageSeriesData({ candleData, maLength }: MovingAverageFunctionProps) {
-    const maData = [];
-
-    for (let i = 0; i < candleData.length; i++) {
-        if (i < maLength - 1) { 
-            maData.push({ time: candleData[i].time }); 
-        } else {
-            let sum = 0;
-            for (let j = 0; j < maLength; j++) {
-                sum += candleData[i - j].close;
-            }
-            const maValue = sum / maLength;
-            maData.push({ time: candleData[i].time, value: maValue });
-        }
-    }
-
-    return maData;
-}
+import type { MovingAverageHookProps } from "@/types/chart.type";
+import { calculateMovingAverageSeriesData } from "@/utils/movingAverageCalculator";
 
 export const useMovingAverage = ({ chart, data, options, visible }: MovingAverageHookProps) => {
     const seriesRef = useRef<ISeriesApi<'Line'> | null>(null);
