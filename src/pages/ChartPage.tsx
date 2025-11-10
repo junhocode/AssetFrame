@@ -71,7 +71,7 @@ export default function ChartPage() {
         </div>
         <div className='border rounded-xl'>
         <KlineChart 
-        data={data}
+            data={data}
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
