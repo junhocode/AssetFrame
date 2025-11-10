@@ -15,7 +15,7 @@ export default function ChartPage() {
   const chartParams = {
     symbol: symbol,
     interval: timeScale,
-    limit: 200
+    limit: 500
   };
 
   const { 

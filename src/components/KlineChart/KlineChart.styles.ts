@@ -2,7 +2,7 @@ import { CrosshairMode } from "lightweight-charts";
 
 export const chartOptions = {
   height: 600,
-  width: 600,
+  width: 1200,
   layout: {
     backgroundColor: "#1e1e1e",
     textColor: "rgba(255, 255, 255, 0.9)",
