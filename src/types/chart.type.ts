@@ -28,7 +28,6 @@ export interface MovingAverageHookProps {
 }
 
 export interface InfiniteScrollParams {
-  data: InfiniteData<KlinesData> | undefined;
   chartRef: React.RefObject<IChartApi | null>;
   fetchNextPage: () => void;
   hasNextPage: boolean;

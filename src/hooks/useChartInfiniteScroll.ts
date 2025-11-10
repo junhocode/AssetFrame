@@ -4,7 +4,6 @@ import type { LogicalRange, Time } from "lightweight-charts";
 import type { InfiniteScrollParams } from "@/types/chart.type";
 
 const useChartInfiniteScroll = ({
-  data,
   chartRef,
   fetchNextPage,
   hasNextPage,
@@ -16,13 +15,6 @@ const useChartInfiniteScroll = ({
   useEffect(() => {
     latestPropsRef.current = { fetchNextPage, hasNextPage, isFetchingNextPage };
   });
-
-  useEffect(() => {
-    if (visibleRangeRef.current && chartRef.current) {
-      chartRef.current.timeScale().setVisibleRange(visibleRangeRef.current);
-      visibleRangeRef.current = null;
-    }
-  }, [data, chartRef]);
 
   const handleVisibleLogicalRangeChange = useCallback(
     (logicalRange: LogicalRange | null) => {
@@ -40,7 +32,7 @@ const useChartInfiniteScroll = ({
     [chartRef, hasNextPage, isFetchingNextPage, fetchNextPage]
   );
 
-  return { handleVisibleLogicalRangeChange };
+  return { handleVisibleLogicalRangeChange, visibleRangeRef };
 };
 
 export default useChartInfiniteScroll;
