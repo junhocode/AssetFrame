@@ -1,18 +1,18 @@
 import type { BinanceWSKline } from "@/types/ws.type";
 import type { CandleData, VolumeData, BinanceRestKline } from "@/types/kline.type";
 
-export const parseWsKlineToCandle = (kline: BinanceWSKline): CandleData => ({
-  time: (kline.k.t / 1000) as CandleData['time'],
-  open: parseFloat(kline.k.o),
-  high: parseFloat(kline.k.h),
-  low: parseFloat(kline.k.l),
-  close: parseFloat(kline.k.c),
+export const parseWsKlineToCandle = (klineData: BinanceWSKline['k']): CandleData => ({
+  time: (klineData.t / 1000) as CandleData['time'],
+  open: parseFloat(klineData.o),
+  high: parseFloat(klineData.h),
+  low: parseFloat(klineData.l),
+  close: parseFloat(klineData.c),
 });
 
-export const parseWsKlineToVolume = (kline: BinanceWSKline): VolumeData => ({
-  time: (kline.k.t / 1000) as VolumeData['time'],
-  value: parseFloat(kline.k.v),
-  color: parseFloat(kline.k.c) >= parseFloat(kline.k.o) 
+export const parseWsKlineToVolume = (klineData: BinanceWSKline['k']): VolumeData => ({
+  time: (klineData.t / 1000) as VolumeData['time'],
+  value: parseFloat(klineData.v),
+  color: parseFloat(klineData.c) >= parseFloat(klineData.o) 
     ? 'rgba(0, 150, 136, 0.8)' 
     : 'rgba(255, 82, 82, 0.8)',
 });
