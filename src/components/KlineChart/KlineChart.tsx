@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { createChart } from 'lightweight-charts';
+import { Spinner } from '../ui/spinner';
 import type { IChartApi, ISeriesApi } from 'lightweight-charts';
 import { useInfiniteKlinesQuery } from '@/queries/useKlineQuery';
 import useFormattedChartData from '@/hooks/useFormattedChartData';
@@ -79,7 +80,9 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
   }, [candlestickData, volumeData]);
 
   if (isLoading) {
-    return <div className={S.statusContainer}>Loading Chart...</div>;
+    return <div className={S.statusContainer}>
+      <Spinner />
+      Loading Chart...</div>;
   }
   if (isError) {
     return <div className={S.errorContainer}>Error: Could not load chart data.</div>;

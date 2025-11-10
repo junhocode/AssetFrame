@@ -26,6 +26,6 @@ export const chartOptions = {
   },
 };
 
-export const statusContainer = 'w-[900px] h-[600px] flex items-center justify-center bg-[#1e1e1e] text-white';
+export const statusContainer = 'flex items-center justify-center';
 
 export const errorContainer = `${statusContainer} text-red-500`;
