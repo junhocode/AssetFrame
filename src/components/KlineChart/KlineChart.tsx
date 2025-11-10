@@ -1,25 +1,31 @@
-import { useRef, useEffect } from "react";
-import { createChart } from "lightweight-charts";
-import type { IChartApi, ISeriesApi } from "lightweight-charts";
-import { useInfiniteKlinesQuery } from "@/queries/useKlineQuery";
-import { useMovingAverage } from "@/hooks/useMovingAverage";
-import useFormattedChartData from "@/hooks/useFormattedChartData";
-import useChartInfiniteScroll from "@/hooks/useChartInfiniteScroll";
-import type { KlineChartProps } from "@/types/chart.type";
-import * as S from "./KlineChart.styles";
+import { useRef, useEffect } from 'react';
+import { createChart } from 'lightweight-charts';
+import type { IChartApi, ISeriesApi } from 'lightweight-charts';
+import { useInfiniteKlinesQuery } from '@/queries/useKlineQuery';
+import useFormattedChartData from '@/hooks/useFormattedChartData';
+import useChartInfiniteScroll from '@/hooks/useChartInfiniteScroll';
+import { useMovingAverage } from '@/hooks/useMovingAverage';
+import {
+  CANDLESTICK_SERIES_OPTIONS,
+  VOLUME_SERIES_OPTIONS,
+  VOLUME_SCALE_OPTIONS,
+  VOLUME_PRICE_SCALE_ID,
+  MA20_OPTIONS,
+  MA60_OPTIONS,
+} from '@/constants/configs'
+import type { KlineChartProps } from '@/types/chart.type';
+import * as S from './KlineChart.styles'
 
 export default function KlineChart({ params, showMA20, showMA60 }: KlineChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
-  const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
-  const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
+  const candleSeriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
+  const volumeSeriesRef = useRef<ISeriesApi<'Histogram'> | null>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteKlinesQuery(params);
-
   const { candlestickData, volumeData } = useFormattedChartData(data);
-
   const { handleVisibleLogicalRangeChange } = useChartInfiniteScroll({
-    data, 
+    data,
     chartRef,
     fetchNextPage,
     hasNextPage,
@@ -28,15 +34,15 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
 
   useMovingAverage({
     chart: chartRef.current,
-    data: candlestickData, 
-    options: { length: 20, color: '#2962FF', lineWidth: 2 },
+    data: candlestickData,
+    options: MA20_OPTIONS,
     visible: showMA20,
   });
 
   useMovingAverage({
     chart: chartRef.current,
-    data: candlestickData, 
-    options: { length: 60, color: '#FF6D00', lineWidth: 2 },
+    data: candlestickData,
+    options: MA60_OPTIONS,
     visible: showMA60,
   });
 
@@ -44,21 +50,9 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
     if (!chartContainerRef.current) return;
 
     const chart = createChart(chartContainerRef.current, S.chartOptions);
-    const candleSeries = chart.addCandlestickSeries({
-      upColor: "rgba(0, 150, 136, 1)",  
-      downColor: "rgba(255, 82, 82, 1)",
-      borderDownColor: "rgba(255, 82, 82, 1)",
-      borderUpColor: "rgba(0, 150, 136, 1)",
-      wickDownColor: "rgba(255, 82, 82, 1)",
-      wickUpColor: "rgba(0, 150, 136, 1)",
-    });
-    const volumeSeries = chart.addHistogramSeries({
-      priceFormat: { type: "volume" },
-      priceScaleId: "volume-scale",
-    });
-    chart.priceScale("volume-scale").applyOptions({
-        scaleMargins: { top: 0.8, bottom: 0 },
-    });
+    const candleSeries = chart.addCandlestickSeries(CANDLESTICK_SERIES_OPTIONS);
+    const volumeSeries = chart.addHistogramSeries(VOLUME_SERIES_OPTIONS);
+    chart.priceScale(VOLUME_PRICE_SCALE_ID).applyOptions(VOLUME_SCALE_OPTIONS);
 
     chart.timeScale().subscribeVisibleLogicalRangeChange(handleVisibleLogicalRangeChange);
 
@@ -75,15 +69,14 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
     };
   }, [handleVisibleLogicalRangeChange]);
 
-
-   useEffect(() => {
+  useEffect(() => {
     if (candlestickData.length > 0 && candleSeriesRef.current) {
       candleSeriesRef.current.setData(candlestickData);
     }
     if (volumeData.length > 0 && volumeSeriesRef.current) {
       volumeSeriesRef.current.setData(volumeData);
     }
-  }, [candlestickData, volumeData]); 
+  }, [candlestickData, volumeData]);
 
   if (isLoading) {
     return <div className={S.statusContainer}>Loading Chart...</div>;
@@ -92,5 +85,5 @@ export default function KlineChart({ params, showMA20, showMA60 }: KlineChartPro
     return <div className={S.errorContainer}>Error: Could not load chart data.</div>;
   }
 
-  return <div ref={chartContainerRef}/>;
+  return <div ref={chartContainerRef} />;
 }

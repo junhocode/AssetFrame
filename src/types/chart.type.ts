@@ -2,7 +2,7 @@ import type { IChartApi, LineSeriesPartialOptions, CandlestickData } from "light
 import type { GetKlinesParams, KlinesData } from "./kline.type";
 import type { InfiniteData } from "@tanstack/react-query";
 
-interface MovingAverageHookOptions extends LineSeriesPartialOptions {
+export interface MovingAverageHookOptions extends LineSeriesPartialOptions {
     length: number;
   }
 
