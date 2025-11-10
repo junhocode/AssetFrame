@@ -1,0 +1,3 @@
+export const CONSTANTS = {
+    FETCHPAGE_THRESHOLD: 20
+}

@@ -1,4 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
+import { CONSTANTS } from "@/constants/configs";
 import type { LogicalRange, Time } from "lightweight-charts";
 import type { InfiniteScrollParams } from "@/types/chart.type";
 
@@ -22,7 +23,7 @@ const useChartInfiniteScroll = ({
     (logicalRange: LogicalRange | null) => {
       if (!logicalRange || !chartRef.current) return;
 
-      const isNearLeftEdge = logicalRange.from < 20;
+      const isNearLeftEdge = logicalRange.from < CONSTANTS.FETCHPAGE_THRESHOLD;
 
       if (isNearLeftEdge && hasNextPage && !isFetchingNextPage) {
         visibleRangeRef.current = chartRef.current
