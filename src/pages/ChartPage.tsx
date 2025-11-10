@@ -69,7 +69,7 @@ export default function ChartPage() {
         <TimeScaleSelector value={timeScale} onChange={handleTimeScaleChange}/>
         <IndicatorSelector value={indicator} onChange={handleIndicatorChange}/>
         </div>
-        <div className='border rounded-xl'>
+        <div className={`transition-opacity duration-300 ${isFetchingNextPage ? 'opacity-40' : 'opacity-100'}`}>
         <KlineChart 
             data={data}
             fetchNextPage={fetchNextPage}
@@ -77,7 +77,14 @@ export default function ChartPage() {
             isFetchingNextPage={isFetchingNextPage}
             showMA20={showMA20}
             showMA60={showMA60}
-        /> </div>
+        /> 
+        {isFetchingNextPage && (
+            <div className="absolute inset-0 flex justify-center items-center">
+              <div className="absolute inset-0 bg-transparent pointer-events-auto" /> 
+              <Spinner />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
