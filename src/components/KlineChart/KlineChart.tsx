@@ -53,7 +53,7 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
 
   useEffect(() => {
     if (!chartRef.current || !candleSeriesRef.current || !volumeSeriesRef.current) return;
-
+    
     const isInfiniteScrollAction = !!visibleRangeRef.current;
 
     if (candlestickData.length > 0) {
@@ -70,7 +70,7 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
         visibleRangeRef.current = null;
     }
 
-  }, [data, candlestickData, volumeData, visibleRangeRef]);
+  }, [data]);
 
 
   return <div ref={chartContainerRef}/>;
