@@ -11,6 +11,11 @@ const useChartInfiniteScroll = ({
   isFetchingNextPage,
 }: InfiniteScrollParams) => {
   const visibleRangeRef = useRef<{ from: Time; to: Time } | null>(null);
+  const latestPropsRef = useRef({ fetchNextPage, hasNextPage, isFetchingNextPage });
+
+  useEffect(() => {
+    latestPropsRef.current = { fetchNextPage, hasNextPage, isFetchingNextPage };
+  });
 
   useEffect(() => {
     if (visibleRangeRef.current && chartRef.current) {
