@@ -2,7 +2,7 @@ import { useState } from "react";
 import KlineChart from "@/components/KlineChart/KlineChart";
 import { Spinner } from "@/components/ui/spinner";
 import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
-import { ItemSelector } from "@/components/ItemSelector/ItemSelector";
+import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
 import { useInfiniteKlinesQuery } from "@/queries/useKlineQuery";
 import { TimeScaleSelector } from "@/components/TimeScaleSelector/TimeScaleSelector";
 import { IndicatorSelector } from "@/components/IndicatorSelector/IndicatorSelector";
@@ -65,7 +65,9 @@ export default function ChartPage() {
     <div className="flex justify-center items-center h-screen w-screen bg-[#ece8e8]">
       <div className="flex flex-col items-start gap-4">
         <div className="flex gap-3">
-          <ItemSelector value={symbol} onChange={handleSymbolChange} />
+          <SymbolSelector
+          value={symbol}
+            onChange={handleSymbolChange} />
           <TimeScaleSelector
             value={timeScale}
             onChange={handleTimeScaleChange}
