@@ -1,9 +1,10 @@
 import { useRef, useEffect } from 'react';
 import { createChart } from 'lightweight-charts';
-import type { IChartApi, ISeriesApi } from 'lightweight-charts';
+import type { IChartApi, ISeriesApi, CandlestickData } from 'lightweight-charts';
 import useFormattedChartData from '@/hooks/useFormattedChartData';
 import useChartInfiniteScroll from '@/hooks/useChartInfiniteScroll';
 import { useMovingAverage } from '@/hooks/useMovingAverage';
+import { useLatestTradePrice } from '@/hooks/useLatestTradePrice';
 import {
   CANDLESTICK_SERIES_OPTIONS,
   VOLUME_SERIES_OPTIONS,
@@ -15,7 +16,7 @@ import {
 import type { KlineChartProps } from '@/types/chart.type';
 import * as S from './KlineChart.styles'
 
-export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchingNextPage, showMA20, showMA60 }: KlineChartProps) {
+export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchingNextPage, showMA20, showMA60, params }: KlineChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
@@ -28,6 +29,8 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
     hasNextPage,
     isFetchingNextPage,
   });
+
+  const latestPriceRef = useLatestTradePrice(params.symbol);
 
   useMovingAverage({ chart: chartRef.current, data: candlestickData, options: MA20_OPTIONS, visible: showMA20 });
   useMovingAverage({ chart: chartRef.current, data: candlestickData, options: MA60_OPTIONS, visible: showMA60 });
@@ -75,6 +78,33 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
     }
   }, [data]);
 
+  useEffect(() => {
+    if (!candleSeriesRef.current) return;
+
+    const intervalId = setInterval(() => {
+      const series = candleSeriesRef.current;
+      const lastPrice = latestPriceRef.current;
+
+      if (!lastPrice || candlestickData.length === 0) {
+        return;
+      }
+
+      const lastCandle = candlestickData[candlestickData.length - 1];
+
+      const newTick = {
+        time: lastCandle.time,
+        open: lastCandle.open,
+        high: Math.max(lastCandle.high, lastPrice),
+        low: Math.min(lastCandle.low, lastPrice),
+        close: lastPrice,
+      };
+
+      series?.update(newTick as CandlestickData);
+
+    }, 200);
+
+    return () => clearInterval(intervalId);
+  }, [candlestickData]);
 
   return <div ref={chartContainerRef}/>;
 }
