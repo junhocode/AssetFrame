@@ -7,37 +7,38 @@ export const useMovingAverage = ({ chart, data, options, visible }: MovingAverag
   const seriesRef = useRef<ISeriesApi<'Line'> | null>(null);
 
   useEffect(() => {
-    if (!chart || data.length === 0) {
-        return;
+    if (!chart) {
+      return;
     }
 
-     if (seriesRef.current) {
-      seriesRef.current.applyOptions({ visible });
-    }
-
-    if (visible) {
-      const maData = calculateMovingAverageSeriesData({
-          candleData: data,
-          maLength: options.length
-      });
-      
-      if (maData && maData.length > 0) {
-        seriesRef.current?.setData(maData)
-      } else {
-        seriesRef.current?.setData([]);
-      }
-    }
+    const series = chart.addLineSeries(options);
+    seriesRef.current = series;
 
     return () => {
-      if (chart && seriesRef.current) {
+      if (seriesRef.current) {
         try {
           chart.removeSeries(seriesRef.current);
-        } catch {
-          //empty block
+        } catch (e) {
+          console.warn("이평선 시리즈 제거 중 오류 발생", e);
         }
+        seriesRef.current = null;
       }
-      seriesRef.current = null;
     };
-    
-  }, [chart, data, options, visible]); 
+  }, [chart, options]);
+
+  useEffect(() => {
+    if (!seriesRef.current) {
+      return;
+    }
+
+    seriesRef.current.applyOptions({ visible });
+
+    if (visible && data.length > 0) {
+      const maData = calculateMovingAverageSeriesData({
+        candleData: data,
+        maLength: options.length, 
+      });
+      seriesRef.current.setData(maData);
+    }
+  }, [data, visible, options.length]);
 };
