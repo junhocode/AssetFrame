@@ -22,3 +22,18 @@ export interface BinanceWSKline {
     B: string;
   };
 }
+
+export interface BinanceWSTrade {
+  e: string;
+  E: number;    
+  s: string; 
+  t: number;
+  p: string;
+  q: string;
+  b: number;
+  a: number;
+  T: number;
+  S: string;
+  X: string;
+}
+
