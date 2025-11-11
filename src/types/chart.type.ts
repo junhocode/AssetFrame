@@ -13,6 +13,11 @@ export interface KlineChartProps {
   isFetchingNextPage: boolean;
   showMA20: boolean;
   showMA60: boolean;
+  params: {
+    symbol: string;
+    interval: string;
+    limit: number;
+  };
 }
 
 export interface MovingAverageFunctionProps {
