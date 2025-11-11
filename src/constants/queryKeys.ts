@@ -15,5 +15,10 @@ export const QUERY_KEYS = {
         all: ['volumes'] as const,
         lists: () => [...QUERY_KEYS.volumes.all, 'list'] as const,
         list: (params: GetKlinesParams) => [...QUERY_KEYS.volumes.lists(), params] as const,
+    },
+    symbols: {
+        all: ['symbols'] as const,
+        lists: () => [...QUERY_KEYS.symbols.all, 'list'] as const,
+        list: () => [...QUERY_KEYS.symbols.lists()] as const,
     }
 };
