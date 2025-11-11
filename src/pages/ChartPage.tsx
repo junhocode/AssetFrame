@@ -87,6 +87,7 @@ export default function ChartPage() {
               isFetchingNextPage={isFetchingNextPage}
               showMA20={showMA20}
               showMA60={showMA60}
+              params={chartParams}
             />
             {isFetchingNextPage && (
             <div className="absolute inset-0 z-10 flex flex-col justify-center items-center gap-2">
