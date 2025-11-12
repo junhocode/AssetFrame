@@ -15,11 +15,12 @@ export function TimeScaleSelector({ value, onChange }: SelectorProps) {
   };
 
   return (
+    <div className="bg-white rounded-md">
     <ToggleGroup
       type="single"
       value={value}
       onValueChange={handleValueChange}
-      className="tounded-full"
+      className="px-2 gap-2"
     >
       {intervals.map((interval) => (
         <ToggleGroupItem
@@ -31,5 +32,6 @@ export function TimeScaleSelector({ value, onChange }: SelectorProps) {
         </ToggleGroupItem>
       ))}
     </ToggleGroup>
+    </div>
   );
 }
