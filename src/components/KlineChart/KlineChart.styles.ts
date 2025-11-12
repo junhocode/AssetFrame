@@ -3,10 +3,6 @@ import { CrosshairMode } from "lightweight-charts";
 export const chartOptions = {
   height: 600,
   width: 1200,
-  layout: {
-    backgroundColor: "#1e1e1e",
-    textColor: "rgba(255, 255, 255, 0.9)",
-  },
   grid: {
     vertLines: {
       color: "rgba(197, 203, 206, 0.2)",
@@ -19,10 +15,10 @@ export const chartOptions = {
     mode: CrosshairMode.Normal,
   },
   rightPriceScale: {
-    borderColor: "rgba(197, 203, 206, 0.8)",
+    borderColor: "rgba(197, 203, 206, 0.8)"
   },
   timeScale: {
-    borderColor: "rgba(197, 203, 206, 0.8)",
+    borderColor: "rgba(197, 203, 206, 0.8)"
   },
 };
 
