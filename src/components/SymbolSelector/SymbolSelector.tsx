@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,25 +18,10 @@ import {
 import type { SelectorProps } from "@/types/selector.type";
 import { useSymbolsQuery } from "@/queries/useSymbolsQuery";
 
-const TOP_SYMBOLS_LIST = [
-  "BTCUSDT",
-  "ETHUSDT",
-  "SOLUSDT",
-  "XRPUSDT",
-  "BNBUSDT",
-];
-
 export function SymbolSelector({ value, onChange }: SelectorProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { data: allSymbols, isLoading, isError } = useSymbolsQuery();
-
-  const topSymbols = useMemo(
-    () => (allSymbols || []).filter((s) => TOP_SYMBOLS_LIST.includes(s.value)),
-    [allSymbols]
-  );
-
-  const displaySymbols = searchQuery.length > 0 ? allSymbols || [] : topSymbols;
 
   if (isLoading) {
     return (
@@ -83,7 +68,7 @@ export function SymbolSelector({ value, onChange }: SelectorProps) {
           <CommandList>
             <CommandEmpty>No symbol found.</CommandEmpty>
             <CommandGroup>
-              {displaySymbols.map((symbol) => (
+              {allSymbols?.map((symbol) => (
                 <CommandItem
                   key={symbol.value}
                   value={symbol.value}
