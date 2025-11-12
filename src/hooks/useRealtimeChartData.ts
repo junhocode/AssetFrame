@@ -1,7 +1,7 @@
 import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import useWebSocket from 'react-use-websocket';
 import { QUERY_KEYS } from '@/constants/queryKeys';
-import { parseWsKlineToCandle, parseWsKlineToVolume } from '@/utils/klineParser';
+import { parseWsKlineToRaw } from '@/utils/klineParser';
 import type { GetKlinesParams, KlinesData } from '@/types/kline.type';
 
 const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
@@ -11,7 +11,6 @@ const getWsUrl = (symbol: string, interval: string) =>
 
 export const useRealtimeChartData = (params: GetKlinesParams) => {
   const queryClient = useQueryClient();
-
   const wsUrl = params.symbol ? getWsUrl(params.symbol, params.interval) : null;
 
   useWebSocket(wsUrl, {
@@ -19,10 +18,8 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
       const message = JSON.parse(event.data);
       if (message.e !== 'kline') return;
 
-      const klineData = message.k; 
-      
-      const newCandle = parseWsKlineToCandle(klineData);
-      const newVolume = parseWsKlineToVolume(klineData);
+      const newRawKline = parseWsKlineToRaw(message.k);
+      const newKlineTime = newRawKline[0]; 
 
       queryClient.setQueryData<InfiniteData<KlinesData>>(
         QUERY_KEYS.klines.list(params),
@@ -34,25 +31,19 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
           const newData = {
             ...oldData,
             pages: oldData.pages.map(page => ({
-              candles: [...page.candles],
-              volumes: [...page.volumes],
+              klines: [...page.klines], 
             })),
           };
 
-          const latestPage = newData.pages[0];
+          const latestPage = newData.pages[newData.pages.length - 1];
 
-          const existingCandleIndex = latestPage.candles.findIndex(c => c.time === newCandle.time);
-          if (existingCandleIndex !== -1) {
-            latestPage.candles[existingCandleIndex] = newCandle;
-          } else {
-            latestPage.candles.push(newCandle);
-          }
+          const existingKlineIndex = latestPage.klines.findIndex(k => k[0] === newKlineTime);
 
-          const existingVolumeIndex = latestPage.volumes.findIndex(v => v.time === newVolume.time);
-          if (existingVolumeIndex !== -1) {
-            latestPage.volumes[existingVolumeIndex] = newVolume;
+          if (existingKlineIndex !== -1) {
+            latestPage.klines[existingKlineIndex] = newRawKline;
           } else {
-            latestPage.volumes.push(newVolume);
+            latestPage.klines.push(newRawKline);
+            latestPage.klines.sort((a,b) => a[0] - b[0]);
           }
   
           return newData;
@@ -62,4 +53,4 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
     shouldReconnect: () => true,
     reconnectInterval: 3000,
   });
-};
+};     
