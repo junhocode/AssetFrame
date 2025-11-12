@@ -3,7 +3,7 @@ import KlineChart from "@/components/KlineChart/KlineChart";
 import { Spinner } from "@/components/ui/spinner";
 import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
 import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
-import { useInfiniteKlinesQuery } from "@/queries/useKlineQuery";
+import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
 import { TimeScaleSelector } from "@/components/TimeScaleSelector/TimeScaleSelector";
 import { IndicatorSelector } from "@/components/IndicatorSelector/IndicatorSelector";
 
