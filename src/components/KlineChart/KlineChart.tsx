@@ -34,7 +34,7 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
 
   useMovingAverage({ chart: chartRef.current, data: candlestickData, options: MA20_OPTIONS, visible: showMA20 });
   useMovingAverage({ chart: chartRef.current, data: candlestickData, options: MA60_OPTIONS, visible: showMA60 });
-
+  
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
@@ -65,7 +65,7 @@ export default function KlineChart({ data, fetchNextPage, hasNextPage, isFetchin
     }
 
     if (isInfiniteScrollAction && data?.pages) {
-        const addedDataCount = data.pages[0]?.candles.length ?? 0;
+        const addedDataCount = data.pages[0]?.klines.length ?? 0;
         const newFrom = visibleRangeRef.current!.from + addedDataCount;
         const newTo = visibleRangeRef.current!.to + addedDataCount;
 
