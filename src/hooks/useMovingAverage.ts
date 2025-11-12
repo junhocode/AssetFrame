@@ -1,44 +1,45 @@
 import { useRef, useEffect } from "react";
 import type { ISeriesApi } from "lightweight-charts";
 import type { MovingAverageHookProps } from "@/types/chart.type";
-import { calculateMovingAverageSeriesData } from "@/utils/movingAverageCalculator";
 
-export const useMovingAverage = ({ chart, data, options, visible }: MovingAverageHookProps) => {
-  const seriesRef = useRef<ISeriesApi<'Line'> | null>(null);
+export function useMovingAverage({ chart, data, options, visible }: MovingAverageHookProps) {
+  const maSeriesRef = useRef<ISeriesApi<'Line'> | null>(null);
 
   useEffect(() => {
     if (!chart) {
       return;
     }
 
-    const series = chart.addLineSeries(options);
-    seriesRef.current = series;
-
-    return () => {
-      if (seriesRef.current) {
+    if (!visible) {
+      if (maSeriesRef.current) {
         try {
-          chart.removeSeries(seriesRef.current);
+          chart.removeSeries(maSeriesRef.current);
         } catch (e) {
-          console.warn("이평선 시리즈 제거 중 오류 발생", e);
+          console.warn('이평선 시리즈 제거 중 오류 발생 (차트가 이미 제거되었을 수 있음):', e);
         }
-        seriesRef.current = null;
+        maSeriesRef.current = null;
       }
-    };
-  }, [chart, options]);
-
-  useEffect(() => {
-    if (!seriesRef.current) {
       return;
     }
 
-    seriesRef.current.applyOptions({ visible });
-
-    if (visible && data.length > 0) {
-      const maData = calculateMovingAverageSeriesData({
-        candleData: data,
-        maLength: options.length, 
-      });
-      seriesRef.current.setData(maData);
+    if (!maSeriesRef.current) {
+      maSeriesRef.current = chart.addLineSeries(options);
     }
-  }, [data, visible, options.length]);
-};
+    
+    if (data.length > 0) {
+      maSeriesRef.current.setData(data);
+    }
+
+    return () => {
+      if (maSeriesRef.current) {
+        try {
+          chart.removeSeries(maSeriesRef.current);
+        } catch (e) {
+          console.warn('이평선 시리즈 제거 중 오류 발생 (차트가 이미 제거되었을 수 있음):', e);
+        }
+        maSeriesRef.current = null;
+      }
+    };
+    
+  }, [chart, visible, data, options]); 
+}
