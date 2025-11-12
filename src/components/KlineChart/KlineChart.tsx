@@ -33,6 +33,7 @@ export default function KlineChart({
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
+  const tooltipRef = useRef<HTMLDivElement | null>(null);
 
   const { candlestickData, volumeData } = useFormattedChartData(data);
   const { handleVisibleLogicalRangeChange, visibleRangeRef, scrollLockRef } =
@@ -74,24 +75,26 @@ export default function KlineChart({
     candleSeriesRef.current = candleSeries;
     volumeSeriesRef.current = volumeSeries;
 
-    const tooltip = document.createElement("div");
-    tooltip.style.position = "absolute";
-    tooltip.style.display = "none";
-    tooltip.style.pointerEvents = "none";
-    tooltip.style.zIndex = "1000";
-    tooltip.style.background = "white";
-    tooltip.style.border = "1px solid rgba(38,166,154,1)";
-    tooltip.style.borderRadius = "4px";
-    tooltip.style.padding = "8px";
-    tooltip.style.fontSize = "12px";
-    tooltip.style.boxShadow = "0 2px 6px rgba(0,0,0,0.15)";
-    tooltip.style.color = "black";
-    chartContainerRef.current.appendChild(tooltip);
+    // 툴팁 DOM 생성 및 ref에 할당
+    tooltipRef.current = document.createElement("div");
+    tooltipRef.current.style.position = "absolute";
+    tooltipRef.current.style.display = "none";
+    tooltipRef.current.style.pointerEvents = "none";
+    tooltipRef.current.style.zIndex = "1000";
+    tooltipRef.current.style.background = "white";
+    tooltipRef.current.style.border = "1px solid rgba(38,166,154,1)";
+    tooltipRef.current.style.borderRadius = "4px";
+    tooltipRef.current.style.padding = "8px";
+    tooltipRef.current.style.fontSize = "12px";
+    tooltipRef.current.style.boxShadow = "0 2px 6px rgba(0,0,0,0.15)";
+    tooltipRef.current.style.color = "black";
+    chartContainerRef.current.appendChild(tooltipRef.current);
 
     chart.subscribeCrosshairMove((param) => {
       const container = chartContainerRef.current;
       const series = candleSeriesRef.current;
-      if (!container || !series) return;
+      const tooltip = tooltipRef.current;
+      if (!container || !series || !tooltip) return;
 
       if (
         !param.point ||
@@ -113,12 +116,10 @@ export default function KlineChart({
       const dateStr = date.toLocaleString("ko-KR");
 
       tooltip.innerHTML = `
-        <div style="font-weight: bold; color: rgba(38,166,154,1)">Price</div>
-        <div style="font-size: 16px; margin-top: 4px;">${price?.toFixed(
-          2
-        )}</div>
-        <div style="margin-top: 4px; color: gray;">${dateStr}</div>
-      `;
+ <div style="font-weight: bold; color: rgba(38,166,154,1)">Price</div>
+ <div style="font-size: 16px; margin-top: 4px;">${price?.toFixed(2)}</div>
+ <div style="margin-top: 4px; color: gray;">${dateStr}</div>
+ `;
 
       const tooltipWidth = 100;
       const tooltipHeight = 70;
@@ -140,6 +141,10 @@ export default function KlineChart({
     return () => {
       chart.remove();
       chartRef.current = null;
+      if (tooltipRef.current) {
+        tooltipRef.current.remove();
+        tooltipRef.current = null;
+      }
     };
   }, [handleVisibleLogicalRangeChange]);
 
@@ -150,6 +155,10 @@ export default function KlineChart({
       !volumeSeriesRef.current
     )
       return;
+
+    if (tooltipRef.current) {
+      tooltipRef.current.style.display = "none";
+    }
 
     const isInfiniteScrollAction = !!visibleRangeRef.current;
 
@@ -173,7 +182,7 @@ export default function KlineChart({
         scrollLockRef.current = false;
       }, 100);
     }
-  }, [data]);
+  }, [data, candlestickData, volumeData]);
 
   useEffect(() => {
     if (!candleSeriesRef.current) return;
