@@ -20,6 +20,12 @@ export const chartOptions = {
   timeScale: {
     borderColor: "rgba(197, 203, 206, 0.8)"
   },
+  watermark: {
+        color: 'rgba(197, 203, 206, 0.5)',
+        visible: true,
+        text: 'junhocode',
+        fontSize: 24,
+    },
 };
 
 export const statusContainer = 'flex items-center justify-center';
