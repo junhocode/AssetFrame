@@ -1,15 +1,35 @@
-import { NativeSelect, NativeSelectOption } from "../ui/native-select";
-import type { SelectorProps } from "@/types/selector.type"; 
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group";
+
+import type { SelectorProps } from "@/types/selector.type";
 
 export function TimeScaleSelector({ value, onChange }: SelectorProps) {
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange(event.target.value);
+  const intervals = ['1s', '1m', '15m', '1h', '4h', '1d', '1w', '1M'];
+
+  const handleValueChange = (newValue: string) => {
+    if (newValue) {
+      onChange(newValue);
+    }
   };
 
   return (
-    <NativeSelect value={value} onChange={handleChange}>
-      <NativeSelectOption value="1m">1 minute</NativeSelectOption>
-      <NativeSelectOption value="1s">1 second</NativeSelectOption>
-    </NativeSelect>
+    <ToggleGroup
+      type="single"
+      value={value}
+      onValueChange={handleValueChange}
+      className="tounded-full"
+    >
+      {intervals.map((interval) => (
+        <ToggleGroupItem
+          key={interval}
+          value={interval}
+          aria-label={`Select ${interval}`}
+        >
+          {interval}
+        </ToggleGroupItem>
+      ))}
+    </ToggleGroup>
   );
 }
