@@ -208,5 +208,5 @@ export default function KlineChart({
     return () => clearInterval(intervalId);
   }, [candlestickData]);
 
-  return <div ref={chartContainerRef} className="relative w-full h-full" />;
+  return <div ref={chartContainerRef} className="relative w-full h-full rounded-lg overflow-hidden shadow-lg" />;
 }
