@@ -5,12 +5,15 @@ import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
 import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
 import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
 import { TimeScaleSelector } from "@/components/TimeScaleSelector/TimeScaleSelector";
-import { IndicatorSelector } from "@/components/IndicatorSelector/IndicatorSelector";
+import IndicatorSelector from "@/components/IndicatorSelector/IndicatorSelector";
+import useFormattedChartData from "@/hooks/useFormattedChartData";
+import type { LineData } from "lightweight-charts";
+import { keepPreviousData } from "@tanstack/react-query";
 
 export default function ChartPage() {
   const [symbol, setSymbol] = useState<string>("BTCUSDT");
   const [timeScale, setTimeScale] = useState<string>("1m");
-  const [indicator, setIndicator] = useState<string>("");
+  const [indicatorData, setIndicatorData] = useState<LineData[]>([]);
 
   const chartParams = {
     symbol: symbol,
@@ -22,13 +25,16 @@ export default function ChartPage() {
     data,
     fetchNextPage,
     hasNextPage,
+    isFetching,
     isFetchingNextPage,
     isLoading,
     isError,
-  } = useInfiniteKlinesQuery(chartParams);
+  } = useInfiniteKlinesQuery(
+    chartParams,
+    { placeholderData: keepPreviousData }
+  );
 
-  const showMA20 = indicator === "MA20";
-  const showMA60 = indicator === "MA60";
+  const { candlestickData } = useFormattedChartData(data);
 
   useRealtimeChartData(chartParams);
 
@@ -38,10 +44,6 @@ export default function ChartPage() {
 
   const handleTimeScaleChange = (timeScale: string) => {
     setTimeScale(timeScale);
-  };
-
-  const handleIndicatorChange = (indicator: string) => {
-    setIndicator(indicator);
   };
 
   if (isLoading) {
@@ -65,36 +67,29 @@ export default function ChartPage() {
     <div className="flex justify-center items-center h-screen w-screen bg-[#ece8e8]">
       <div className="flex flex-col items-start gap-4">
         <div className="flex gap-3">
-          <SymbolSelector
-          value={symbol}
-            onChange={handleSymbolChange} />
-          <TimeScaleSelector
-            value={timeScale}
-            onChange={handleTimeScaleChange}
-          />
+          <SymbolSelector value={symbol} onChange={handleSymbolChange} />
+          <TimeScaleSelector value={timeScale} onChange={handleTimeScaleChange} />
           <IndicatorSelector
-            value={indicator}
-            onChange={handleIndicatorChange}
+            candlestickData={candlestickData}
+            onIndicatorChange={setIndicatorData}
           />
         </div>
-          <div
-            className={`transition-opacity duration-300 ${
-              isFetchingNextPage ? "opacity-40" : "opacity-100"
-            }`}
-          >
-            <KlineChart
-              data={data}
-              fetchNextPage={fetchNextPage}
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-              showMA20={showMA20}
-              showMA60={showMA60}
-              params={chartParams}
-            />
-            {isFetchingNextPage && (
-            <div className="absolute inset-0 z-10 flex flex-col justify-center items-center gap-2">
+        <div
+          className={`relative transition-opacity duration-300 ${
+            isFetching && !isLoading ? "opacity-50" : "opacity-100"
+          }`}
+        >
+          <KlineChart
+            data={data}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            params={chartParams}
+            indicatorData={indicatorData}
+          />
+          {isFetching && !isFetchingNextPage && (
+             <div className="absolute inset-0 z-10 flex flex-col justify-center items-center gap-2 bg-gray-200 bg-opacity-30">
               <Spinner />
-              <span className="text-black text-lg font-semibold">Loading Chart...</span>
             </div>
           )}
         </div>
