@@ -1,9 +1,9 @@
 import { intervals } from "@/constants/configs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { SelectorProps } from "@/types/selector.type";
+import * as S from "./TimeScaleSelector.styles";
 
 export default function TimeScaleSelector({ value, onChange }: SelectorProps) {
-
   const handleValueChange = (newValue: string) => {
     if (newValue) {
       onChange(newValue);
@@ -11,23 +11,23 @@ export default function TimeScaleSelector({ value, onChange }: SelectorProps) {
   };
 
   return (
-    <div className="bg-white rounded-md">
-    <ToggleGroup
-      type="single"
-      value={value}
-      onValueChange={handleValueChange}
-      className="px-2 gap-2"
-    >
-      {intervals.map((interval) => (
-        <ToggleGroupItem
-          key={interval}
-          value={interval}
-          aria-label={`Select ${interval}`}
-        >
-          {interval}
-        </ToggleGroupItem>
-      ))}
-    </ToggleGroup>
+    <div>
+      <ToggleGroup
+        type="single"
+        value={value}
+        onValueChange={handleValueChange}
+        className={S.toggleGroup}
+      >
+        {intervals.map((interval) => (
+          <ToggleGroupItem
+            key={interval}
+            value={interval}
+            aria-label={`Select ${interval}`}
+          >
+            {interval}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
     </div>
   );
 }
