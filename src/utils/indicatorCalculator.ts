@@ -1,4 +1,4 @@
-import { sma, ema, wma, rsi, macd } from 'technicalindicators';
+import { SMA, EMA, WMA, RSI, MACD } from 'technicalindicators';
 
 export type IndicatorType = 'SMA' | 'EMA' | 'WMA' | 'DEMA' | 'TEMA' | 'RSI' | 'MACD';
 
@@ -9,43 +9,74 @@ export interface IndicatorOptions {
   signalPeriod?: number;
 }
 
+export interface IndicatorResults {
+  [key: string]: (number | undefined)[]; 
+}
+
 export const calculateIndicator = (
-  indicatorType: IndicatorType,
+  indicatorTypes: IndicatorType[],
   data: number[],
   options: IndicatorOptions
-) => {
-  switch (indicatorType) {
-    case 'SMA':
-      if (!options.period) throw new Error('SMA에는 period가 필요합니다.');
-      return sma({ values: data, period: options.period });
+): IndicatorResults => {
 
-    case 'EMA':
-      if (!options.period) throw new Error('EMA에는 period가 필요합니다.');
-      return ema({ values: data, period: options.period });
-    
-    case 'WMA':
-      if (!options.period) throw new Error('WMA에는 period가 필요합니다.');
-      return wma({ values: data, period: options.period });
+  const results: IndicatorResults = {};
+  indicatorTypes.forEach(type => {
+    if (type === 'MACD') {
+      results.MACD_macd = [];
+      results.MACD_signal = [];
+      results.MACD_histogram = [];
+    } else {
+      results[type] = [];
+    }
+  });
 
-    case 'RSI':
-      if (!options.period) throw new Error('RSI에는 period가 필요합니다.');
-      return rsi({ values: data, period: options.period });
-
-    case 'MACD':
-      if (!options.fastPeriod || !options.slowPeriod || !options.signalPeriod) {
-        throw new Error('MACD에는 fastPeriod, slowPeriod, signalPeriod가 모두 필요합니다.');
+  const calculators: any = {};
+  indicatorTypes.forEach(type => {
+    try {
+      switch (type) {
+        case 'SMA':
+          if (!options.period) throw new Error('SMA period 필요');
+          calculators.SMA = new SMA({ values: [], period: options.period });
+          break;
+        case 'RSI':
+          if (!options.period) throw new Error('RSI period 필요');
+          calculators.RSI = new RSI({ values: [], period: options.period });
+          break;
+        case 'MACD':
+          if (!options.fastPeriod || !options.slowPeriod || !options.signalPeriod) throw new Error('MACD 옵션 필요');
+          calculators.MACD = new MACD({
+            values: [],
+            fastPeriod: options.fastPeriod,
+            slowPeriod: options.slowPeriod,
+            signalPeriod: options.signalPeriod,
+            SimpleMAOscillator: false,
+            SimpleMASignal: false
+          });
+          break;
       }
-      return macd({
-        values: data,
-        fastPeriod: options.fastPeriod,
-        slowPeriod: options.slowPeriod,
-        signalPeriod: options.signalPeriod,
-        SimpleMAOscillator: false,
-        SimpleMASignal: false
-      });
+    } catch (e) {
+      console.error(`${type} 계산기 생성 실패:`, e);
+    }
+  });
 
-    default:
-      console.error(`${indicatorType}는 지원하지 않는 보조지표입니다.`);
-      return [];
+  for (let i = 0; i < data.length; i++) {
+    const price = data[i];
+
+    for (const type in calculators) {
+      const calculator = calculators[type];
+      const result = calculator.nextValue(price);
+
+      if (type === 'MACD') {
+        results.MACD_macd[i] = result?.MACD;
+        results.MACD_signal[i] = result?.signal;
+        results.MACD_histogram[i] = result?.histogram;
+      } else if (result !== undefined) {
+        results[type][i] = result;
+      } else {
+        results[type][i] = undefined; 
+      }
+    }
   }
+
+  return results;
 };

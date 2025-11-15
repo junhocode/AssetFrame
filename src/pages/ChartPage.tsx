@@ -13,7 +13,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 export default function ChartPage() {
   const [symbol, setSymbol] = useState<string>("BTCUSDT");
   const [timeScale, setTimeScale] = useState<string>("1m");
-  const [indicatorData, setIndicatorData] = useState<LineData[]>([]);
+  const [indicatorData, setIndicatorData] = useState<{ [key: string]: LineData[] }>({});
 
   const chartParams = {
     symbol: symbol,

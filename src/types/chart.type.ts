@@ -16,7 +16,7 @@ export interface MovingAverageHookOptions extends LineSeriesPartialOptions {
       interval: string;
       limit: number;
     };
-    indicatorData: LineData[];
+    indicatorData: { [key: string]: LineData[] };
   }
 
 export interface MovingAverageFunctionProps {
