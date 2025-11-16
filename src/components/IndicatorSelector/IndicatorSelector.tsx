@@ -55,12 +55,15 @@ const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestickData, 
   }, [selectedValues, period, candlestickData, onIndicatorChange]);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 max-w-80">
       <MultiSelect 
         options={indicatorOptions}
         onValueChange={setSelectedValues}
         defaultValue={selectedValues}
         placeholder="Select indicators"
+        className="h-9 min-h-9 py-1"
+        maxCount={1}
+        maxWidth='1'
       />
       <input
         type="number"

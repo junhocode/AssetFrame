@@ -66,7 +66,7 @@ export default function ChartPage() {
   return (
     <div className="flex justify-center items-center h-screen w-screen bg-[#ece8e8]">
       <div className="flex flex-col items-start gap-4">
-        <div className="flex gap-3">
+        <div className="flex gap-3 items-center">
           <SymbolSelector value={symbol} onChange={handleSymbolChange} />
           <TimeScaleSelector value={timeScale} onChange={handleTimeScaleChange} />
           <IndicatorSelector
