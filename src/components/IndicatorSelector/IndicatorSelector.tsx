@@ -41,22 +41,20 @@ export const IndicatorSelector = ({
         { period }
       );
 
-      const allFormattedData: { [key: string]: LineData[] } = {};
+      const allFormattedData = Object.entries(indicatorResults).reduce(
+        (acc, [key, values]) => {
+          const formattedData = values
+            .map((value, index) => ({
+              value,
+              time: candlestickData[index].time,
+            }))
+            .filter((item): item is LineData => item.value !== undefined);
 
-      for (const indicatorKey in indicatorResults) {
-        const indicators = indicatorResults[indicatorKey];
-        const formattedData: LineData[] = [];
-
-        for (let i = 0; i < indicators.length; i++) {
-          if (indicators[i] !== undefined) {
-            formattedData.push({
-              time: candlestickData[i].time,
-              value: indicators[i]!,
-            });
-          }
-        }
-        allFormattedData[indicatorKey] = formattedData;
-      }
+          acc[key] = formattedData;
+          return acc;
+        },
+        {} as { [key: string]: LineData[] }
+      );
 
       onIndicatorChange(allFormattedData);
     } catch (error) {
