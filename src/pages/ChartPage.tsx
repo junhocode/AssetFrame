@@ -7,7 +7,7 @@ import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
 import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
 import { TimeScaleSelector } from "@/components/TimeScaleSelector/TimeScaleSelector";
 import { IndicatorSelector } from '@/components/IndicatorSelector/IndicatorSelector';
-import useFormattedChartData from "@/hooks/useFormattedChartData";
+import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import type { LineData } from "lightweight-charts";
 import { Counter } from "@/components/ui/shadcn-io/counter";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -74,6 +74,7 @@ export default function ChartPage() {
           <TimeScaleSelector value={timeScale} onChange={handleTimeScaleChange} />
           <IndicatorSelector
             candlestickData={candlestickData}
+            period={period}
             onIndicatorChange={setIndicatorData}
           />
           <Counter
