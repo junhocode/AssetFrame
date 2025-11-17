@@ -1,38 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { VirtualList } from "@/components/VirtualList/VirtualList";
 import { Button } from "@/components/ui/button";
 import { useSymbols } from "@/hooks/useSymbols";
 import { Command, CommandEmpty, CommandInput } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import type { SelectorProps } from "@/types/selector.type";
-import * as S from "./SymbolSelector.styles"
+import * as S from "./SymbolSelector.styles";
 
-function ListLoader() {
-  return (
-    <div className="flex items-center justify-center p-4 text-sm text-muted-foreground">
-      Loading...
-    </div>
-  );
-}
-
-export function SymbolSelector({ value, onChange }: SelectorProps) {
+export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isContentLoaded, setIsContentLoaded] = useState(false);
 
-  const { allSymbols, filteredSymbols, isLoading, isError } = useSymbols(searchQuery);
-
-  useEffect(() => {
-    if (open) {
-      const timer = setTimeout(() => {
-        setIsContentLoaded(true);
-      }, 50);
-      return () => clearTimeout(timer);
-    } else {
-      setIsContentLoaded(false);
-    }
-  }, [open]);
+  const { allSymbols, filteredSymbols, isLoading, isError } =
+    useSymbols(searchQuery);
 
   const handleSelect = (symbolValue: string) => {
     onChange(symbolValue.toUpperCase());
@@ -44,18 +29,14 @@ export function SymbolSelector({ value, onChange }: SelectorProps) {
   if (isLoading)
     return (
       <Button variant="outline" disabled className={S.combobox}>
-        Loading symbols...
+        종목을 불러오는 중..
       </Button>
     );
 
   if (isError)
     return (
-      <Button
-        variant="outline"
-        disabled
-        className={S.errorCombobox}
-      >
-        Failed to load
+      <Button variant="outline" disabled className={S.errorCombobox}>
+        종목을 불러오는데 실패했습니다, 재시도 해주세요.
       </Button>
     );
 
@@ -70,28 +51,27 @@ export function SymbolSelector({ value, onChange }: SelectorProps) {
         >
           {value
             ? allSymbols?.find((s) => s.value === value)?.label
-            : "Select ..."}
-          <ChevronsUpDown className={S.chevronIcon}/>
+            : "종목 선택..."}
+          <ChevronsUpDown className={S.chevronIcon} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className={S.popoverContent}>
         <Command shouldFilter={false}>
           <CommandInput
-            placeholder="Search symbol..."
+            placeholder="종목 검색..."
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
           <div className={S.virtualList}>
-            {!isContentLoaded ? (
-              <ListLoader />
-            ) : filteredSymbols.length > 0 ? (
+            {filteredSymbols.length > 0 ? (
               <VirtualList
                 items={filteredSymbols}
                 estimateSize={32}
                 renderItem={(symbol) => (
-                  <div 
-                  className={S.virtualItem}
-                  onClick={() => handleSelect(symbol.value)}>
+                  <div
+                    className={S.virtualItem}
+                    onClick={() => handleSelect(symbol.value)}
+                  >
                     <span>{symbol.label}</span>
                     <Check
                       className={S.getCheckIconStyles(value, symbol.value)}
@@ -100,11 +80,11 @@ export function SymbolSelector({ value, onChange }: SelectorProps) {
                 )}
               />
             ) : (
-              <CommandEmpty>No symbol found.</CommandEmpty>
+              <CommandEmpty>해당하는 종목이 없습니다.</CommandEmpty>
             )}
           </div>
         </Command>
       </PopoverContent>
     </Popover>
   );
-}
+};
