@@ -1,4 +1,12 @@
+import type { CandlestickData, LineData } from "lightweight-charts";
+
 export interface SelectorProps {
   value: string;
   onChange: (value: string) => void;
+}
+
+export interface IndicatorSelectorProps {
+  candlestickData: CandlestickData[];
+  period: number;
+  onIndicatorChange: (indicatorData: { [key: string]: LineData[] }) => void;
 }

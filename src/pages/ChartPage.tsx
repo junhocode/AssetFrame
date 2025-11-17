@@ -5,7 +5,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
 import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
 import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
-import TimeScaleSelector from "@/components/TimeScaleSelector/TimeScaleSelector";
+import { TimeScaleSelector } from "@/components/TimeScaleSelector/TimeScaleSelector";
 import { IndicatorSelector } from '@/components/IndicatorSelector/IndicatorSelector';
 import useFormattedChartData from "@/hooks/useFormattedChartData";
 import type { LineData } from "lightweight-charts";

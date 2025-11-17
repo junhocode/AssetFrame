@@ -1,63 +1,86 @@
-import { useState, useEffect } from 'react';
-import { MultiSelect } from '../ui/multi-select';
-import { calculateIndicator, type IndicatorType } from '@/utils/indicatorCalculator';
-import type { CandlestickData, LineData } from 'lightweight-charts';
-import { INDICATORS } from '@/constants/configs';
+import { useState, useEffect, useMemo } from "react";
+import { MultiSelect } from "../ui/multi-select";
+import {
+  calculateIndicator,
+  type IndicatorType,
+} from "@/utils/indicatorCalculator";
+import { INDICATORS } from "@/constants/configs";
+import type { LineData } from "lightweight-charts";
+import type { IndicatorSelectorProps } from "@/types/selector.type";
+import * as S from "./IndicatorSelector.styles";
 
-interface IndicatorSelectorProps {
-  candlestickData: CandlestickData[];
-  period: number;
-  onIndicatorChange: (indicatorData: { [key: string]: LineData[] }) => void;
-}
+export const IndicatorSelector = ({
+  candlestickData,
+  period,
+  onIndicatorChange,
+}: IndicatorSelectorProps) => {
+  const [selectedIndicators, setSelectedIndicators] = useState<string[]>([]);
 
-export const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestickData, period, onIndicatorChange }) => {
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
-  
+  const closePrices = useMemo(() => {
+    if (!candlestickData || candlestickData.length === 0) {
+      return [];
+    }
+    return candlestickData.map((d) => d.close);
+  }, [candlestickData]);
+
   useEffect(() => {
-    if (!candlestickData || candlestickData.length === 0 || selectedValues.length === 0) {
+    if (
+      !candlestickData ||
+      candlestickData.length === 0 ||
+      selectedIndicators.length === 0
+    ) {
       onIndicatorChange({});
       return;
     }
 
     try {
-      const closePrices = candlestickData.map(d => d.close);
-      const selectedIndicatorTypes = selectedValues as IndicatorType[];
-      const indicatorResults = calculateIndicator(selectedIndicatorTypes, closePrices, { period });
+      const selectedIndicatorTypes = selectedIndicators as IndicatorType[];
+      const indicatorResults = calculateIndicator(
+        selectedIndicatorTypes,
+        closePrices,
+        { period }
+      );
 
       const allFormattedData: { [key: string]: LineData[] } = {};
 
       for (const indicatorKey in indicatorResults) {
-        const values = indicatorResults[indicatorKey];
+        const indicators = indicatorResults[indicatorKey];
         const formattedData: LineData[] = [];
 
-        for (let i = 0; i < values.length; i++) {
-            if (values[i] !== undefined) {
-                formattedData.push({
-                    time: candlestickData[i].time,
-                    value: values[i]!,
-                });
-            }
+        for (let i = 0; i < indicators.length; i++) {
+          if (indicators[i] !== undefined) {
+            formattedData.push({
+              time: candlestickData[i].time,
+              value: indicators[i]!,
+            });
+          }
         }
         allFormattedData[indicatorKey] = formattedData;
       }
-      
+
       onIndicatorChange(allFormattedData);
     } catch (error) {
-      console.error("보조지표 계산 중 오류 발생:", error);
+      console.error(error);
       onIndicatorChange({});
     }
-  }, [selectedValues, period, candlestickData, onIndicatorChange]);
+  }, [
+    selectedIndicators,
+    period,
+    candlestickData,
+    closePrices,
+    onIndicatorChange,
+  ]);
 
   return (
-    <div className="flex items-center">
-      <MultiSelect 
+    <div className={S.multiSelectorContainer}>
+      <MultiSelect
         options={INDICATORS}
-        onValueChange={setSelectedValues}
-        defaultValue={selectedValues}
-        placeholder="Select indicators"
-        className="h-9 min-h-9"
+        onValueChange={setSelectedIndicators}
+        defaultValue={selectedIndicators}
+        placeholder="보조지표를 선택해 주세요.."
+        className={S.multiSelector}
         maxCount={1}
-        maxWidth='1'
+        maxWidth="1"
       />
     </div>
   );
