@@ -1,8 +1,8 @@
 import { useRef, useEffect, useState } from "react";
 import { createChart } from "lightweight-charts";
 import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
-import useFormattedChartData from "@/hooks/useFormattedChartData";
-import useChartInfiniteScroll from "@/hooks/useChartInfiniteScroll";
+import { useFormattedChartData } from "@/hooks/useFormattedChartData";
+import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
 import { useLatestTradePrice } from "@/hooks/useLatestTradePrice";
 import { getRandomColor } from "@/utils/randomColorGenarator";
 import {
@@ -156,7 +156,7 @@ export const KlineChart = ({
     });
 
     setIndicatorSeries(newSeriesMap);
-  }, [indicatorData, indicatorSeries]);
+  }, [indicatorData]);
 
   useEffect(() => {
     if (!candleSeriesRef.current) return;
