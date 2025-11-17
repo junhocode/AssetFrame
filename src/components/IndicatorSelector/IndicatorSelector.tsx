@@ -5,10 +5,11 @@ import type { CandlestickData, LineData } from 'lightweight-charts';
 
 interface IndicatorSelectorProps {
   candlestickData: CandlestickData[];
+  period: number;
   onIndicatorChange: (indicatorData: { [key: string]: LineData[] }) => void;
 }
 
-export const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestickData, onIndicatorChange }) => {
+export const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestickData, period, onIndicatorChange }) => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   
   const indicatorOptions = [
@@ -65,10 +66,5 @@ export const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestic
         maxWidth='1'
       />
     </div>
-    <Counter
-        number={period}
-        setNumber={setPeriod}
-        buttonProps={{ disabled: selectedValues.length === 0 }}
-      />
   );
 };
