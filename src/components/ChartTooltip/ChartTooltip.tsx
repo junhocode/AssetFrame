@@ -19,8 +19,8 @@ export const ChartTooltip = ({ top, left, candle, time, visible }: ChartTooltipP
         left: `${left}px`,
       }}
     >
-      <div className={S.priceLine}>Price</div>
-      <div className={S.priceValue}>{price.toFixed(2)}</div>
+      <div className={S.priceLine}>가격</div>
+      <div className={S.priceValue}>{price.toFixed(2)} USD</div>
       <div className={S.dateLine}>{dateStr}</div>
     </div>
   );
