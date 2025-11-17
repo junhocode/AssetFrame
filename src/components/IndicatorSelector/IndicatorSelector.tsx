@@ -8,10 +8,9 @@ interface IndicatorSelectorProps {
   onIndicatorChange: (indicatorData: { [key: string]: LineData[] }) => void;
 }
 
-const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestickData, onIndicatorChange }) => {
+export const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestickData, onIndicatorChange }) => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
-  const [period, setPeriod] = useState(20);
-
+  
   const indicatorOptions = [
     { value: "SMA", label: "SMA" },
     { value: "EMA", label: "EMA" },
@@ -55,25 +54,21 @@ const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestickData, 
   }, [selectedValues, period, candlestickData, onIndicatorChange]);
 
   return (
-    <div className="flex items-center gap-2 max-w-80">
+    <div className="flex items-center">
       <MultiSelect 
         options={indicatorOptions}
         onValueChange={setSelectedValues}
         defaultValue={selectedValues}
         placeholder="Select indicators"
-        className="h-9 min-h-9 py-1"
+        className="h-9 min-h-9"
         maxCount={1}
         maxWidth='1'
       />
-      <input
-        type="number"
-        value={period}
-        onChange={(e) => setPeriod(parseInt(e.target.value, 10) || 1)}
-        min="1"
-        className="p-2 border rounded w-20"
-      />
     </div>
+    <Counter
+        number={period}
+        setNumber={setPeriod}
+        buttonProps={{ disabled: selectedValues.length === 0 }}
+      />
   );
 };
-
-export default IndicatorSelector;

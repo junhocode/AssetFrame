@@ -6,9 +6,9 @@ import { motion, type HTMLMotionProps, type Transition } from 'motion/react';
 import {
   SlidingNumber,
   type SlidingNumberProps,
-} from '@repo/sliding-number';
-import { Button } from '@repo/shadcn-ui/components/ui/button';
-import { cn } from '@repo/shadcn-ui/lib/utils';
+} from '@/components/ui/shadcn-io/sliding-number/index';
+import { Button } from '../../button';
+import { cn } from '@/lib/utils';
  
 type CounterProps = HTMLMotionProps<'div'> & {
   number: number;
@@ -33,14 +33,14 @@ function Counter({
       layout
       transition={transition}
       className={cn(
-        'flex items-center gap-x-2 p-1 rounded-xl bg-neutral-100 dark:bg-neutral-800',
-        className,
+        'flex items-center gap-x-2 p-1 rounded-xl ',
+        className,                 
       )}
       {...props}
     >
       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
         <Button
-          size="icon"
+          size="icon-sm"
           {...buttonProps}
           onClick={() => setNumber(number - 1)}
           className={cn(
@@ -55,16 +55,16 @@ function Counter({
       <SlidingNumber
         number={number}
         {...slidingNumberProps}
-        className={cn('text-lg', slidingNumberProps?.className)}
+        className={cn('text-md', slidingNumberProps?.className)}
       />
  
       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
         <Button
-          size="icon"
+          size="icon-sm"
           {...buttonProps}
           onClick={() => setNumber(number + 1)}
           className={cn(
-            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-2xl font-light pb-[3px]',
+            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-3xl font-light pb-[3px]',
             buttonProps?.className,
           )}
         >
