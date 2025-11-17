@@ -19,7 +19,7 @@ export const useInfiniteKlinesQuery = (
       QueryKey,
       number | undefined
     >,
-    'queryKey' | 'queryFn' | 'getNextPageParam' | 'initialPageParam'
+    "queryKey" | "queryFn" | "getNextPageParam" | "initialPageParam"
   >
 ) => {
   return useInfiniteQuery<
@@ -39,11 +39,14 @@ export const useInfiniteKlinesQuery = (
     getNextPageParam: (lastPage) => {
       const lastCandles = lastPage.klines;
 
-      if (typeof params.limit !== "number" || lastCandles.length < params.limit) {
+      if (
+        typeof params.limit !== "number" ||
+        lastCandles.length < params.limit
+      ) {
         return undefined;
       }
-      
-      const oldestCandleTime = lastCandles.sort((a,b) => a[0] - b[0])[0]?.[0];
+
+      const oldestCandleTime = lastCandles.sort((a, b) => a[0] - b[0])[0]?.[0];
 
       if (!oldestCandleTime) {
         return undefined;
@@ -54,7 +57,7 @@ export const useInfiniteKlinesQuery = (
 
     initialPageParam: undefined,
     enabled: !!params.symbol && typeof params.limit === "number",
-    
+
     ...options,
   });
 };

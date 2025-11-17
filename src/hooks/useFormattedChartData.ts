@@ -3,7 +3,7 @@ import type { KlinesData } from "@/types/kline.type";
 import type { InfiniteData } from "@tanstack/react-query";
 import type { CandlestickData, HistogramData, UTCTimestamp } from "lightweight-charts";
 
-const useFormattedChartData = (data: InfiniteData<KlinesData> | undefined) => {
+export const useFormattedChartData = (data: InfiniteData<KlinesData> | undefined) => {
   const formattedData = useMemo(() => {
     if (!data?.pages || data.pages.length === 0) {
       return { candlestickData: [], volumeData: [] };
@@ -41,5 +41,3 @@ const useFormattedChartData = (data: InfiniteData<KlinesData> | undefined) => {
 
   return formattedData;
 };
-
-export default useFormattedChartData;

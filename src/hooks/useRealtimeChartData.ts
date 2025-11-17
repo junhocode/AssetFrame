@@ -1,12 +1,12 @@
-import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
-import useWebSocket from 'react-use-websocket';
-import { QUERY_KEYS } from '@/constants/queryKeys';
-import { parseWsKlineToRaw } from '@/utils/klineParser';
-import type { GetKlinesParams, KlinesData } from '@/types/kline.type';
+import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
+import useWebSocket from "react-use-websocket";
+import { QUERY_KEYS } from "@/constants/queryKeys";
+import { parseWsKlineToRaw } from "@/utils/klineParser";
+import type { GetKlinesParams, KlinesData } from "@/types/kline.type";
 
 const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
 
-const getWsUrl = (symbol: string, interval: string) => 
+const getWsUrl = (symbol: string, interval: string) =>
   `${WS_BASE_URL}/${symbol.toLowerCase()}@kline_${interval}`;
 
 export const useRealtimeChartData = (params: GetKlinesParams) => {
@@ -16,10 +16,10 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
   useWebSocket(wsUrl, {
     onMessage: (event) => {
       const message = JSON.parse(event.data);
-      if (message.e !== 'kline') return;
+      if (message.e !== "kline") return;
 
       const newRawKline = parseWsKlineToRaw(message.k);
-      const newKlineTime = newRawKline[0]; 
+      const newKlineTime = newRawKline[0];
 
       queryClient.setQueryData<InfiniteData<KlinesData>>(
         QUERY_KEYS.klines.list(params),
@@ -30,22 +30,24 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
 
           const newData = {
             ...oldData,
-            pages: oldData.pages.map(page => ({
-              klines: [...page.klines], 
+            pages: oldData.pages.map((page) => ({
+              klines: [...page.klines],
             })),
           };
 
           const latestPage = newData.pages[newData.pages.length - 1];
 
-          const existingKlineIndex = latestPage.klines.findIndex(k => k[0] === newKlineTime);
+          const existingKlineIndex = latestPage.klines.findIndex(
+            (k) => k[0] === newKlineTime
+          );
 
           if (existingKlineIndex !== -1) {
             latestPage.klines[existingKlineIndex] = newRawKline;
           } else {
             latestPage.klines.push(newRawKline);
-            latestPage.klines.sort((a,b) => a[0] - b[0]);
+            latestPage.klines.sort((a, b) => a[0] - b[0]);
           }
-  
+
           return newData;
         }
       );
@@ -53,4 +55,4 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
     shouldReconnect: () => true,
     reconnectInterval: 3000,
   });
-};     
+};

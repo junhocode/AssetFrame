@@ -3,7 +3,7 @@ import { FETCHPAGE_THRESHOLD } from "@/constants/configs";
 import type { LogicalRange } from "lightweight-charts";
 import type { InfiniteScrollParams } from "@/types/chart.type";
 
-const useChartInfiniteScroll = ({
+export const useChartInfiniteScroll = ({
   chartRef,
   fetchNextPage,
   hasNextPage,
@@ -32,5 +32,3 @@ const useChartInfiniteScroll = ({
 
   return { handleVisibleLogicalRangeChange, visibleRangeRef, scrollLockRef };
 };
-
-export default useChartInfiniteScroll;

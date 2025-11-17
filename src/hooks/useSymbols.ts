@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSymbolsQuery } from "@/queries/useSymbolsQuery";
 
-export function useSymbols(searchQuery: string) {
+export const useSymbols = (searchQuery: string) => {
   const { data: allSymbols, isLoading, isError } = useSymbolsQuery();
 
   const filteredSymbols = useMemo(() => {
@@ -14,4 +14,4 @@ export function useSymbols(searchQuery: string) {
   }, [allSymbols, searchQuery]);
 
   return { allSymbols, filteredSymbols, isLoading, isError };
-}
+};
