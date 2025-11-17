@@ -10,3 +10,10 @@ export interface IndicatorSelectorProps {
   period: number;
   onIndicatorChange: (indicatorData: { [key: string]: LineData[] }) => void;
 }
+
+export interface VirtualListProps<T> {
+  items: T[];
+  renderItem: (item: T) => React.ReactNode;
+  estimateSize: number;
+  containerClassName?: string;
+}
