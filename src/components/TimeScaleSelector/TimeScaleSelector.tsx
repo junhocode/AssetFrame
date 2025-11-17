@@ -3,7 +3,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { SelectorProps } from "@/types/selector.type";
 import * as S from "./TimeScaleSelector.styles";
 
-export default function TimeScaleSelector({ value, onChange }: SelectorProps) {
+export const TimeScaleSelector = ({ value, onChange }: SelectorProps) => {
   const handleValueChange = (newValue: string) => {
     if (newValue) {
       onChange(newValue);
