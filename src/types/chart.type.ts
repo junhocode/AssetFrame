@@ -10,7 +10,7 @@ import type { InfiniteData } from "@tanstack/react-query";
 export interface KlineChartProps {
   data: InfiniteData<KlinesData> | undefined;
   fetchNextPage: () => void;
-  hasNextPage: boolean | undefined;
+  hasNextPage: boolean;
   isFetchingNextPage: boolean;
   params: {
     symbol: string;

@@ -1,37 +1,44 @@
 import { useRef, useEffect, useState } from "react";
 import { createChart } from "lightweight-charts";
-import type {
-  IChartApi,
-  ISeriesApi,
-  CandlestickData,
-} from "lightweight-charts";
+import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
 import useFormattedChartData from "@/hooks/useFormattedChartData";
 import useChartInfiniteScroll from "@/hooks/useChartInfiniteScroll";
 import { useLatestTradePrice } from "@/hooks/useLatestTradePrice";
+import { getRandomColor } from "@/utils/randomColorGenarator";
 import {
   CANDLESTICK_SERIES_OPTIONS,
   VOLUME_SERIES_OPTIONS,
   VOLUME_SCALE_OPTIONS,
   VOLUME_PRICE_SCALE_ID,
+  INITIAL_TOOLTIP_STATE,
 } from "@/constants/configs";
-import type { KlineChartProps } from "@/types/chart.type";
+import type {
+  IChartApi,
+  ISeriesApi,
+  CandlestickData,
+} from "lightweight-charts";
+import type { ChartTooltipProps, KlineChartProps } from "@/types/chart.type";
 import * as S from "./KlineChart.styles";
 
-export default function KlineChart({
+export const KlineChart = ({
   data,
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
   params,
-  indicatorData, 
-}: KlineChartProps) {
+  indicatorData,
+}: KlineChartProps) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
-  const tooltipRef = useRef<HTMLDivElement | null>(null);
 
-  const [indicatorSeries, setIndicatorSeries] = useState(new Map<string, ISeriesApi<"Line">>());
+  const [indicatorSeries, setIndicatorSeries] = useState(
+    new Map<string, ISeriesApi<"Line">>()
+  );
+  const [tooltipState, setTooltipState] = useState<ChartTooltipProps>(
+    INITIAL_TOOLTIP_STATE
+  );
 
   const { candlestickData, volumeData } = useFormattedChartData(data);
   const { handleVisibleLogicalRangeChange, visibleRangeRef, scrollLockRef } =
@@ -48,7 +55,9 @@ export default function KlineChart({
     if (!chartContainerRef.current || chartRef.current) return;
 
     const chart = createChart(chartContainerRef.current, S.chartOptions);
-    chart.timeScale().subscribeVisibleLogicalRangeChange(handleVisibleLogicalRangeChange);
+    chart
+      .timeScale()
+      .subscribeVisibleLogicalRangeChange(handleVisibleLogicalRangeChange);
 
     const candleSeries = chart.addCandlestickSeries(CANDLESTICK_SERIES_OPTIONS);
     const volumeSeries = chart.addHistogramSeries(VOLUME_SERIES_OPTIONS);
@@ -58,61 +67,33 @@ export default function KlineChart({
     candleSeriesRef.current = candleSeries;
     volumeSeriesRef.current = volumeSeries;
 
-    tooltipRef.current = document.createElement("div");
-    tooltipRef.current.style.position = "absolute";
-    tooltipRef.current.style.display = "none";
-    tooltipRef.current.style.pointerEvents = "none";
-    tooltipRef.current.style.zIndex = "1000";
-    tooltipRef.current.style.background = "white";
-    tooltipRef.current.style.border = "1px solid rgba(38,166,154,1)";
-    tooltipRef.current.style.borderRadius = "4px";
-    tooltipRef.current.style.padding = "8px";
-    tooltipRef.current.style.fontSize = "12px";
-    tooltipRef.current.style.boxShadow = "0 2px 6px rgba(0,0,0,0.15)";
-    tooltipRef.current.style.color = "black";
-    chartContainerRef.current.appendChild(tooltipRef.current);
-    
     chart.subscribeCrosshairMove((param) => {
-        const container = chartContainerRef.current;
-        const series = candleSeriesRef.current;
-        const tooltip = tooltipRef.current;
-        if (!container || !series || !tooltip) return;
-  
-        if (
-          !param.point || !param.time || param.point.x < 0 ||
-          param.point.x > container.clientWidth || param.point.y < 0 ||
-          param.point.y > container.clientHeight
-        ) {
-          tooltip.style.display = "none";
-          return;
-        }
-  
-        const candle = param.seriesData.get(series) as CandlestickData;
-        if (!candle) return;
-  
-        const price = candle.close ?? candle.customValues;
-        const date = new Date((param.time as number) * 1000);
-        const dateStr = date.toLocaleString("ko-KR");
-  
-        tooltip.innerHTML = `
-          <div style="font-weight: bold; color: rgba(38,166,154,1)">Price</div>
-          <div style="font-size: 16px; margin-top: 4px;">${price?.toFixed(2)}</div>
-          <div style="margin-top: 4px; color: gray;">${dateStr}</div>
-        `;
-  
-        const tooltipWidth = 100;
-        const tooltipHeight = 70;
-        const margin = 12;
-  
-        let left = param.point.x + margin;
-        if (left > container.clientWidth - tooltipWidth) left = param.point.x - tooltipWidth - margin;
-  
-        let top = param.point.y + margin;
-        if (top > container.clientHeight - tooltipHeight) top = param.point.y - tooltipHeight - margin;
-  
-        tooltip.style.left = `${left}px`;
-        tooltip.style.top = `${top}px`;
-        tooltip.style.display = "block";
+      const container = chartContainerRef.current;
+      const series = candleSeriesRef.current;
+      if (!container || !series || !param.point || !param.time) {
+        setTooltipState((prev) => ({ ...prev, visible: false }));
+        return;
+      }
+
+      const candle = param.seriesData.get(series) as CandlestickData;
+      if (!candle) {
+        setTooltipState((prev) => ({ ...prev, visible: false }));
+        return;
+      }
+
+      const tooltipWidth = 100;
+      const tooltipHeight = 70;
+      const margin = 12;
+
+      let left = param.point.x + margin;
+      if (left > container.clientWidth - tooltipWidth)
+        left = param.point.x - tooltipWidth - margin;
+
+      let top = param.point.y + margin;
+      if (top > container.clientHeight - tooltipHeight)
+        top = param.point.y - tooltipHeight - margin;
+
+      setTooltipState({ top, left, candle, time: param.time, visible: true });
     });
 
     return () => {
@@ -123,18 +104,20 @@ export default function KlineChart({
 
   useEffect(() => {
     if (!candleSeriesRef.current || !volumeSeriesRef.current) return;
-    
+
     candleSeriesRef.current.setData(candlestickData);
     volumeSeriesRef.current.setData(volumeData);
-    
+
     if (visibleRangeRef.current && data?.pages) {
       const addedDataCount = data.pages[0]?.klines.length ?? 0;
       const newFrom = visibleRangeRef.current.from + addedDataCount;
       const newTo = visibleRangeRef.current.to + addedDataCount;
-      
-      chartRef.current?.timeScale().setVisibleLogicalRange({ from: newFrom, to: newTo });
+
+      chartRef.current
+        ?.timeScale()
+        .setVisibleLogicalRange({ from: newFrom, to: newTo });
       visibleRangeRef.current = null;
-      
+
       setTimeout(() => {
         scrollLockRef.current = false;
       }, 100);
@@ -155,7 +138,7 @@ export default function KlineChart({
       }
     });
 
-    currentIndicatorKeys.forEach(key => {
+    currentIndicatorKeys.forEach((key) => {
       const dataForSeries = indicatorData[key];
       if (!dataForSeries) return;
 
@@ -173,7 +156,7 @@ export default function KlineChart({
     });
 
     setIndicatorSeries(newSeriesMap);
-  }, [indicatorData]); 
+  }, [indicatorData, indicatorSeries]);
 
   useEffect(() => {
     if (!candleSeriesRef.current) return;
@@ -198,5 +181,13 @@ export default function KlineChart({
     return () => clearInterval(intervalId);
   }, [candlestickData, latestPriceRef]);
 
-  return <div ref={chartContainerRef} className="relative w-full h-full rounded-lg overflow-hidden shadow-lg" />;
+  return (
+    <>
+    <div
+      ref={chartContainerRef}
+      className={S.chart}
+    />
+    <ChartTooltip {...tooltipState} />
+    </>
+  );
 }

@@ -31,3 +31,5 @@ export const chartOptions = {
 export const statusContainer = 'flex items-center justify-center';
 
 export const errorContainer = `${statusContainer} text-red-500`;
+
+export const chart = 'relative w-full h-full rounded-lg overflow-hidden shadow-lg'

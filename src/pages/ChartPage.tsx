@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState } from "react";
-import KlineChart from "@/components/KlineChart/KlineChart";
+import { KlineChart } from "@/components/KlineChart/KlineChart";
 import { Spinner } from "@/components/ui/spinner";
 import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
 import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
