@@ -80,18 +80,22 @@ export const KlineChart = ({
         setTooltipState((prev) => ({ ...prev, visible: false }));
         return;
       }
+      
+      const chartRect = container.getBoundingClientRect();
 
       const tooltipWidth = 100;
       const tooltipHeight = 70;
-      const margin = 12;
+      const margin = 15;
 
-      let left = param.point.x + margin;
-      if (left > container.clientWidth - tooltipWidth)
-        left = param.point.x - tooltipWidth - margin;
+      let left = chartRect.left + param.point.x + margin;
+      if (left + tooltipWidth > window.innerWidth) { 
+        left = chartRect.left + param.point.x - tooltipWidth - margin;
+      }
 
-      let top = param.point.y + margin;
-      if (top > container.clientHeight - tooltipHeight)
-        top = param.point.y - tooltipHeight - margin;
+      let top = chartRect.top + param.point.y - tooltipHeight - margin;
+      if (top < 0) {
+        top = chartRect.top + param.point.y + margin; 
+      }
 
       setTooltipState({ top, left, candle, time: param.time, visible: true });
     });
