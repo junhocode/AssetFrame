@@ -1,4 +1,4 @@
-import { intervals } from "@/constants/configs";
+import { INTERVALS } from "@/constants/configs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { SelectorProps } from "@/types/selector.type";
 import * as S from "./TimeScaleSelector.styles";
@@ -18,7 +18,7 @@ export default function TimeScaleSelector({ value, onChange }: SelectorProps) {
         onValueChange={handleValueChange}
         className={S.toggleGroup}
       >
-        {intervals.map((interval) => (
+        {INTERVALS.map((interval) => (
           <ToggleGroupItem
             key={interval}
             value={interval}

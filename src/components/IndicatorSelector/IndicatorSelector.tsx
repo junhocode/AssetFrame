@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { calculateIndicator, type IndicatorType } from '@/utils/indicatorCalculator';
 import { MultiSelect } from '../ui/multi-select';
+import { calculateIndicator, type IndicatorType } from '@/utils/indicatorCalculator';
 import type { CandlestickData, LineData } from 'lightweight-charts';
+import { INDICATORS } from '@/constants/configs';
 
 interface IndicatorSelectorProps {
   candlestickData: CandlestickData[];
@@ -12,13 +13,6 @@ interface IndicatorSelectorProps {
 export const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestickData, period, onIndicatorChange }) => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   
-  const indicatorOptions = [
-    { value: "SMA", label: "SMA" },
-    { value: "EMA", label: "EMA" },
-    { value: "WMA", label: "WMA" },
-    { value: "RSI", label: "RSI" }
-  ];
-
   useEffect(() => {
     if (!candlestickData || candlestickData.length === 0 || selectedValues.length === 0) {
       onIndicatorChange({});
@@ -57,7 +51,7 @@ export const IndicatorSelector: React.FC<IndicatorSelectorProps> = ({ candlestic
   return (
     <div className="flex items-center">
       <MultiSelect 
-        options={indicatorOptions}
+        options={INDICATORS}
         onValueChange={setSelectedValues}
         defaultValue={selectedValues}
         placeholder="Select indicators"
