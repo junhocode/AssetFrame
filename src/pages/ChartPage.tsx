@@ -11,6 +11,7 @@ import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import type { LineData } from "lightweight-charts";
 import { Counter } from "@/components/ui/shadcn-io/counter";
 import { keepPreviousData } from "@tanstack/react-query";
+import * as S from "./ChartPage.styles"
 
 export default function ChartPage() {
   const [symbol, setSymbol] = useState<string>("BTCUSDT");
@@ -51,7 +52,7 @@ export default function ChartPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col justify-center items-center gap-4 h-screen w-screen bg-[#ece8e8]">
+      <div className={S.loading}>
         <Spinner />
         <span>Loading Chart...</span>
       </div>
@@ -60,16 +61,16 @@ export default function ChartPage() {
 
   if (isError) {
     return (
-      <div className="flex justify-center items-center h-screen w-screen bg-[#ece8e8]">
+      <div className={S.container}>
         Sorry, there has been an error.. Please refresh!
       </div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center h-screen w-screen bg-[#ece8e8]">
-      <div className="flex flex-col items-start gap-4">
-        <div className="flex gap-3 items-center">
+    <div className={S.container}>
+      <div className={S.set}>
+        <div className={S.selectors}>
           <SymbolSelector value={symbol} onChange={handleSymbolChange} />
           <TimeScaleSelector value={timeScale} onChange={handleTimeScaleChange} />
           <IndicatorSelector
@@ -97,7 +98,7 @@ export default function ChartPage() {
             indicatorData={indicatorData}
           />
           {isFetching && !isFetchingNextPage && (
-             <div className="absolute inset-0 z-10 flex flex-col justify-center items-center gap-2 bg-gray-200 bg-opacity-30">
+             <div className={S.fetching}>
               <Spinner />
             </div>
           )}
