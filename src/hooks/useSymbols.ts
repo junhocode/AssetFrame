@@ -14,4 +14,4 @@ export const useSymbols = (searchQuery: string) => {
   }, [allSymbols, searchQuery]);
 
   return { allSymbols, filteredSymbols, isLoading, isError };
-};
+}
