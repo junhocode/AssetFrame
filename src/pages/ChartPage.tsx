@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from "react"
 import { useState } from "react";
 import { KlineChart } from "@/components/KlineChart/KlineChart";
 import { Spinner } from "@/components/ui/spinner";
@@ -7,13 +7,13 @@ import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
 import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
 import { TimeScaleSelector } from "@/components/TimeScaleSelector/TimeScaleSelector";
 import { IndicatorSelector } from '@/components/IndicatorSelector/IndicatorSelector';
+import { PeriodCounter } from "@/components/PeriodCounter/PeriodCounter";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import type { LineData } from "lightweight-charts";
-import { Counter } from "@/components/ui/shadcn-io/counter";
 import { keepPreviousData } from "@tanstack/react-query";
 import * as S from "./ChartPage.styles"
 
-export default function ChartPage() {
+export const ChartPage = () => {
   const [symbol, setSymbol] = useState<string>("BTCUSDT");
   const [timeScale, setTimeScale] = useState<string>("1m");
   const [indicatorData, setIndicatorData] = useState<{ [key: string]: LineData[] }>({});
@@ -50,6 +50,8 @@ export default function ChartPage() {
     setTimeScale(timeScale);
   };
 
+  const isDisabled = Object.keys(indicatorData).length === 0
+
   if (isLoading) {
     return (
       <div className={S.loading}>
@@ -78,10 +80,10 @@ export default function ChartPage() {
             period={period}
             onIndicatorChange={setIndicatorData}
           />
-          <Counter
-            number={period}
-            setNumber={setPeriod}
-            buttonProps={{ disabled: Object.keys(indicatorData).length === 0 }}
+          <PeriodCounter
+            period={period}
+            setPeriod={setPeriod}
+            isDisabled={isDisabled}
           />
         </div>
         <div
