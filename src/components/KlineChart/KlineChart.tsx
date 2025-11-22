@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { createChart, ColorType } from "lightweight-charts";
+import { createChart } from "lightweight-charts";
 import { useAtomValue } from "jotai/react";
 import { darkModeAtom } from "@/atoms/themeAtom";
 import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
@@ -58,7 +58,7 @@ export const KlineChart = ({
   useEffect(() => {
     if (!chartContainerRef.current || chartRef.current) return;
 
-    const chart = createChart(chartContainerRef.current, S.chartOptions);
+    const chart = createChart(chartContainerRef.current, S.chartOptions(isDark));
     chart
       .timeScale()
       .subscribeVisibleLogicalRangeChange(handleVisibleLogicalRangeChange);
@@ -109,46 +109,6 @@ export const KlineChart = ({
       chartRef.current = null;
     };
   }, [handleVisibleLogicalRangeChange]);
-
-  useEffect(() => {
-    const chart = chartRef.current;
-    if (!chart) return;
-
-    const theme = isDark
-      ? {
-          background: "#171717", 
-          text: "#D4D4D4",      
-          grid: "#262626",       
-          border: "#404040",   
-          watermark: "rgba(255, 255, 255, 0.1)",
-        }
-      : {
-          background: "#FFFFFF", 
-          text: "#191919",       
-          grid: "rgba(197, 203, 206, 0.2)", 
-          border: "rgba(197, 203, 206, 0.8)", 
-          watermark: "rgba(197, 203, 206, 0.5)",
-        };
-
-    chart.applyOptions({
-      layout: {
-        background: { type: ColorType.Solid, color: theme.background },
-        textColor: theme.text,
-      },
-      grid: {
-        vertLines: { color: theme.grid },
-        horzLines: { color: theme.grid },
-      },
-      rightPriceScale: { borderColor: theme.border },
-      timeScale: { borderColor: theme.border },
-      watermark: {
-        color: theme.watermark,
-        visible: true,
-        text: "junhocode",
-        fontSize: 24,
-      },
-    });
-  }, [isDark]); 
 
   useEffect(() => {
     if (!candleSeriesRef.current || !volumeSeriesRef.current) return;
