@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 import { useState } from "react";
 import { KlineChart } from "@/components/KlineChart/KlineChart";
 import { Spinner } from "@/components/ui/spinner";
@@ -6,17 +6,19 @@ import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
 import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
 import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
 import { TimeScaleSelector } from "@/components/TimeScaleSelector/TimeScaleSelector";
-import { IndicatorSelector } from '@/components/IndicatorSelector/IndicatorSelector';
+import { IndicatorSelector } from "@/components/IndicatorSelector/IndicatorSelector";
 import { PeriodCounter } from "@/components/PeriodCounter/PeriodCounter";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import type { LineData } from "lightweight-charts";
 import { keepPreviousData } from "@tanstack/react-query";
-import * as S from "./ChartPage.styles"
+import * as S from "./ChartPage.styles";
 
 export const ChartPage = () => {
   const [symbol, setSymbol] = useState<string>("BTCUSDT");
   const [timeScale, setTimeScale] = useState<string>("1m");
-  const [indicatorData, setIndicatorData] = useState<{ [key: string]: LineData[] }>({});
+  const [indicatorData, setIndicatorData] = useState<{
+    [key: string]: LineData[];
+  }>({});
   const [period, setPeriod] = React.useState<number>(20);
 
   const chartParams = {
@@ -33,10 +35,9 @@ export const ChartPage = () => {
     isFetchingNextPage,
     isLoading,
     isError,
-  } = useInfiniteKlinesQuery(
-    chartParams,
-    { placeholderData: keepPreviousData }
-  );
+  } = useInfiniteKlinesQuery(chartParams, {
+    placeholderData: keepPreviousData,
+  });
 
   const { candlestickData } = useFormattedChartData(data);
 
@@ -50,7 +51,7 @@ export const ChartPage = () => {
     setTimeScale(timeScale);
   };
 
-  const isDisabled = Object.keys(indicatorData).length === 0
+  const isDisabled = Object.keys(indicatorData).length === 0;
 
   if (isLoading) {
     return (
@@ -74,7 +75,10 @@ export const ChartPage = () => {
       <div className={S.set}>
         <div className={S.selectors}>
           <SymbolSelector value={symbol} onChange={handleSymbolChange} />
-          <TimeScaleSelector value={timeScale} onChange={handleTimeScaleChange} />
+          <TimeScaleSelector
+            value={timeScale}
+            onChange={handleTimeScaleChange}
+          />
           <IndicatorSelector
             candlestickData={candlestickData}
             period={period}
@@ -100,7 +104,7 @@ export const ChartPage = () => {
             indicatorData={indicatorData}
           />
           {isFetching && !isFetchingNextPage && (
-             <div className={S.fetching}>
+            <div className={S.fetching}>
               <Spinner />
             </div>
           )}
@@ -108,4 +112,4 @@ export const ChartPage = () => {
       </div>
     </div>
   );
-}
+};

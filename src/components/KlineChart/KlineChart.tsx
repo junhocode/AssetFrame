@@ -80,7 +80,7 @@ export const KlineChart = ({
         setTooltipState((prev) => ({ ...prev, visible: false }));
         return;
       }
-      
+
       const chartRect = container.getBoundingClientRect();
 
       const tooltipWidth = 100;
@@ -88,13 +88,13 @@ export const KlineChart = ({
       const margin = 15;
 
       let left = chartRect.left + param.point.x + margin;
-      if (left + tooltipWidth > window.innerWidth) { 
+      if (left + tooltipWidth > window.innerWidth) {
         left = chartRect.left + param.point.x - tooltipWidth - margin;
       }
 
       let top = chartRect.top + param.point.y - tooltipHeight - margin;
       if (top < 0) {
-        top = chartRect.top + param.point.y + margin; 
+        top = chartRect.top + param.point.y + margin;
       }
 
       setTooltipState({ top, left, candle, time: param.time, visible: true });
@@ -160,7 +160,7 @@ export const KlineChart = ({
     });
 
     setIndicatorSeries(newSeriesMap);
-  }, [indicatorData]);
+  });
 
   useEffect(() => {
     if (!candleSeriesRef.current) return;
@@ -187,11 +187,8 @@ export const KlineChart = ({
 
   return (
     <>
-    <div
-      ref={chartContainerRef}
-      className={S.chart}
-    />
-    <ChartTooltip {...tooltipState} />
+      <div ref={chartContainerRef} className={S.chart} />
+      <ChartTooltip {...tooltipState} />
     </>
   );
-}
+};

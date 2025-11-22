@@ -20,7 +20,7 @@ export const useChartInfiniteScroll = ({
       const isNearLeftEdge = logicalRange.from < FETCHPAGE_THRESHOLD;
 
       if (isNearLeftEdge && hasNextPage && !isFetchingNextPage) {
-        scrollLockRef.current = true; 
+        scrollLockRef.current = true;
         visibleRangeRef.current = chartRef.current
           .timeScale()
           .getVisibleLogicalRange();

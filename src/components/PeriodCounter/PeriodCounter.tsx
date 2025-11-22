@@ -1,5 +1,10 @@
 import { Counter } from "../ui/shadcn-io/counter";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card"
+import {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from "@/components/ui/hover-card";
+import * as S from "./PeriodCounter.styles"
 
 interface PeriodCounterProps {
   period: number;
@@ -7,32 +12,37 @@ interface PeriodCounterProps {
   isDisabled: boolean;
 }
 
-export const PeriodCounter = ({period, setPeriod, isDisabled}: PeriodCounterProps) => {
-
-  return isDisabled? (
+export const PeriodCounter = ({
+  period,
+  setPeriod,
+  isDisabled,
+}: PeriodCounterProps) => {
+  return isDisabled ? (
     <HoverCard openDelay={100} closeDelay={50}>
-    <HoverCardTrigger asChild>
-    <Counter 
-        number={period}
-        setNumber={setPeriod}
-        disabled={isDisabled}
-        min={1}
-        max={60}
-    />
-    </HoverCardTrigger>
-    <HoverCardContent side="top">
+      <HoverCardTrigger asChild>
+        <Counter
+          number={period}
+          setNumber={setPeriod}
+          disabled={isDisabled}
+          min={1}
+          max={60}
+        />
+      </HoverCardTrigger>
+      <HoverCardContent side="top">
         <div>
-        <span className="text-red-400 text-sm">지표 표기 기간은 보조 지표를 선택한 후 조정할 수 있습니다.</span>
+          <span className={S.disabledMessage}>
+            지표 표기 기간은 보조 지표를 선택한 후 조정할 수 있습니다.
+          </span>
         </div>
-    </HoverCardContent>
+      </HoverCardContent>
     </HoverCard>
   ) : (
-    <Counter 
-        number={period}
-        setNumber={setPeriod}
-        disabled={isDisabled}
-        min={1}
-        max={60}
+    <Counter
+      number={period}
+      setNumber={setPeriod}
+      disabled={isDisabled}
+      min={1}
+      max={60}
     />
-  )
+  );
 };

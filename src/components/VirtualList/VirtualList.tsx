@@ -1,9 +1,14 @@
 import { useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { VirtualListProps } from "@/types/selector.type";
-import * as S from "./VirtualList.styles"
+import * as S from "./VirtualList.styles";
 
-export function VirtualList<T>({ items, renderItem, estimateSize, containerClassName }: VirtualListProps<T>) {
+export function VirtualList<T>({
+  items,
+  renderItem,
+  estimateSize,
+  containerClassName,
+}: VirtualListProps<T>) {
   const parentRef = useRef<HTMLDivElement>(null);
 
   const rowVirtualizer = useVirtualizer({

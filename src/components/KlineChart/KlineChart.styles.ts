@@ -15,21 +15,22 @@ export const chartOptions = {
     mode: CrosshairMode.Normal,
   },
   rightPriceScale: {
-    borderColor: "rgba(197, 203, 206, 0.8)"
+    borderColor: "rgba(197, 203, 206, 0.8)",
   },
   timeScale: {
-    borderColor: "rgba(197, 203, 206, 0.8)"
+    borderColor: "rgba(197, 203, 206, 0.8)",
   },
   watermark: {
-        color: 'rgba(197, 203, 206, 0.5)',
-        visible: true,
-        text: 'junhocode',
-        fontSize: 24,
-    },
+    color: "rgba(197, 203, 206, 0.5)",
+    visible: true,
+    text: "junhocode",
+    fontSize: 24,
+  },
 };
 
-export const statusContainer = 'flex items-center justify-center';
+export const statusContainer = "flex items-center justify-center";
 
 export const errorContainer = `${statusContainer} text-red-500`;
 
-export const chart = 'relative w-full h-full rounded-lg overflow-hidden shadow-lg'
+export const chart =
+  "relative w-full h-full rounded-lg overflow-hidden shadow-lg";

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { VirtualList } from "@/components/VirtualList/VirtualList";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,11 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
 
   const { allSymbols, filteredSymbols, isLoading, isError } =
     useSymbols(searchQuery);
+
+  const selectedSymbol = useMemo(() => {
+    if (!value || !allSymbols) return null;
+    return allSymbols.find((s) => s.symbol === value);
+  }, [allSymbols, value]);
 
   const handleSelect = (symbolValue: string) => {
     onChange(symbolValue.toUpperCase());
@@ -49,9 +54,20 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
           aria-expanded={open}
           className={S.combobox}
         >
-          {value
-            ? allSymbols?.find((s) => s.value === value)?.label
-            : "종목 선택..."}
+          <div className={S.selectedSymbolContainer}>
+            {selectedSymbol ? (
+              <>
+                <img
+                  src={selectedSymbol.logoUrl}
+                  alt={selectedSymbol.name}
+                  className={S.logoIcon}
+                />
+                <span>{selectedSymbol.name}</span>
+              </>
+            ) : (
+              "종목 선택..."
+            )}
+          </div>
           <ChevronsUpDown className={S.chevronIcon} />
         </Button>
       </PopoverTrigger>
@@ -70,11 +86,16 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
                 renderItem={(symbol) => (
                   <div
                     className={S.virtualItem}
-                    onClick={() => handleSelect(symbol.value)}
+                    onClick={() => handleSelect(symbol.symbol)}
                   >
-                    <span>{symbol.label}</span>
+                    <img
+                      src={symbol.logoUrl}
+                      alt={symbol.name}
+                      className={S.logoIconInList}
+                    />
+                    <span>{symbol.name}</span>
                     <Check
-                      className={S.getCheckIconStyles(value, symbol.value)}
+                      className={S.getCheckIconStyles(value, symbol.symbol)}
                     />
                   </div>
                 )}

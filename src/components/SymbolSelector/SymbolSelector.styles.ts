@@ -1,18 +1,28 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-export const combobox = "w-[200px] justify-between"
+export const combobox = "w-[200px] flex items-center justify-between";
 
-export const errorCombobox = "w-[200px] justify-between text-red-600"
+export const errorCombobox = "w-[200px] text-red-600";
 
-export const chevronIcon = "opacity-50"
+export const selectedSymbolContainer = "flex items-center";
 
-export const popoverContent = "w-[200px] p-0"
+export const chevronIcon = "ml-2 h-4 w-4 shrink-0 opacity-50";
 
-export const virtualList = "max-h-[200px] overflow-y-auto text-sm"
+export const popoverContent = "w-[200px] p-0";
 
-export const virtualItem = "flex items-center p-2 rounded-sm cursor-pointer hover:bg-accent"
+export const virtualList = "max-h-[200px] overflow-y-auto text-sm";
 
-export function getCheckIconStyles(selectedValue: string, itemValue: string): string {
+export const virtualItem =
+  "flex items-center p-2 rounded-sm cursor-pointer hover:bg-accent";
+
+export const logoIcon = "w-5 h-5 mr-2 rounded-full";
+
+export const logoIconInList = "w-5 h-5 mr-3 rounded-full";
+
+export function getCheckIconStyles(
+  selectedValue: string,
+  itemValue: string
+): string {
   return cn(
     "ml-auto h-4 w-4",
     selectedValue === itemValue ? "opacity-100" : "opacity-0"

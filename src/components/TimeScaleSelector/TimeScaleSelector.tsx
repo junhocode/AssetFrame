@@ -30,4 +30,4 @@ export const TimeScaleSelector = ({ value, onChange }: SelectorProps) => {
       </ToggleGroup>
     </div>
   );
-}
+};
