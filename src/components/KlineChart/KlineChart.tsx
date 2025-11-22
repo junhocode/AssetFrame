@@ -111,6 +111,11 @@ export const KlineChart = ({
   }, [handleVisibleLogicalRangeChange]);
 
   useEffect(() => {
+    if (!chartRef.current) return;
+    chartRef.current.applyOptions(S.chartOptions(isDark));
+  }, [isDark]);
+
+  useEffect(() => {
     if (!candleSeriesRef.current || !volumeSeriesRef.current) return;
 
     candleSeriesRef.current.setData(candlestickData);
