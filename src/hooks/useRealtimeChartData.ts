@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
-import useWebSocket from "react-use-websocket";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { parseWsKlineToRaw } from "@/utils/klineParser";
 import type { GetKlinesParams, KlinesData } from "@/types/kline.type";
@@ -13,7 +14,7 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
   const queryClient = useQueryClient();
   const wsUrl = params.symbol ? getWsUrl(params.symbol, params.interval) : null;
 
-  useWebSocket(wsUrl, {
+  const { readyState } = useWebSocket(wsUrl, {
     onMessage: (event) => {
       const message = JSON.parse(event.data);
       if (message.e !== "kline") return;
@@ -54,5 +55,22 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
     },
     shouldReconnect: () => true,
     reconnectInterval: 3000,
+    
+    heartbeat: {
+      message: 'ping',
+      returnMessage: 'pong',
+      timeout: 5000, 
+      interval: 3000,
+    },
   });
+
+  useEffect(() => {
+    const status = readyState === ReadyState.OPEN;
+    queryClient.setQueryData(['ws-status'], status);
+    
+  }, [readyState, queryClient]);
+
+  const isConnected = readyState === ReadyState.OPEN;
+
+  return { isConnected };
 };
