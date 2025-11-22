@@ -11,10 +11,10 @@ import { PeriodCounter } from "@/components/PeriodCounter/PeriodCounter";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import type { LineData } from "lightweight-charts";
 import { keepPreviousData } from "@tanstack/react-query";
-import SystemStatus from "@/components/SystemStatus/SystemStatus";
+import { SystemStatus } from "@/components/SystemStatus/SystemStatus";
 import * as S from "./ChartPage.styles";
-import ThemeSwitcher from "@/components/ThemeSwitcher/ThemeSwitcher";
-import GitHubButton from "@/components/GitHubButton/GithubButton";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher/ThemeSwitcher";
+import { GitHubButton } from "@/components/GitHubButton/GithubButton";
 
 export const ChartPage = () => {
   const [symbol, setSymbol] = useState<string>("BTCUSDT");
@@ -56,6 +56,8 @@ export const ChartPage = () => {
 
   const isDisabled = Object.keys(indicatorData).length === 0;
 
+  const renderContent = () => {
+
   if (isLoading) {
     return (
       <div className={S.loading}>
@@ -78,8 +80,8 @@ export const ChartPage = () => {
        <div className="absolute flex top-5 right-5 z-50">
          <SystemStatus />
          <div className="ml-2">
-         <ThemeSwitcher />
          <GitHubButton />
+         <ThemeSwitcher />
          </div>
       </div>
       <div className={S.set}>
@@ -122,4 +124,11 @@ export const ChartPage = () => {
       </div>
     </div>
   );
+}
+return (
+  <div className={S.container}>
+    {renderContent()}
+  </div>
+);
+
 };
