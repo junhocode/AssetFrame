@@ -2,7 +2,7 @@ export const loading =
   "flex flex-col justify-center items-center gap-4 h-screen w-screen bg-[#ece8e8]";
 
 export const container =
-  "flex justify-center items-center h-screen w-screen bg-[#ece8e8]";
+  "relative flex justify-center items-center h-screen w-screen bg-[#ece8e8]";
 
 export const set = "flex flex-col items-start gap-4";
 

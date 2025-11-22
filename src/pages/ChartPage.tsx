@@ -11,6 +11,7 @@ import { PeriodCounter } from "@/components/PeriodCounter/PeriodCounter";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import type { LineData } from "lightweight-charts";
 import { keepPreviousData } from "@tanstack/react-query";
+import SystemStatus from "@/components/SystemStatus/SystemStatus";
 import * as S from "./ChartPage.styles";
 
 export const ChartPage = () => {
@@ -72,6 +73,9 @@ export const ChartPage = () => {
 
   return (
     <div className={S.container}>
+       <div className="absolute top-5 right-5 z-50">
+         <SystemStatus />
+      </div>
       <div className={S.set}>
         <div className={S.selectors}>
           <SymbolSelector value={symbol} onChange={handleSymbolChange} />
