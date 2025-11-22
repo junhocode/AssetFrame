@@ -31,32 +31,14 @@ export const FETCHPAGE_THRESHOLD = 20;
 export const INTERVALS = ["1s", "1m", "15m", "1h", "4h", "1d", "1w", "1M"];
 
 export const INDICATORS = [
-  { value: "ADL", label: "Accumulation Distribution Line (ADL)" },
-  { value: "ADX", label: "Average Directional Index (ADX)" },
   { value: "ATR", label: "Average True Range (ATR)" },
-  { value: "AO", label: "Awesome Oscillator (AO)" },
-  { value: "BB", label: "Bollinger Bands (BB)" },
-  { value: "CCI", label: "Commodity Channel Index (CCI)" },
+  { value: "BollingerBands", label: "Bollinger Bands (BB)" },
   { value: "EMA", label: "Exponential Moving Average (EMA)" },
-  { value: "FI", label: "Force Index (FI)" },
-  { value: "IchimokuCloud", label: "Ichimoku Cloud" },
-  { value: "KST", label: "Know Sure Thing (KST)" },
   { value: "MACD", label: "Moving Average Convergence Divergence (MACD)" },
-  { value: "MFI", label: "Moneyflow Index (MFI)" },
   { value: "OBV", label: "On Balance Volume (OBV)" },
-  { value: "PSAR", label: "Parabolic Stop and Reverse (PSAR)" },
-  { value: "ROC", label: "Rate of Change (ROC)" },
   { value: "RSI", label: "Relative Strength Index (RSI)" },
   { value: "SMA", label: "Simple Moving Average (SMA)" },
-  { value: "Stoch", label: "Stochastic Oscillator (KD)" },
-  { value: "StochRSI", label: "Stochastic RSI (StochRSI)" },
-  { value: "TRIX", label: "Triple Exponentially Smoothed Average (TRIX)" },
-  { value: "TypicalPrice", label: "Typical Price" },
-  { value: "VP", label: "Volume Profile (VP)" },
-  { value: "VWAP", label: "Volume Weighted Average Price (VWAP)" },
-  { value: "WEMA", label: "Wilder's Smoothing (WEMA)" },
-  { value: "WilliamsR", label: "Williams %R (W%R)" },
-  { value: "WMA", label: "Weighted Moving Average (WMA)" },
+  { value: "Stochastic", label: "Stochastic Oscillator (KD)" },
 ];
 
 export const INITIAL_TOOLTIP_STATE: ChartTooltipProps = {
