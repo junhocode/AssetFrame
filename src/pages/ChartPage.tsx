@@ -13,6 +13,8 @@ import type { LineData } from "lightweight-charts";
 import { keepPreviousData } from "@tanstack/react-query";
 import SystemStatus from "@/components/SystemStatus/SystemStatus";
 import * as S from "./ChartPage.styles";
+import ThemeSwitcher from "@/components/ThemeSwitcher/ThemeSwitcher";
+import GitHubButton from "@/components/GitHubButton/GithubButton";
 
 export const ChartPage = () => {
   const [symbol, setSymbol] = useState<string>("BTCUSDT");
@@ -73,8 +75,12 @@ export const ChartPage = () => {
 
   return (
     <div className={S.container}>
-       <div className="absolute top-5 right-5 z-50">
+       <div className="absolute flex top-5 right-5 z-50">
          <SystemStatus />
+         <div className="ml-2">
+         <ThemeSwitcher />
+         <GitHubButton />
+         </div>
       </div>
       <div className={S.set}>
         <div className={S.selectors}>
