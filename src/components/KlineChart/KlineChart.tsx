@@ -33,7 +33,7 @@ export const KlineChart = ({
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
 
-  const [indicatorSeries, setIndicatorSeries] = useState(
+  const indicatorSeriesRef = useRef(
     new Map<string, ISeriesApi<"Line">>()
   );
   const [tooltipState, setTooltipState] = useState<ChartTooltipProps>(
@@ -133,12 +133,12 @@ export const KlineChart = ({
     if (!chart) return;
 
     const currentIndicatorKeys = Object.keys(indicatorData);
-    const newSeriesMap = new Map(indicatorSeries);
+    const seriesMap = indicatorSeriesRef.current;
 
-    indicatorSeries.forEach((series, key) => {
+    seriesMap.forEach((series, key) => {
       if (!currentIndicatorKeys.includes(key)) {
         chart.removeSeries(series);
-        newSeriesMap.delete(key);
+        seriesMap.delete(key);
       }
     });
 
@@ -146,7 +146,7 @@ export const KlineChart = ({
       const dataForSeries = indicatorData[key];
       if (!dataForSeries) return;
 
-      const existingSeries = newSeriesMap.get(key);
+      const existingSeries = seriesMap.get(key);
       if (existingSeries) {
         existingSeries.setData(dataForSeries);
       } else {
@@ -155,12 +155,10 @@ export const KlineChart = ({
           lineWidth: 2,
         });
         newSeries.setData(dataForSeries);
-        newSeriesMap.set(key, newSeries);
+        seriesMap.set(key, newSeries);
       }
     });
-
-    setIndicatorSeries(newSeriesMap);
-  });
+  },[indicatorData]);
 
   useEffect(() => {
     if (!candleSeriesRef.current) return;
