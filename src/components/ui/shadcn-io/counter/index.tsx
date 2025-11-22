@@ -53,14 +53,14 @@ function Counter({
       )}
       {...props}
     >
-      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+      <motion.div>
         <Button
           size="icon-sm"
           {...buttonProps}
           onClick={handleDecrement}
           disabled={ disabled || number < min }
           className={cn(
-            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-2xl font-light pb-[3px]',
+            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-2xl font-light pb-[3px] hover:text-yellow-300 dark:hover:text-yellow-300 transition-colors duration-300 ease-in-out',
             buttonProps?.className,
           )}
         >
@@ -74,14 +74,14 @@ function Counter({
         className={cn('text-md', slidingNumberProps?.className)}
       />
  
-      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+      <motion.div>
         <Button
           size="icon-sm"
           {...buttonProps}
           onClick={handleIncrement}
           disabled={ disabled || number > max }
           className={cn(
-            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-3xl font-light pb-[3px]',
+            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-2xl font-light pb-[3px] hover:text-yellow-300 dark:hover:text-yellow-300 transition-colors duration-300 ease-in-out',
             buttonProps?.className,
           )}
         >
