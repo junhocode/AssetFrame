@@ -1,6 +1,6 @@
 export interface BinanceWSKline {
-  e: string; // Event type 
-  E: number; // Event time    
+  e: string; // Event type
+  E: number; // Event time
   s: string; // Symbol
   k: {
     t: number;
@@ -25,8 +25,8 @@ export interface BinanceWSKline {
 
 export interface BinanceWSTrade {
   e: string;
-  E: number;    
-  s: string; 
+  E: number;
+  s: string;
   t: number;
   p: string;
   q: string;
@@ -36,4 +36,3 @@ export interface BinanceWSTrade {
   S: string;
   X: string;
 }
-

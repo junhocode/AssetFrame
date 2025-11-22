@@ -4,13 +4,8 @@ import {
   HoverCardTrigger,
   HoverCardContent,
 } from "@/components/ui/hover-card";
-import * as S from "./PeriodCounter.styles"
-
-interface PeriodCounterProps {
-  period: number;
-  setPeriod: (value: number) => void;
-  isDisabled: boolean;
-}
+import type { PeriodCounterProps } from "@/types/selector.type";
+import * as S from "./PeriodCounter.styles";
 
 export const PeriodCounter = ({
   period,

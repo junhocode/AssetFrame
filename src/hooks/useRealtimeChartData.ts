@@ -55,19 +55,18 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
     },
     shouldReconnect: () => true,
     reconnectInterval: 3000,
-    
+
     heartbeat: {
-      message: 'ping',
-      returnMessage: 'pong',
-      timeout: 5000, 
+      message: "ping",
+      returnMessage: "pong",
+      timeout: 5000,
       interval: 3000,
     },
   });
 
   useEffect(() => {
     const status = readyState === ReadyState.OPEN;
-    queryClient.setQueryData(['ws-status'], status);
-    
+    queryClient.setQueryData(["ws-status"], status);
   }, [readyState, queryClient]);
 
   const isConnected = readyState === ReadyState.OPEN;

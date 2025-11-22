@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 
-export const combobox = "w-[200px] flex items-center dark:hover:border-yellow-300 justify-between hover:border hover:border-yellow-300 transition-all duration-200";
+export const combobox =
+  "w-[200px] flex items-center dark:hover:border-yellow-300 justify-between hover:border hover:border-yellow-300 transition-all duration-200";
 
 export const errorCombobox = "w-[200px] text-red-600";
 

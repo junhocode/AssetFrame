@@ -4,15 +4,10 @@ import { COIN_WHITELIST } from "@/constants/whiteList";
 import type { BinanceTickerData } from "@/types/ticker.type";
 import type { SymbolData } from "@/types/symbol.type";
 
-export type CombinedSymbolData = SymbolData & {
-  lastPrice?: string;
-  priceChangePercent?: string;
-};
-
 export const useSymbols = (searchQuery: string) => {
   const { data: tickersData, isLoading, isError } = useSymbolsQuery();
 
-  const allSymbols: CombinedSymbolData[] = useMemo(() => {
+  const allSymbols: SymbolData[] = useMemo(() => {
     if (!tickersData || tickersData.length === 0) {
       return COIN_WHITELIST.map((coin) => ({
         ...coin,

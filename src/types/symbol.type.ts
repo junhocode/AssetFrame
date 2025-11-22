@@ -12,6 +12,8 @@ export interface BinanceRestExchangeInfoResponse {
 
 export interface SymbolData {
   symbol: string;
-  name: string;   
-  logoUrl: string; 
+  name: string;
+  logoUrl: string;
+  lastPrice?: string;
+  priceChangePercent?: string;
 }

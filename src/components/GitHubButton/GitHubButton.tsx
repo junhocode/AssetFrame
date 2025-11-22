@@ -1,6 +1,6 @@
-import { Github } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import * as S from './GithubButton.styles'
+import { Github } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import * as S from "./GitHubButton.styles";
 
 export const GitHubButton = () => {
   const getToGitHub = () => {
@@ -13,8 +13,8 @@ export const GitHubButton = () => {
       size="icon"
       onClick={getToGitHub}
       className={S.gitHubButton}
-      >
-      <Github/>
+    >
+      <Github />
     </Button>
-  )
-}
+  );
+};
