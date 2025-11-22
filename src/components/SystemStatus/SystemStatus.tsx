@@ -12,7 +12,7 @@ export const SystemStatus = () => {
 
   return (
     <div className={S.statusContainer}>
-        <span>system status:</span>
+        <span className={S.text}>system status</span>
         {isConnected
         ? <div className={S.connectedIcon}></div>
         : <div className={S.disconnectedIcon}></div>}
