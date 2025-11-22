@@ -26,6 +26,7 @@ export const PeriodCounter = ({
           disabled={isDisabled}
           min={1}
           max={60}
+          className={S.counter}
         />
       </HoverCardTrigger>
       <HoverCardContent side="top">
