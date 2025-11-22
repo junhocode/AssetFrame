@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import { createChart } from "lightweight-charts";
+import { createChart, ColorType } from "lightweight-charts";
+import { useAtomValue } from "jotai/react";
+import { darkModeAtom } from "@/atoms/themeAtom";
 import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
@@ -32,6 +34,8 @@ export const KlineChart = ({
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
+
+  const isDark = useAtomValue(darkModeAtom);
 
   const indicatorSeriesRef = useRef(
     new Map<string, ISeriesApi<"Line">>()
@@ -105,6 +109,46 @@ export const KlineChart = ({
       chartRef.current = null;
     };
   }, [handleVisibleLogicalRangeChange]);
+
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart) return;
+
+    const theme = isDark
+      ? {
+          background: "#171717", 
+          text: "#D4D4D4",      
+          grid: "#262626",       
+          border: "#404040",   
+          watermark: "rgba(255, 255, 255, 0.1)",
+        }
+      : {
+          background: "#FFFFFF", 
+          text: "#191919",       
+          grid: "rgba(197, 203, 206, 0.2)", 
+          border: "rgba(197, 203, 206, 0.8)", 
+          watermark: "rgba(197, 203, 206, 0.5)",
+        };
+
+    chart.applyOptions({
+      layout: {
+        background: { type: ColorType.Solid, color: theme.background },
+        textColor: theme.text,
+      },
+      grid: {
+        vertLines: { color: theme.grid },
+        horzLines: { color: theme.grid },
+      },
+      rightPriceScale: { borderColor: theme.border },
+      timeScale: { borderColor: theme.border },
+      watermark: {
+        color: theme.watermark,
+        visible: true,
+        text: "junhocode",
+        fontSize: 24,
+      },
+    });
+  }, [isDark]); 
 
   useEffect(() => {
     if (!candleSeriesRef.current || !volumeSeriesRef.current) return;
