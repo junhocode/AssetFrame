@@ -11,6 +11,7 @@ export interface BinanceRestExchangeInfoResponse {
 }
 
 export interface SymbolData {
-  value: string;
-  label: string;
+  symbol: string;
+  name: string;   
+  logoUrl: string; 
 }

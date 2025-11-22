@@ -1,17 +1,48 @@
 import { useMemo } from "react";
 import { useSymbolsQuery } from "@/queries/useSymbolsQuery";
+import { COIN_WHITELIST } from "@/constants/whiteList";
+import type { BinanceTickerData } from "@/types/ticker.type";
+import type { SymbolData } from "@/types/symbol.type";
+
+export type CombinedSymbolData = SymbolData & {
+  lastPrice?: string;
+  priceChangePercent?: string;
+};
 
 export const useSymbols = (searchQuery: string) => {
-  const { data: allSymbols, isLoading, isError } = useSymbolsQuery();
+  const { data: tickersData, isLoading, isError } = useSymbolsQuery();
+
+  const allSymbols: CombinedSymbolData[] = useMemo(() => {
+    if (!tickersData || tickersData.length === 0) {
+      return COIN_WHITELIST.map((coin) => ({
+        ...coin,
+        value: coin.symbol,
+      }));
+    }
+
+    const tickersMap = new Map<string, BinanceTickerData>(
+      tickersData.map((ticker) => [ticker.symbol, ticker])
+    );
+
+    return COIN_WHITELIST.map((coin) => {
+      const liveData = tickersMap.get(coin.symbol);
+
+      return {
+        ...coin,
+        lastPrice: liveData?.lastPrice,
+        priceChangePercent: liveData?.priceChangePercent,
+      };
+    });
+  }, [tickersData]);
 
   const filteredSymbols = useMemo(() => {
-    if (!allSymbols) return [];
     if (!searchQuery) return allSymbols;
 
+    const lowercasedQuery = searchQuery.toLowerCase();
     return allSymbols.filter((symbol) =>
-      symbol.label.toLowerCase().includes(searchQuery.toLowerCase())
+      symbol.name.toLowerCase().includes(lowercasedQuery)
     );
   }, [allSymbols, searchQuery]);
 
   return { allSymbols, filteredSymbols, isLoading, isError };
-}
+};
