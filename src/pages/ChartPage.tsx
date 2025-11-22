@@ -79,7 +79,7 @@ export const ChartPage = () => {
     <div className={S.container}>
        <div className="absolute flex top-5 right-5 z-50">
          <SystemStatus />
-         <div className="ml-2">
+         <div className="ml-3">
          <GitHubButton />
          <ThemeSwitcher />
          </div>
