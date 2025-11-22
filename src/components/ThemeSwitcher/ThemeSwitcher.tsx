@@ -3,8 +3,9 @@ import { useAtom } from 'jotai/react'
 import { darkModeAtom } from '@/atoms/themeAtom'
 import { MoonStar, SunMedium } from 'lucide-react';
 import { Button } from '../ui/button';
+import * as S from "./ThemeSwitcher.styles"
 
-const ThemeSwitcher = () => {
+export const ThemeSwitcher = () => {
   const [isDark, setIsDark] = useAtom(darkModeAtom)
 
   const toggleTheme = () => {
@@ -24,17 +25,12 @@ const ThemeSwitcher = () => {
     <Button
       variant="ghost"
       onClick={toggleTheme}
-      className="
-        hover:!bg-transparent 
-        transition duration-200 ease-in-out
-        hover:text-yellow-200"
+      className={S.themeButton}
     >
       {isDark
-        ? <SunMedium className="w-5 h-5" />
-        : <MoonStar className="w-5 h-5" />
+        ? <SunMedium className={S.icon} />
+        : <MoonStar className={S.icon} />
       }
     </Button>
   )
-}
-
-export default ThemeSwitcher
+};

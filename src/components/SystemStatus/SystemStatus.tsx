@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
+import * as S from "./SystemStatus.styles"
 
-const SystemStatus = () => {
+export const SystemStatus = () => {
   const { data: isConnected } = useQuery({
     queryKey: ['ws-status'],
     queryFn: () => false,
@@ -10,13 +11,11 @@ const SystemStatus = () => {
   })
 
   return (
-    <div className="flex justify-center items-center gap-2">
+    <div className={S.statusContainer}>
         <span>system status:</span>
         {isConnected
-        ? <div className="w-2 h-2 rounded-full bg-green-500"></div>
-        : <div className="w-2 h-2 rounded-full bg-red-500"></div>}
+        ? <div className={S.connectedIcon}></div>
+        : <div className={S.disconnectedIcon}></div>}
     </div>
   )
-}
-
-export default SystemStatus
+};

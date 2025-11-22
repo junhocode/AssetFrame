@@ -1,7 +1,8 @@
 import { Github } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
+import * as S from './GithubButton.styles'
 
-const GitHubButton = () => {
+export const GitHubButton = () => {
   const getToGitHub = () => {
     window.open("https://github.com/junhocode/AssetFrame", "_blank");
   };
@@ -11,14 +12,9 @@ const GitHubButton = () => {
       variant="ghost"
       size="icon"
       onClick={getToGitHub}
-      className="
-        hover:!bg-transparent 
-        transition-colors duration-200 ease-in-out
-         hover:text-yellow-200"
-    >
+      className={S.gitHubButton}
+      >
       <Github/>
     </Button>
   )
 }
-
-export default GitHubButton;

@@ -23,6 +23,7 @@ export const TimeScaleSelector = ({ value, onChange }: SelectorProps) => {
             key={interval}
             value={interval}
             aria-label={`Select ${interval}`}
+            className={S.toggleGroupItems}
           >
             {interval}
           </ToggleGroupItem>
