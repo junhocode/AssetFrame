@@ -115,7 +115,7 @@ export const Main = () => {
         </div>
       </div>
 
-      <div className="w-[300px] p-2">
+      <div className="w-[300px] p-2 h-full">
          <OrderBook symbol={symbol}/>
       </div>
     </div>

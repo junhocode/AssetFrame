@@ -63,7 +63,7 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
                   alt={selectedSymbol.name}
                   className={S.logoIcon}
                 />
-                <span className="pr-7">{selectedSymbol.name}</span>
+                <span className="pr-4">{selectedSymbol.name}</span>
                 <PriceChangeBadge value={selectedSymbol.priceChangePercent} />
               </>
             ) : (

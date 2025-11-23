@@ -50,14 +50,14 @@ export const OrderBook = ({ symbol }: OrderBookProps) => {
   }
 
   return (
-    <div className="flex h-160 w-full flex-col bg-card font-mono text-xs tabular-nums slashed-zero overflow-hidden">
-      <div className="flex w-full px-3 py-1 mb-1 text-[#848E9C] text-xs font-semibold items-center">
+    <div className="flex h-full w-full flex-col bg-card font-mono text-xs overflow-hidden">
+      <div className="flex w-full px-3 text-[#848E9C] text-xs font-semibold items-center">
         <span className={colStyles.price}>Price(USDT)</span>
         <span className={colStyles.amount}>Amount({symbol})</span>
         <span className={colStyles.total}>Total</span>
       </div>
 
-      <div className="flex flex-1 flex-col justify-end overflow-hidden min-h-0 pb-1 gap-[1px]">
+      <div className="flex flex-1 flex-col justify-start overflow-hidden min-h-0 pb-1">
         {asks.map((ask) => (
           <OrderBookRow
             key={ask[0]}
@@ -70,7 +70,7 @@ export const OrderBook = ({ symbol }: OrderBookProps) => {
       </div>
 
       <div className="shrink-0 border-y border-border py-2 bg-muted/30 flex items-center justify-center overflow-hidden z-20">
-        <span className="flex text-lg font-bold text-foreground text-yellow-300 items-center">
+        <span className="flex text-lg font-bold text-yellow-300 items-center">
           <span className="mr-1">$</span>
           <SlidingNumber
             number={parseFloat(bids[0]?.[0] || "0")}
@@ -79,7 +79,7 @@ export const OrderBook = ({ symbol }: OrderBookProps) => {
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col pt-1 overflow-hidden min-h-0 gap-[1px]">
+      <div className="flex flex-1 flex-col pt-1 overflow-hidden min-h-0">
         {bids.map((bid) => (
           <OrderBookRow
             key={bid[0]}
@@ -110,7 +110,7 @@ const OrderBookRow = ({ price, amount, maxQty, type }: OrderBookRowProps) => {
   const isAsk = type === "ask";
 
   return (
-    <div className="relative flex w-full h-[22px] shrink-0 cursor-pointer items-center px-3 hover:bg-muted/50">
+    <div className="relative flex w-full h-[25px] shrink-0 cursor-pointer items-center px-3 hover:bg-muted/50">
       <div
         className={cn(
           "absolute right-0 top-0 bottom-0 z-0 transition-all duration-300",
