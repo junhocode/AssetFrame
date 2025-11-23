@@ -25,4 +25,8 @@ export const QUERY_KEYS = {
     list: () => [...QUERY_KEYS.symbols.lists()] as const,
     whitelist: () => [...QUERY_KEYS.symbols.all, "whitelist"],
   },
+  orderBook: {
+    all: ["orderBook"] as const,
+    detail: (symbol: string) => ["orderBook", symbol] as const,
+  }
 };
