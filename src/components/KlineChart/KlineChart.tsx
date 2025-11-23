@@ -37,9 +37,9 @@ export const KlineChart = ({
 
   const isDark = useAtomValue(darkModeAtom);
 
-  const indicatorSeriesRef = useRef(
-    new Map<string, ISeriesApi<"Line">>()
-  );
+  const OSCILLATORS = ["RSI", "MACD", "Stochastic", "ATR", "OBV"];
+
+  const indicatorSeriesRef = useRef(new Map<string, ISeriesApi<"Line">>());
   const [tooltipState, setTooltipState] = useState<ChartTooltipProps>(
     INITIAL_TOOLTIP_STATE
   );
@@ -58,10 +58,19 @@ export const KlineChart = ({
   useEffect(() => {
     if (!chartContainerRef.current || chartRef.current) return;
 
-    const chart = createChart(chartContainerRef.current, S.chartOptions(isDark));
+    const chart = createChart(
+      chartContainerRef.current,
+      S.chartOptions(isDark)
+    );
     chart
       .timeScale()
       .subscribeVisibleLogicalRangeChange(handleVisibleLogicalRangeChange);
+
+    new ResizeObserver(entries => {
+        if (entries.length === 0 || entries[0].target !== chartContainerRef.current) { return; }
+        const newRect = entries[0].contentRect;
+        chart.applyOptions({ height: newRect.height, width: newRect.width });
+      }).observe(chartContainerRef.current);  
 
     const candleSeries = chart.addCandlestickSeries(CANDLESTICK_SERIES_OPTIONS);
     const volumeSeries = chart.addHistogramSeries(VOLUME_SERIES_OPTIONS);
@@ -86,14 +95,19 @@ export const KlineChart = ({
       }
 
       const chartRect = container.getBoundingClientRect();
+      const containerWidth = chartContainerRef.current.clientWidth;
 
-      const tooltipWidth = 100;
+      const tooltipWidth = 210;
       const tooltipHeight = 70;
       const margin = 15;
 
-      let left = chartRect.left + param.point.x + margin;
-      if (left + tooltipWidth > window.innerWidth) {
+      const isRightSide = param.point.x > containerWidth / 2
+
+      let left;
+      if (isRightSide) {
         left = chartRect.left + param.point.x - tooltipWidth - margin;
+      } else {
+        left = chartRect.left + param.point.x + margin; 
       }
 
       let top = chartRect.top + param.point.y - tooltipHeight - margin;
@@ -151,23 +165,50 @@ export const KlineChart = ({
       }
     });
 
+    const hasOscillator = currentIndicatorKeys.some((key) =>
+      OSCILLATORS.some((type) => key.includes(type))
+    );
+
+    chart.priceScale("right").applyOptions({
+      scaleMargins: {
+        top: 0.1,
+        bottom: hasOscillator ? 0.3 : 0.1,
+      },
+    });
+
     currentIndicatorKeys.forEach((key) => {
       const dataForSeries = indicatorData[key];
       if (!dataForSeries) return;
 
+      const isOscillator = OSCILLATORS.some((type) => key.includes(type));
+
       const existingSeries = seriesMap.get(key);
+
       if (existingSeries) {
         existingSeries.setData(dataForSeries);
       } else {
-        const newSeries = chart.addLineSeries({
+        const seriesOptions = {
           color: getRandomColor(),
           lineWidth: 2,
-        });
+          priceScaleId: isOscillator ? "oscillator-scale" : "right",
+        };
+
+        const newSeries = chart.addLineSeries(seriesOptions);
+
+        if (isOscillator) {
+          chart.priceScale("oscillator-scale").applyOptions({
+            scaleMargins: {
+              top: 0.75,
+              bottom: 0,
+            },
+          });
+        }
+
         newSeries.setData(dataForSeries);
         seriesMap.set(key, newSeries);
       }
     });
-  },[indicatorData]);
+  }, [indicatorData]);
 
   useEffect(() => {
     if (!candleSeriesRef.current) return;
