@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom";
 import type { ChartTooltipProps } from "@/types/chart.type";
+import { motion } from 'motion/react';
 import * as S from "./ChartTooltip.styles";
 
 export const ChartTooltip = ({
@@ -18,17 +19,30 @@ export const ChartTooltip = ({
   const dateStr = date.toLocaleString("ko-KR");
 
   const tooltipContent = (
-    <div
+    <motion.div
       className={S.tooltipContainer}
+      animate={{
+        x: left,
+        y: top,
+        opacity: 1,
+        scale: 1
+      }}
+      initial={{ opacity: 0, scale: 0.9 }}
+      transition={{
+        type: "spring",
+        damping: 25,
+        stiffness: 500,
+        mass: 0.5
+      }}
       style={{
-        top: `${top}px`,
-        left: `${left}px`,
+        top: 0,
+        left: 0,
       }}
     >
       <div className={S.priceLine}>가격</div>
       <div className={S.priceValue}>{price.toFixed(2)} USD</div>
       <div className={S.dateLine}>{dateStr}</div>
-    </div>
+    </motion.div>
   );
 
   return ReactDOM.createPortal(tooltipContent, document.body);
