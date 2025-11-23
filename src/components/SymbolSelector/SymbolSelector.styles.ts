@@ -25,7 +25,7 @@ export function getCheckIconStyles(
   itemValue: string
 ): string {
   return cn(
-    "ml-auto h-4 w-4",
+    "ml-2 h-4 w-4",
     selectedValue === itemValue ? "opacity-100" : "opacity-0"
   );
 }

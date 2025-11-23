@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { VirtualList } from "@/components/VirtualList/VirtualList";
+import { PriceChangeBadge } from "../PriceChangeBadge/PriceChangeBadge";
 import { Button } from "@/components/ui/button";
 import { useSymbols } from "@/hooks/useSymbols";
 import { Command, CommandEmpty, CommandInput } from "@/components/ui/command";
@@ -62,7 +63,8 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
                   alt={selectedSymbol.name}
                   className={S.logoIcon}
                 />
-                <span>{selectedSymbol.name}</span>
+                <span className="pr-7">{selectedSymbol.name}</span>
+                <PriceChangeBadge value={selectedSymbol.priceChangePercent} />
               </>
             ) : (
               "종목 선택..."
@@ -93,7 +95,8 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
                       alt={symbol.name}
                       className={S.logoIconInList}
                     />
-                    <span>{symbol.name}</span>
+                    <span className="grow">{symbol.name}</span>
+                    <PriceChangeBadge value={symbol.priceChangePercent} />
                     <Check
                       className={S.getCheckIconStyles(value, symbol.symbol)}
                     />
