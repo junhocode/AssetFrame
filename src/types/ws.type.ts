@@ -1,3 +1,5 @@
+import type { GetOrderBookResponse } from "./orderBook.type";
+
 export interface BinanceWSKline {
   e: string; // Event type
   E: number; // Event time
@@ -35,4 +37,10 @@ export interface BinanceWSTrade {
   T: number;
   S: string;
   X: string;
+}
+
+export interface BinanceWSDepth {
+  id: string;
+  status: number;
+  result: GetOrderBookResponse
 }
