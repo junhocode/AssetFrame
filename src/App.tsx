@@ -1,9 +1,7 @@
-import { ChartPage } from "./pages/ChartPage";
+import { Layout } from "./components/Layout/Layout";
 
 export default function App() {
   return (
-    <div>
-      <ChartPage />
-    </div>
+    <Layout />
   );
 }
