@@ -1,6 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -65,6 +65,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-family: inherit;
 }
 
 h1 {
@@ -88,7 +89,7 @@ button {
 }
 
 @theme inline {
-  --font-sans: "Pretendard", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "JetBrains Mono", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -166,7 +167,9 @@ button {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
   }
 }
 

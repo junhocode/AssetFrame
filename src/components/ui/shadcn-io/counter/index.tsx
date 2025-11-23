@@ -71,7 +71,7 @@ function Counter({
       <SlidingNumber
         number={number}
         {...slidingNumberProps}
-        className={cn('text-md', slidingNumberProps?.className)}
+        className={cn('text-md font-mono', slidingNumberProps?.className)}
       />
  
       <motion.div>
