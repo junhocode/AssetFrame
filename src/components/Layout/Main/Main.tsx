@@ -1,9 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
-
 import { keepPreviousData } from "@tanstack/react-query";
 import type { LineData } from "lightweight-charts";
-
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
 import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
@@ -47,6 +45,24 @@ export const Main = () => {
   const { candlestickData } = useFormattedChartData(data);
 
   useRealtimeChartData(chartParams);
+
+  React.useEffect(() => {
+    if (!candlestickData || candlestickData.length === 0) {
+      document.title = "AssetFrame";
+      return;
+    }
+
+    const lastCandle = candlestickData[candlestickData.length - 1];
+    const price = 'close' in lastCandle ? lastCandle.close : (lastCandle as any).value;
+
+    const formattedPrice = price.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    document.title = `${formattedPrice} ${symbol} | AssetFrame`;
+
+  }, [candlestickData, symbol]);
 
   const handleSymbolChange = (symbol: string) => {
     setSymbol(symbol);
