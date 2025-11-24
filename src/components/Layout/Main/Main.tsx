@@ -60,7 +60,7 @@ export const Main = () => {
       maximumFractionDigits: 2,
     });
 
-    document.title = `${formattedPrice} ${symbol} | AssetFrame`;
+    document.title = `AssetFrame | ${symbol} ${formattedPrice}`;
 
   }, [candlestickData, symbol]);
 
