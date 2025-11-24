@@ -9,9 +9,6 @@ export const useSymbolsQuery = () => {
     queryKey: QUERY_KEYS.symbols.whitelist(),
 
     queryFn: () => getTickers(WHITELISTED_SYMBOLS),
-
-    refetchInterval: 5000,
-    staleTime: 4000,
     refetchOnWindowFocus: true,
   });
 };
