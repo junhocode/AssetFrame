@@ -35,14 +35,14 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
   if (isLoading)
     return (
       <Button variant="outline" disabled className={S.combobox}>
-        종목을 불러오는 중..
+        Loading Cryptos..
       </Button>
     );
 
   if (isError)
     return (
       <Button variant="outline" disabled className={S.errorCombobox}>
-        종목을 불러오는데 실패했습니다, 재시도 해주세요.
+        Sorry, there has been an error.. Please refresh!
       </Button>
     );
 
@@ -67,7 +67,7 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
                 <PriceChangeBadge value={selectedSymbol.priceChangePercent ?? 0} />
               </>
             ) : (
-              "종목 선택..."
+              "Select crypto..."
             )}
           </div>
           <ChevronsUpDown className={S.chevronIcon} />
@@ -76,7 +76,7 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
       <PopoverContent className={S.popoverContent}>
         <Command shouldFilter={false}>
           <CommandInput
-            placeholder="종목 검색..."
+            placeholder="Search crypto..."
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
@@ -104,7 +104,7 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
                 )}
               />
             ) : (
-              <CommandEmpty>해당하는 종목이 없습니다.</CommandEmpty>
+              <CommandEmpty>No crypto found.</CommandEmpty>
             )}
           </div>
         </Command>

@@ -93,7 +93,7 @@ export const IndicatorSelector = ({
 
       onIndicatorChange(allFormattedData);
     } catch (error) {
-      console.error("지표 계산 중 오류 발생:", error);
+      console.error("error caused while calculating indicator:", error);
       onIndicatorChange({});
     }
   }, [activeConfigs, formattedCandles, onIndicatorChange]);
@@ -104,7 +104,7 @@ export const IndicatorSelector = ({
         options={INDICATORS}
         onValueChange={handleSelectionChange}
         defaultValue={selectedValues}
-        placeholder="보조지표를 선택해 주세요.."
+        placeholder="Select an indicator.."
         className={S.multiSelector}
         maxCount={1}
         maxWidth="1"

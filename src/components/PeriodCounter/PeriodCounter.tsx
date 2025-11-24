@@ -27,7 +27,7 @@ export const PeriodCounter = ({
       <HoverCardContent side="top">
         <div>
           <span className={S.disabledMessage}>
-            지표 표기 기간은 보조 지표를 선택한 후 조정할 수 있습니다.
+            Period can be chosen after one or more indicator is activated. 
           </span>
         </div>
       </HoverCardContent>
