@@ -46,13 +46,12 @@ export const OrderBook = ({ symbol }: OrderBookProps) => {
 
   return (
     <div className={S.container}>
-      <div className={S.asksWrapper}>
-        <div className={S.headerRow}>
+      <div className={S.headerRow}>
           <span className={S.colPrice}>Price(USDT)</span>
           <span className={S.colAmount}>Amount</span>
           <span className={S.colTotal}>Total</span>
         </div>
-
+      <div className={S.asksWrapper}>
         {asks.map((ask) => (
           <OrderBookRow
             key={ask[0]}

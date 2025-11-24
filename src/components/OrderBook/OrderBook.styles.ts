@@ -1,5 +1,5 @@
-export const container = 
-  "flex w-full flex-col bg-card font-mono text-xs mt-10 rounded-md";
+export const container =
+  "flex w-full h-full flex-col bg-card font-mono text-xs rounded-md overflow-hidden";
 
 export const loadingContainer = 
   "flex h-full items-center justify-center text-xs text-muted-foreground font-mono";
@@ -7,11 +7,11 @@ export const loadingContainer =
 export const errorContainer = 
   "flex h-full items-center justify-center text-xs text-destructive font-mono";
 
-export const asksWrapper = 
-  "flex flex-1 flex-col justify-end min-h-0 pb-1";
+export const asksWrapper =
+  "flex flex-1 flex-col justify-end min-h-0 pb-1 overflow-hidden";
 
-export const bidsWrapper = 
-  "flex flex-1 flex-col pt-1 min-h-0";
+export const bidsWrapper =
+  "flex flex-1 flex-col pt-1 min-h-0 overflow-hidden";
 
 export const headerRow = 
   "flex w-full px-3 text-[#848E9C] text-xs font-semibold items-center";
