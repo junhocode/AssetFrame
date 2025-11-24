@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/binance/:path*",
-      "destination": "https://api.binance.com/api/v3/:path*"
+      "source": "/proxy-api/:path*",
+      "destination": "https://api.binance.com/:path*"
     }
   ]
 }
