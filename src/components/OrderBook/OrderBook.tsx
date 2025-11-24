@@ -50,7 +50,7 @@ export const OrderBook = ({ symbol }: OrderBookProps) => {
   }
 
   return (
-    <div className="flex w-full flex-col bg-card font-mono text-xs mt-4 rounded-md">
+    <div className="flex w-full flex-col bg-card font-mono text-xs mt-10 rounded-md">
       <div className="flex flex-1 flex-col justify-end min-h-0 pb-1">
         <div className="flex w-full px-3 text-[#848E9C] text-xs font-semibold items-center">
         <span className={colStyles.price}>Price(USDT)</span>

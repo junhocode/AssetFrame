@@ -6,17 +6,13 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL
 
 const getOrderBookWsUrl = (symbol: string) =>
-  `${WS_BASE_URL}/${symbol.toLowerCase()}@depth@1000ms`;
+  `${WS_BASE_URL}/${symbol.toLowerCase()}@depth20@1000ms`;
 
 export const useRealtimeOrderBook = (symbol: string) => {
   const queryClient = useQueryClient();
   const wsUrl = symbol ? getOrderBookWsUrl(symbol) : null;
 
   const { readyState } = useWebSocket(wsUrl, {
-    onOpen: () => {
-      console.log(`Connected to OrderBook WS for ${symbol}`);
-    },
-    
     onMessage: (event) => {
       const message = JSON.parse(event.data);
 
