@@ -7,10 +7,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "types": ["node"],
-    "paths": {
-      "@src/*": [
-        "src/*"
-      ]
+   "paths": {
+      "src/*": ["src/*"],
+      "@/*": ["src/*"],
+      "@src/*": ["src/*"]
     }
   }
 }
