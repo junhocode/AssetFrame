@@ -1,6 +1,6 @@
 # AssetFrame : All-in-One Crypto Analytics Dashboard
 
-**AssetFrame**은 가상 자산의 실시간 가격, 호가(Orderbook), 그리고 기술적 분석 지표를 한눈에 제공하는 **싱글 페이지 어플리케이션 (SPA)**입니다.
+**AssetFrame**은 가상 자산의 실시간 가격, 호가(Orderbook), 그리고 기술적 분석 지표를 한눈에 제공하는 싱글 페이지 어플리케이션 (SPA)입니다.
 
 ## 목차
 
@@ -11,6 +11,18 @@
 5. [**차트**](#5-차트)
 6. [**오더 북**](#6-오더-북)
 7. [**보조 지표**](#7-보조-지표)
+
+## 스크린샷
+
+**라이트 테마 디폴트 / 보조 지표 허용 시 스크린샷**
+
+<img width="2559" height="1305" alt="light-default" src="https://github.com/user-attachments/assets/df3cbadf-7d84-4924-8946-1d13390c1f20" />
+<img width="2559" height="1308" alt="스크린샷 2025-11-24 210810" src="https://github.com/user-attachments/assets/5c3b57e3-bcf3-4357-82db-ca657ecf2655" />
+
+**다크 테마 디폴트 / 보조 지표 허용 시 스크린샷**
+
+<img width="2559" height="1305" alt="스크린샷 2025-11-24 210739" src="https://github.com/user-attachments/assets/634bf929-329c-44dd-8b18-f93e2996bb29" />
+<img width="2559" height="1302" alt="스크린샷 2025-11-24 210823" src="https://github.com/user-attachments/assets/050028cf-acaf-48e3-9f9a-b3eb5888fede" />
 
 ## 1. 개요
 
