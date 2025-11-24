@@ -1,6 +1,7 @@
-import { ArrowUp, ArrowDown, Minus } from "lucide-react";
-import { SlidingNumber } from "../ui/shadcn-io/sliding-number";
+import { ArrowDown, ArrowUp, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SlidingNumber } from "../ui/shadcn-io/sliding-number";
+import * as S from "./PriceChangeBadge.styles";
 
 interface PriceChangeBadgeProps {
   value: number | string;
@@ -16,29 +17,22 @@ export const PriceChangeBadge = ({
   const isPositive = numValue > 0;
   const isNegative = numValue < 0;
 
-  let colorClass = "text-neutral-500";
+  let colorClass = S.neutralColor;
   let Icon = Minus;
 
   if (isPositive) {
-    colorClass = "text-green-500";
+    colorClass = S.positiveColor;
     Icon = ArrowUp;
   } else if (isNegative) {
-    colorClass = "text-red-500";
+    colorClass = S.negativeColor;
     Icon = ArrowDown;
   }
 
   return (
-    <div
-      className={cn(
-        "flex items-center gap-1 text-xs font-medium",
-        "font-mono tabular-nums slashed-zero",
-        colorClass,
-        className
-      )}
-    >
-      <Icon className="h-3 w-3 shrink-0" strokeWidth={2.5} />
+    <div className={cn(S.container, colorClass, className)}>
+      <Icon className={S.icon} strokeWidth={2.5} />
 
-      <div className="flex items-center">
+      <div className={S.valueWrapper}>
         <SlidingNumber number={Math.abs(numValue)} decimalPlaces={2} />
         <span>%</span>
       </div>

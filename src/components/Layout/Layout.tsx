@@ -1,9 +1,10 @@
 import { useEffect } from "react";
+import { useAtomValue } from "jotai/react";
 import { Header } from "./Header/Header";
 import { Main } from "./Main/Main";
 import Footer from "./Footer/Footer";
-import { useAtomValue } from "jotai/react";
 import { darkModeAtom } from "@/atoms/themeAtom";
+import * as S from "./Layout.styles";
 
 export const Layout = () => {
   const isDark = useAtomValue(darkModeAtom);
@@ -18,9 +19,9 @@ export const Layout = () => {
   }, [isDark]);
 
   return (
-    <div className="flex h-screen w-full flex-col bg-[#171717] text-white overflow-hidden font-sans">
+    <div className={S.layoutContainer}>
       <Header />
-      <main className="flex-1 flex min-h-0 w-full">
+      <main className={S.mainContent}>
         <Main />
       </main>
       <Footer />
