@@ -18,6 +18,7 @@ import type {
   IChartApi,
   ISeriesApi,
   CandlestickData,
+  LineWidth
 } from "lightweight-charts";
 import type { ChartTooltipProps, KlineChartProps } from "@/types/chart.type";
 import * as S from "./KlineChart.styles";
@@ -95,7 +96,7 @@ export const KlineChart = ({
       }
 
       const chartRect = container.getBoundingClientRect();
-      const containerWidth = chartContainerRef.current.clientWidth;
+      const containerWidth = container.clientWidth;
 
       const tooltipWidth = 210;
       const tooltipHeight = 70;
@@ -190,7 +191,7 @@ export const KlineChart = ({
       } else {
         const seriesOptions = {
           color: getRandomColor(),
-          lineWidth: 2,
+          lineWidth: 2 as LineWidth,
           priceScaleId: isOscillator ? "oscillator-scale" : "right",
         };
 
