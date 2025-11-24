@@ -64,7 +64,7 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
                   className={S.logoIcon}
                 />
                 <span className="pr-4">{selectedSymbol.name}</span>
-                <PriceChangeBadge value={selectedSymbol.priceChangePercent} />
+                <PriceChangeBadge value={selectedSymbol.priceChangePercent ?? 0} />
               </>
             ) : (
               "종목 선택..."
@@ -96,7 +96,7 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
                       className={S.logoIconInList}
                     />
                     <span className="grow">{symbol.name}</span>
-                    <PriceChangeBadge value={symbol.priceChangePercent} />
+                    <PriceChangeBadge value={symbol.priceChangePercent ?? 0} />
                     <Check
                       className={S.getCheckIconStyles(value, symbol.symbol)}
                     />
