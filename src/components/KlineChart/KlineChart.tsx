@@ -121,6 +121,7 @@ export const KlineChart = ({
     return () => {
       chart.remove();
       chartRef.current = null;
+      indicatorSeriesRef.current.clear(); 
     };
   }, [handleVisibleLogicalRangeChange]);
 
