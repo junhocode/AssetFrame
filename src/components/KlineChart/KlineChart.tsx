@@ -5,7 +5,7 @@ import { darkModeAtom } from "@/atoms/themeAtom";
 import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
-import { useLatestTradePrice } from "@/hooks/useLatestTradePrice";
+import { useRealTimeTrade } from "@/hooks/useRealTimeTrade";
 import { getRandomColor } from "@/utils/randomColorGenarator";
 import {
   CANDLESTICK_SERIES_OPTIONS,
@@ -54,7 +54,7 @@ export const KlineChart = ({
       isFetchingNextPage,
     });
 
-  const latestPriceRef = useLatestTradePrice(params.symbol);
+  const latestPriceRef = useRealTimeTrade(params.symbol);
 
   useEffect(() => {
     if (!chartContainerRef.current || chartRef.current) return;

@@ -3,7 +3,7 @@ import useWebSocket from "react-use-websocket";
 
 const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
 
-export const useLatestTradePrice = (symbol: string) => {
+export const useRealTimeTrade = (symbol: string) => {
   const latestPriceRef = useRef<number | null>(null);
 
   const wsUrl = symbol ? `${WS_BASE_URL}/${symbol.toLowerCase()}@trade` : null;
