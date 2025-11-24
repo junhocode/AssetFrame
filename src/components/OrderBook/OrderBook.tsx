@@ -50,14 +50,14 @@ export const OrderBook = ({ symbol }: OrderBookProps) => {
   }
 
   return (
-    <div className="flex h-full w-full flex-col bg-card font-mono text-xs overflow-hidden">
-      <div className="flex w-full px-3 text-[#848E9C] text-xs font-semibold items-center">
+    <div className="flex w-full flex-col bg-card font-mono text-xs mt-4 rounded-md">
+      <div className="flex flex-1 flex-col justify-end min-h-0 pb-1">
+        <div className="flex w-full px-3 text-[#848E9C] text-xs font-semibold items-center">
         <span className={colStyles.price}>Price(USDT)</span>
-        <span className={colStyles.amount}>Amount({symbol})</span>
+        <span className={colStyles.amount}>Amount</span>
         <span className={colStyles.total}>Total</span>
       </div>
 
-      <div className="flex flex-1 flex-col justify-start overflow-hidden min-h-0 pb-1">
         {asks.map((ask) => (
           <OrderBookRow
             key={ask[0]}
@@ -69,8 +69,8 @@ export const OrderBook = ({ symbol }: OrderBookProps) => {
         ))}
       </div>
 
-      <div className="shrink-0 border-y border-border py-2 bg-muted/30 flex items-center justify-center overflow-hidden z-20">
-        <span className="flex text-lg font-bold text-yellow-300 items-center">
+      <div className="shrink-0 border-y border-border py-2 bg-muted/30 flex items-center justify-center z-20">
+        <span className="flex text-lg font-bold text-yellow-600 dark:text-yellow-300 items-center">
           <span className="mr-1">$</span>
           <SlidingNumber
             number={parseFloat(bids[0]?.[0] || "0")}
@@ -79,7 +79,7 @@ export const OrderBook = ({ symbol }: OrderBookProps) => {
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col pt-1 overflow-hidden min-h-0">
+      <div className="flex flex-1 flex-col pt-1 min-h-0">
         {bids.map((bid) => (
           <OrderBookRow
             key={bid[0]}
