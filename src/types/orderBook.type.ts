@@ -10,7 +10,6 @@ export interface RateLimits {
 
 export interface GetOrderBookParams {
     symbol: string;
-    limit: number;
 }
 
 export interface GetOrderBookResponse {
