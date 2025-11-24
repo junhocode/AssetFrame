@@ -8,10 +8,6 @@ export interface RateLimits {
     count: number;
 }
 
-export interface GetOrderBookParams {
-    symbol: string;
-}
-
 export interface GetOrderBookResponse {
     lastUpdateId: number;
     bids: OrderBookEntry[];
