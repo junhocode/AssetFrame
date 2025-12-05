@@ -119,6 +119,7 @@ export const Main = () => {
             }`}
           >
             <KlineChart
+              key={symbol}
               data={data}
               fetchNextPage={fetchNextPage}
               hasNextPage={hasNextPage}
