@@ -39,7 +39,7 @@ const fetcher = {
       const errorMsg =
         error?.response?.data?.message ||
         errorMessage ||
-        "API 요청 중 오류가 발생했습니다.";
+        "Error occurred during api process.";
       throw new Error(errorMsg);
     }
   },
