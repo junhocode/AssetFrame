@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import { useSymbolsQuery } from "@/queries/useSymbolsQuery";
 import { COIN_WHITELIST } from "@/constants/whiteList";
-import type { BinanceTickerData } from "@/types/ticker.type";
-import type { SymbolData } from "@/types/symbol.type";
+import type { BinanceTicker } from "@/types/ticker.type";
+import type { Symbol } from "@/types/symbol.type";
 
 export const useSymbols = (searchQuery: string) => {
   const { data: tickersData, isLoading, isError } = useSymbolsQuery();
 
-  const allSymbols: SymbolData[] = useMemo(() => {
+  const allSymbols: Symbol[] = useMemo(() => {
     if (!tickersData || tickersData.length === 0) {
       return COIN_WHITELIST.map((coin) => ({
         ...coin,
@@ -15,7 +15,7 @@ export const useSymbols = (searchQuery: string) => {
       }));
     }
 
-    const tickersMap = new Map<string, BinanceTickerData>(
+    const tickersMap = new Map<string, BinanceTicker>(
       tickersData.map((ticker) => [ticker.symbol, ticker])
     );
 

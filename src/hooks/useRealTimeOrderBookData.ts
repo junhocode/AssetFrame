@@ -1,9 +1,9 @@
-import type { GetOrderBookResponse } from "@/types/orderBook.type";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/constants/queryKeys";
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import type { OrderBookResponse } from "@/types/orderBook.type";
 
-const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL
+const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
 
 const getOrderBookWsUrl = (symbol: string) =>
   `${WS_BASE_URL}/${symbol.toLowerCase()}@depth20@1000ms`;
@@ -17,19 +17,22 @@ export const useRealtimeOrderBook = (symbol: string) => {
       const message = JSON.parse(event.data);
 
       if (message.bids && message.asks) {
-        const newOrderBook: GetOrderBookResponse = {
+        const newOrderBook: OrderBookResponse = {
           lastUpdateId: message.lastUpdateId,
           bids: message.bids,
-          asks: message.asks, 
+          asks: message.asks,
         };
 
-        queryClient.setQueryData(QUERY_KEYS.orderBook.detail(symbol), newOrderBook);
+        queryClient.setQueryData(
+          QUERY_KEYS.orderBook.detail(symbol),
+          newOrderBook
+        );
       }
     },
 
-    shouldReconnect: () => true, 
+    shouldReconnect: () => true,
     reconnectInterval: 3000,
-    filter: () => !!symbol, 
+    filter: () => !!symbol,
   });
 
   const isConnected = readyState === ReadyState.OPEN;
