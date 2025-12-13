@@ -1,9 +1,5 @@
-import { Counter } from "../ui/shadcn-io/counter";
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "@/components/ui/hover-card";
+import { Counter } from "@/components/ui/counter";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import type { PeriodCounterProps } from "@/types/selector.type";
 import * as S from "./PeriodCounter.styles";
 

@@ -12,6 +12,11 @@ export interface VirtualListProps<T> {
   containerClassName?: string;
 }
 
+export interface PriceChangeBadgeProps {
+  value: number | string;
+  className?: string;
+}
+
 export interface IndicatorSelectorProps {
   candlestickData: CandlestickData[];
   period: number;

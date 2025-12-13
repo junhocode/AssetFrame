@@ -14,3 +14,10 @@ export interface OrderBookResponse {
   asks: OrderBookEntry[];
   rateLimits?: RateLimits[];
 }
+
+export interface OrderBookRowProps {
+  price: string;
+  amount: string;
+  maxQty: number;
+  type: "ask" | "bid";
+}

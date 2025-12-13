@@ -1,9 +1,9 @@
 import { INTERVALS } from "@/constants/configs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { SelectorProps } from "@/types/selector.type";
-import * as S from "./TimeScaleSelector.styles";
+import * as S from "./IntervalSelector.styles";
 
-export const TimeScaleSelector = ({ value, onChange }: SelectorProps) => {
+export const IntervalSelector = ({ value, onChange }: SelectorProps) => {
   const handleValueChange = (newValue: string) => {
     if (newValue) {
       onChange(newValue);

@@ -1,16 +1,64 @@
 import { useMemo } from "react";
+import { SlidingNumber } from "@/components/ui/sliding-number";
 import { useRealtimeOrderBook } from "@/hooks/useRealTimeOrderBookData";
-import { cn } from "@/lib/utils";
 import { useOrderBookQuery } from "@/queries/useOrderBookQuery";
-import { numberParser } from "@/utils/numberParser";
-import { SlidingNumber } from "../ui/shadcn-io/sliding-number";
+import { cn } from "@/lib/utils";
+import { parseNumber } from "@/utils/parseNumber";
+import type { OrderBookRowProps } from "@/types/orderBook.type";
 import * as S from "./OrderBook.styles";
 
-interface OrderBookProps {
-  symbol: string;
-}
+const OrderBookRow = ({ price, amount, maxQty, type }: OrderBookRowProps) => {
+  const priceNum = parseFloat(price);
+  const amountNum = parseFloat(amount);
+  const total = priceNum * amountNum;
 
-export const OrderBook = ({ symbol }: OrderBookProps) => {
+  const widthPercent = `${Math.min((amountNum / maxQty) * 100, 100)}%`;
+  const isAsk = type === "ask";
+
+  return (
+    <div className={S.rowContainer}>
+      <div
+        className={cn(
+          S.rowBgBase,
+          isAsk ? S.rowBgAsk : S.rowBgBid
+        )}
+        style={{ width: widthPercent }}
+      />
+
+      <span
+        className={cn(
+          S.colPrice,
+          S.rowTextBase,
+          isAsk ? S.rowTextAsk : S.rowTextBid
+        )}
+      >
+        {priceNum.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+        })}
+      </span>
+
+      <span
+        className={cn(
+          S.colAmount,
+          S.rowTextSecondary
+        )}
+      >
+        {amountNum.toFixed(4)}
+      </span>
+
+      <span
+        className={cn(
+          S.colTotal,
+          S.rowTextSecondary
+        )}
+      >
+        {parseNumber(total)}
+      </span>
+    </div>
+  );
+};
+
+export const OrderBook = ({ symbol }: { symbol: string }) => {
   const { data, isLoading } = useOrderBookQuery(symbol);
 
   useRealtimeOrderBook(symbol);
@@ -84,64 +132,6 @@ export const OrderBook = ({ symbol }: OrderBookProps) => {
           />
         ))}
       </div>
-    </div>
-  );
-};
-
-interface OrderBookRowProps {
-  price: string;
-  amount: string;
-  maxQty: number;
-  type: "ask" | "bid";
-}
-
-const OrderBookRow = ({ price, amount, maxQty, type }: OrderBookRowProps) => {
-  const priceNum = parseFloat(price);
-  const amountNum = parseFloat(amount);
-  const total = priceNum * amountNum;
-
-  const widthPercent = `${Math.min((amountNum / maxQty) * 100, 100)}%`;
-  const isAsk = type === "ask";
-
-  return (
-    <div className={S.rowContainer}>
-      <div
-        className={cn(
-          S.rowBgBase,
-          isAsk ? S.rowBgAsk : S.rowBgBid
-        )}
-        style={{ width: widthPercent }}
-      />
-
-      <span
-        className={cn(
-          S.colPrice,
-          S.rowTextBase,
-          isAsk ? S.rowTextAsk : S.rowTextBid
-        )}
-      >
-        {priceNum.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-        })}
-      </span>
-
-      <span
-        className={cn(
-          S.colAmount,
-          S.rowTextSecondary
-        )}
-      >
-        {amountNum.toFixed(4)}
-      </span>
-
-      <span
-        className={cn(
-          S.colTotal,
-          S.rowTextSecondary
-        )}
-      >
-        {numberParser(total)}
-      </span>
     </div>
   );
 };
