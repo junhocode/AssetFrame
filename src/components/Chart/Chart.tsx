@@ -6,7 +6,7 @@ import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
 import { useRealTimeTrade } from "@/hooks/useRealTimeTrade";
-import { getRandomColor } from "@/utils/getRandomColor";
+import { stringToColor } from "@/utils/stringToColor";
 import {
   CANDLESTICK_SERIES_OPTIONS,
   VOLUME_SERIES_OPTIONS,
@@ -190,7 +190,7 @@ export const Chart = ({
         existingSeries.setData(dataForSeries);
       } else {
         const seriesOptions = {
-          color: getRandomColor(),
+          color: stringToColor(key),
           lineWidth: 2 as LineWidth,
           priceScaleId: isOscillator ? "oscillator-scale" : "right",
         };
