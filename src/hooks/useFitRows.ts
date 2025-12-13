@@ -12,7 +12,7 @@ export const useFitRows = (
     const updateCount = () => {
       if (ref.current) {
         const height = ref.current.clientHeight;
-        setCount(Math.floor(height / rowHeight));
+        setCount(Math.floor((height - 1) / rowHeight)); 
       }
     };
 

@@ -8,10 +8,10 @@ export const errorContainer =
   "flex h-full items-center justify-center text-xs text-destructive font-mono";
 
 export const asksWrapper =
-  "flex flex-1 flex-col-reverse min-h-0 pb-1 overflow-hidden";
+  "flex flex-1 flex-col-reverse min-h-0 overflow-hidden";
 
 export const bidsWrapper =
-  "flex flex-1 flex-col pt-1 min-h-0 overflow-hidden";
+  "flex flex-1 flex-col min-h-0 overflow-hidden";
 
 export const headerRow = 
   "flex w-full px-3 pt-2 text-[#848E9C] text-xs font-semibold items-center";

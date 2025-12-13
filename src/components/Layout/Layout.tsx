@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAtomValue } from "jotai/react";
 import { Header } from "./Header/Header";
 import { Main } from "./Main/Main";
-import Footer from "./Footer/Footer";
+import { Footer } from "./Footer/Footer";
 import { darkModeAtom } from "@/atoms/themeAtom";
 import * as S from "./Layout.styles";
 
