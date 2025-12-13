@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { numberParser } from '@/utils/numberParser';
+import { numberParser } from '@/utils/parseNumber';
 
 describe("numberParser", () => {
   it("input 0", () => {

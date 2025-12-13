@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { parseWsKlineToRaw } from '@/utils/klineParser';
+import { parseWsKlineToRaw } from '@/utils/parseKline';
 
 describe('parseWsKlineToRaw', () => {
   it('parses WS data into kline format', () => {
