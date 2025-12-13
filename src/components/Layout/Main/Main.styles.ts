@@ -17,4 +17,4 @@ export const chartContainer =
   "relative flex-1 w-full min-h-0 transition-opacity duration-300";
 
 export const orderBookContainer = 
-  "w-[300px] p-2 h-full";
+  "flex flex-col justify-center w-[300px] p-2 h-full";

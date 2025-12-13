@@ -6,7 +6,7 @@ import type { OrderBookResponse } from "@/types/orderBook.type";
 const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
 
 const getOrderBookWsUrl = (symbol: string) =>
-  `${WS_BASE_URL}/${symbol.toLowerCase()}@depth50@1000ms`;
+  `${WS_BASE_URL}/${symbol.toLowerCase()}@depth20@1000ms`;
 
 export const useRealtimeOrderBook = (symbol: string) => {
   const queryClient = useQueryClient();
