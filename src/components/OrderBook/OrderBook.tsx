@@ -1,11 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react"; 
 import { SlidingNumber } from "@/components/ui/sliding-number";
 import { useRealtimeOrderBook } from "@/hooks/useRealTimeOrderBookData";
 import { useOrderBookQuery } from "@/queries/useOrderBookQuery";
 import { cn } from "@/lib/utils";
 import { parseNumber } from "@/utils/parseNumber";
 import type { OrderBookRowProps } from "@/types/orderBook.type";
+import { useFitRows } from "@/hooks/useFitRows";
 import * as S from "./OrderBook.styles";
+
+const ROW_HEIGHT = 25;
 
 const OrderBookRow = ({ price, amount, maxQty, type }: OrderBookRowProps) => {
   const priceNum = parseFloat(price);
@@ -18,13 +21,9 @@ const OrderBookRow = ({ price, amount, maxQty, type }: OrderBookRowProps) => {
   return (
     <div className={S.rowContainer}>
       <div
-        className={cn(
-          S.rowBgBase,
-          isAsk ? S.rowBgAsk : S.rowBgBid
-        )}
+        className={cn(S.rowBgBase, isAsk ? S.rowBgAsk : S.rowBgBid)}
         style={{ width: widthPercent }}
       />
-
       <span
         className={cn(
           S.colPrice,
@@ -32,26 +31,12 @@ const OrderBookRow = ({ price, amount, maxQty, type }: OrderBookRowProps) => {
           isAsk ? S.rowTextAsk : S.rowTextBid
         )}
       >
-        {priceNum.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-        })}
+        {priceNum.toLocaleString(undefined, { minimumFractionDigits: 2 })}
       </span>
-
-      <span
-        className={cn(
-          S.colAmount,
-          S.rowTextSecondary
-        )}
-      >
+      <span className={cn(S.colAmount, S.rowTextSecondary)}>
         {amountNum.toFixed(4)}
       </span>
-
-      <span
-        className={cn(
-          S.colTotal,
-          S.rowTextSecondary
-        )}
-      >
+      <span className={cn(S.colTotal, S.rowTextSecondary)}>
         {parseNumber(total)}
       </span>
     </div>
@@ -60,6 +45,12 @@ const OrderBookRow = ({ price, amount, maxQty, type }: OrderBookRowProps) => {
 
 export const OrderBook = ({ symbol }: { symbol: string }) => {
   const { data, isLoading } = useOrderBookQuery(symbol);
+  
+  const asksRef = useRef<HTMLDivElement>(null);
+  const bidsRef = useRef<HTMLDivElement>(null);
+
+  const asksCount = useFitRows(asksRef, ROW_HEIGHT);
+  const bidsCount = useFitRows(bidsRef, ROW_HEIGHT);
 
   useRealtimeOrderBook(symbol);
 
@@ -70,37 +61,34 @@ export const OrderBook = ({ symbol }: { symbol: string }) => {
     return Math.max(maxBid, maxAsk);
   }, [data]);
 
-  const asks = useMemo(() => {
-    return data?.asks ? [...data.asks].reverse() : [];
-  }, [data?.asks]);
+  const displayAsks = useMemo(() => {
+    const originalAsks = data?.asks || [];
+    return originalAsks.slice(0, Math.max(0, asksCount));
+  }, [data?.asks, asksCount]);
 
-  const bids = data?.bids || [];
+  const displayBids = useMemo(() => {
+    const originalBids = data?.bids || [];
+    return originalBids.slice(0, Math.max(0, bidsCount));
+  }, [data?.bids, bidsCount]);
 
   if (isLoading) {
-    return (
-      <div className={S.loadingContainer}>
-        Loading...
-      </div>
-    );
+    return <div className={S.loadingContainer}>Loading...</div>;
   }
 
   if (!data) {
-    return (
-      <div className={S.errorContainer}>
-        Failed to load
-      </div>
-    );
+    return <div className={S.errorContainer}>Failed to load</div>;
   }
 
   return (
     <div className={S.container}>
       <div className={S.headerRow}>
-          <span className={S.colPrice}>Price(USDT)</span>
-          <span className={S.colAmount}>Amount</span>
-          <span className={S.colTotal}>Total</span>
-        </div>
-      <div className={S.asksWrapper}>
-        {asks.map((ask) => (
+        <span className={S.colPrice}>Price(USDT)</span>
+        <span className={S.colAmount}>Amount</span>
+        <span className={S.colTotal}>Total</span>
+      </div>
+
+      <div ref={asksRef} className={S.asksWrapper}>
+        {displayAsks.map((ask) => (
           <OrderBookRow
             key={ask[0]}
             price={ask[0]}
@@ -115,14 +103,15 @@ export const OrderBook = ({ symbol }: { symbol: string }) => {
         <span className={S.middlePriceWrapper}>
           <span className={S.dollarSign}>$</span>
           <SlidingNumber
-            number={parseFloat(bids[0]?.[0] || "0")}
+            number={parseFloat(data.bids[0]?.[0] || "0")} 
             decimalPlaces={2}
           />
         </span>
       </div>
 
-      <div className={S.bidsWrapper}>
-        {bids.map((bid) => (
+      {/* Bids (매수) - Ref 연결 필수 */}
+      <div ref={bidsRef} className={S.bidsWrapper}>
+        {displayBids.map((bid) => (
           <OrderBookRow
             key={bid[0]}
             price={bid[0]}
