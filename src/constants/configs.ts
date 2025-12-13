@@ -1,10 +1,5 @@
+import type { DeepPartial, CandlestickSeriesPartialOptions, HistogramSeriesPartialOptions, PriceScaleOptions } from "lightweight-charts";
 import type { ChartTooltipProps } from "@/types/chart.type";
-import type {
-  DeepPartial,
-  CandlestickSeriesPartialOptions,
-  HistogramSeriesPartialOptions,
-  PriceScaleOptions,
-} from "lightweight-charts";
 
 export const VOLUME_PRICE_SCALE_ID = "volume-scale";
 
