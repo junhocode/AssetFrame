@@ -7,7 +7,7 @@ import type {
 import type { KlinesData } from "./kline.type";
 import type { InfiniteData } from "@tanstack/react-query";
 
-export interface KlineChartProps {
+export interface ChartProps {
   data: InfiniteData<KlinesData> | undefined;
   fetchNextPage: () => void;
   hasNextPage: boolean;

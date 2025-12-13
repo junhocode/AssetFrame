@@ -5,6 +5,13 @@ export interface SelectorProps {
   onChange: (value: string) => void;
 }
 
+export interface VirtualListProps<T> {
+  items: T[];
+  renderItem: (item: T) => React.ReactNode;
+  estimateSize: number;
+  containerClassName?: string;
+}
+
 export interface IndicatorSelectorProps {
   candlestickData: CandlestickData[];
   period: number;
@@ -15,11 +22,4 @@ export interface PeriodCounterProps {
   period: number;
   setPeriod: (value: number) => void;
   isDisabled: boolean;
-}
-
-export interface VirtualListProps<T> {
-  items: T[];
-  renderItem: (item: T) => React.ReactNode;
-  estimateSize: number;
-  containerClassName?: string;
 }
