@@ -14,7 +14,7 @@ export const bidsWrapper =
   "flex flex-1 flex-col pt-1 min-h-0 overflow-hidden";
 
 export const headerRow = 
-  "flex w-full px-3 text-[#848E9C] text-xs font-semibold items-center";
+  "flex w-full px-3 pt-2 text-[#848E9C] text-xs font-semibold items-center";
 
 export const colPrice = 
   "w-[30%] shrink-0 text-left truncate";
