@@ -6,8 +6,8 @@ import { motion, type HTMLMotionProps, type Transition } from 'motion/react';
 import {
   SlidingNumber,
   type SlidingNumberProps,
-} from '@/components/ui/shadcn-io/sliding-number/index';
-import { Button } from '../../button';
+} from '@/components/ui/sliding-number';
+import { Button } from './button';
 import { cn } from '@/lib/utils';
  
 type CounterProps = HTMLMotionProps<'div'> & {
