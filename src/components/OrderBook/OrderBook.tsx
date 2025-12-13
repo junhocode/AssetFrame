@@ -1,11 +1,11 @@
-import { useMemo, useRef } from "react"; 
+import { useMemo, useRef } from "react";
 import { SlidingNumber } from "@/components/ui/sliding-number";
 import { useRealtimeOrderBook } from "@/hooks/useRealTimeOrderBookData";
+import { useFitRows } from "@/hooks/useFitRows";
 import { useOrderBookQuery } from "@/queries/useOrderBookQuery";
 import { cn } from "@/lib/utils";
 import { parseNumber } from "@/utils/parseNumber";
 import type { OrderBookRowProps } from "@/types/orderBook.type";
-import { useFitRows } from "@/hooks/useFitRows";
 import * as S from "./OrderBook.styles";
 
 const ROW_HEIGHT = 25;
@@ -61,14 +61,20 @@ export const OrderBook = ({ symbol }: { symbol: string }) => {
     return Math.max(maxBid, maxAsk);
   }, [data]);
 
-  const displayAsks = useMemo(() => {
+ const displayAsks = useMemo(() => {
     const originalAsks = data?.asks || [];
-    return originalAsks.slice(0, Math.max(0, asksCount));
+  
+    if (asksCount === 0) return originalAsks;
+
+    return originalAsks.slice(0, asksCount);
   }, [data?.asks, asksCount]);
 
   const displayBids = useMemo(() => {
     const originalBids = data?.bids || [];
-    return originalBids.slice(0, Math.max(0, bidsCount));
+    
+    if (bidsCount === 0) return originalBids;
+
+    return originalBids.slice(0, bidsCount);
   }, [data?.bids, bidsCount]);
 
   if (isLoading) {
@@ -103,13 +109,12 @@ export const OrderBook = ({ symbol }: { symbol: string }) => {
         <span className={S.middlePriceWrapper}>
           <span className={S.dollarSign}>$</span>
           <SlidingNumber
-            number={parseFloat(data.bids[0]?.[0] || "0")} 
+            number={parseFloat(data.bids[0]?.[0] || "0")}
             decimalPlaces={2}
           />
         </span>
       </div>
 
-      {/* Bids (매수) - Ref 연결 필수 */}
       <div ref={bidsRef} className={S.bidsWrapper}>
         {displayBids.map((bid) => (
           <OrderBookRow
