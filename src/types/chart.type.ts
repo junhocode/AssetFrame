@@ -4,11 +4,11 @@ import type {
   LineData,
   Time,
 } from "lightweight-charts";
-import type { KlinesData } from "./kline.type";
 import type { InfiniteData } from "@tanstack/react-query";
+import type { BinanceRestKline } from "@/types/kline.type";
 
 export interface ChartProps {
-  data: InfiniteData<KlinesData> | undefined;
+  data: InfiniteData<BinanceRestKline[]> | undefined;
   fetchNextPage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
