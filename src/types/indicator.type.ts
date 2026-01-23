@@ -5,7 +5,6 @@ export type AllowedIndicator =
   | "MACD"
   | "BollingerBands"
   | "ATR"
-  | "OBV"
   | "Stochastic";
 
 export interface Indicator {
@@ -18,6 +17,19 @@ export interface Indicator {
   stdDev?: number;
 }
 
-export interface IndicatorResults {
-  [id: string]: (number | undefined | any)[];
-}
+export type SeriesData = (number | null)[];
+
+export type IndicatorResults = Record<string, SeriesData>;
+
+export type MarketInput = {
+  high: number[];
+  low: number[];
+  close: number[];
+  volume: number[];
+};
+
+export type IndicatorHandler = (
+  config: Indicator,
+  input: MarketInput,
+  len: number
+) => IndicatorResults;
