@@ -1,11 +1,7 @@
 import { useMemo } from "react";
-import type { KlinesData } from "@/types/kline.type";
 import type { InfiniteData } from "@tanstack/react-query";
-import type {
-  CandlestickData,
-  HistogramData,
-  UTCTimestamp,
-} from "lightweight-charts";
+import type { CandlestickData, HistogramData, UTCTimestamp } from "lightweight-charts";
+import type { KlinesData } from "@/types/kline.type";
 
 export const useFormattedChartData = (
   data: InfiniteData<KlinesData> | undefined

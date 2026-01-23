@@ -1,5 +1,5 @@
-import { useRef } from "react";
 import useWebSocket from "react-use-websocket";
+import { useRef } from "react";
 
 const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
 

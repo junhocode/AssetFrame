@@ -1,11 +1,7 @@
-import {
-  useInfiniteQuery,
-  type QueryKey,
-  type InfiniteData,
-  type UseInfiniteQueryOptions,
-} from "@tanstack/react-query";
-import { QUERY_KEYS } from "@/constants/queryKeys";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getKlines } from "@/apis/klines.api";
+import { QUERY_KEYS } from "@/constants/queryKeys";
+import type { QueryKey, InfiniteData, UseInfiniteQueryOptions } from "@tanstack/react-query";
 import type { GetKlinesParams } from "@/types/kline.type";
 import type { KlinesData } from "@/types/kline.type";
 

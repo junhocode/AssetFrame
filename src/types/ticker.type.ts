@@ -1,4 +1,4 @@
-export interface BinanceTickerData {
+export interface BinanceTicker {
   symbol: string;
   priceChange: string;
   priceChangePercent: string;

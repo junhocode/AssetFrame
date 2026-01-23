@@ -1,19 +1,17 @@
 import * as React from "react";
 import { useState } from "react";
 import { keepPreviousData } from "@tanstack/react-query";
-import type { LineData } from "lightweight-charts";
-import { useFormattedChartData } from "@/hooks/useFormattedChartData";
-import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
-import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
-
 import { IndicatorSelector } from "@/components/IndicatorSelector/IndicatorSelector";
-import { KlineChart } from "@/components/KlineChart/KlineChart";
+import { Chart } from "@/components/Chart/Chart";
 import { OrderBook } from "@/components/OrderBook/OrderBook";
 import { PeriodCounter } from "@/components/PeriodCounter/PeriodCounter";
 import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
-import { TimeScaleSelector } from "@/components/TimeScaleSelector/TimeScaleSelector";
+import { IntervalSelector } from "@/components/IntervalSelector/IntervalSelector";
 import { Spinner } from "@/components/ui/spinner";
-
+import { useFormattedChartData } from "@/hooks/useFormattedChartData";
+import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
+import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
+import type { LineData } from "lightweight-charts";
 import * as S from "./Main.styles";
 
 export const Main = () => {
@@ -97,7 +95,7 @@ export const Main = () => {
         <div className={S.set}>
           <div className={S.selectors}>
             <SymbolSelector value={symbol} onChange={handleSymbolChange} />
-            <TimeScaleSelector
+            <IntervalSelector
               value={timeScale}
               onChange={handleTimeScaleChange}
             />
@@ -118,7 +116,8 @@ export const Main = () => {
               isFetching && !isLoading ? "opacity-50" : "opacity-100"
             }`}
           >
-            <KlineChart
+            <Chart
+              key={symbol}
               data={data}
               fetchNextPage={fetchNextPage}
               hasNextPage={hasNextPage}

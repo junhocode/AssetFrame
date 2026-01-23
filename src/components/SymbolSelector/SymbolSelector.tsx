@@ -1,15 +1,11 @@
 import { useState, useMemo } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { VirtualList } from "@/components/VirtualList/VirtualList";
-import { PriceChangeBadge } from "../PriceChangeBadge/PriceChangeBadge";
+import { PriceChangeBadge } from "@/components/PriceChangeBadge/PriceChangeBadge";
 import { Button } from "@/components/ui/button";
-import { useSymbols } from "@/hooks/useSymbols";
 import { Command, CommandEmpty, CommandInput } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useSymbols } from "@/hooks/useSymbols";
 import type { SelectorProps } from "@/types/selector.type";
 import * as S from "./SymbolSelector.styles";
 

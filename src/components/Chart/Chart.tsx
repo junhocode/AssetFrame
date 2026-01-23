@@ -6,7 +6,7 @@ import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
 import { useRealTimeTrade } from "@/hooks/useRealTimeTrade";
-import { getRandomColor } from "@/utils/randomColorGenarator";
+import { stringToColor } from "@/utils/stringToColor";
 import {
   CANDLESTICK_SERIES_OPTIONS,
   VOLUME_SERIES_OPTIONS,
@@ -20,17 +20,17 @@ import type {
   CandlestickData,
   LineWidth
 } from "lightweight-charts";
-import type { ChartTooltipProps, KlineChartProps } from "@/types/chart.type";
-import * as S from "./KlineChart.styles";
+import type { ChartTooltipProps, ChartProps } from "@/types/chart.type";
+import * as S from "./Chart.styles";
 
-export const KlineChart = ({
+export const Chart = ({
   data,
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
   params,
   indicatorData,
-}: KlineChartProps) => {
+}: ChartProps) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -190,7 +190,7 @@ export const KlineChart = ({
         existingSeries.setData(dataForSeries);
       } else {
         const seriesOptions = {
-          color: getRandomColor(),
+          color: stringToColor(key),
           lineWidth: 2 as LineWidth,
           priceScaleId: isOscillator ? "oscillator-scale" : "right",
         };

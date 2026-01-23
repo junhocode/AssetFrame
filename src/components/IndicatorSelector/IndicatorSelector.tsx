@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { MultiSelect } from "../ui/multi-select";
-import { calculateIndicators } from "@/utils/indicatorCalculator";
+import { calculateIndicators } from "@/utils/calculateIndicators";
 import { INDICATORS } from "@/constants/configs";
 import type { LineData } from "lightweight-charts";
 import type { IndicatorSelectorProps } from "@/types/selector.type";

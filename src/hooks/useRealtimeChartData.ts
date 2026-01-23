@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/constants/queryKeys";
-import { parseWsKlineToRaw } from "@/utils/klineParser";
+import { parseKline } from "@/utils/parseKline";
 import type { GetKlinesParams, KlinesData } from "@/types/kline.type";
 
 const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
@@ -19,7 +19,7 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
       const message = JSON.parse(event.data);
       if (message.e !== "kline") return;
 
-      const newRawKline = parseWsKlineToRaw(message.k);
+      const newRawKline = parseKline(message.k);
       const newKlineTime = newRawKline[0];
 
       queryClient.setQueryData<InfiniteData<KlinesData>>(

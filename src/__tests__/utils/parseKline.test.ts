@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
-import { parseWsKlineToRaw } from '@/utils/klineParser';
+import { parseKline } from '@/utils/parseKline';
 
-describe('parseWsKlineToRaw', () => {
+describe('parseKline', () => {
   it('parses WS data into kline format', () => {
     const mockWsKline = {
       t: 1700000000000, 
@@ -23,7 +23,7 @@ describe('parseWsKlineToRaw', () => {
       B: "0"            
     };
 
-    const result = parseWsKlineToRaw(mockWsKline as any);
+    const result = parseKline(mockWsKline as any);
 
     expect(result).toHaveLength(12);
 

@@ -1,12 +1,8 @@
 import { ArrowDown, ArrowUp, Minus } from "lucide-react";
+import { SlidingNumber } from "@/components/ui/sliding-number";
 import { cn } from "@/lib/utils";
-import { SlidingNumber } from "../ui/shadcn-io/sliding-number";
+import type { PriceChangeBadgeProps } from "@/types/selector.type";
 import * as S from "./PriceChangeBadge.styles";
-
-interface PriceChangeBadgeProps {
-  value: number | string;
-  className?: string;
-}
 
 export const PriceChangeBadge = ({
   value,

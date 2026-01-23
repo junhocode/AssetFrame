@@ -1,6 +1,6 @@
-import type { SymbolData } from "@/types/symbol.type";
+import type { Symbol } from "@/types/symbol.type";
 
-export const COIN_WHITELIST: SymbolData[] = [
+export const COIN_WHITELIST: Symbol[] = [
   {
     symbol: "BTCUSDT",
     name: "Bitcoin",
