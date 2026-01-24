@@ -2,17 +2,13 @@ import { useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/constants/queryKeys";
+import { WS_ENDPOINTS } from "@/constants/ws";
 import { parseKline } from "@/utils/parseKline";
 import type { KlinesParams, Kline } from "@/types/kline.type";
 
-const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
-
-const getWsUrl = (symbol: string, interval: string) =>
-  `${WS_BASE_URL}/${symbol.toLowerCase()}@kline_${interval}`;
-
-export const useRealtimeChartData = (params: KlinesParams) => {
+export const useChartSync = (params: KlinesParams) => {
   const queryClient = useQueryClient();
-  const wsUrl = params.symbol ? getWsUrl(params.symbol, params.interval) : null;
+  const wsUrl = params.symbol ? WS_ENDPOINTS.chartData(params.symbol, params.interval) : null;
 
   const { readyState } = useWebSocket(wsUrl, {
     onMessage: (event) => {
@@ -22,31 +18,28 @@ export const useRealtimeChartData = (params: KlinesParams) => {
       const newRawKline = parseKline(message.k);
       const newKlineTime = newRawKline[0];
 
-      queryClient.setQueryData<InfiniteData<Kline>>(
+      queryClient.setQueryData<InfiniteData<Kline[]>>(
         QUERY_KEYS.klines.list(params),
         (oldData) => {
           if (!oldData || !oldData.pages || oldData.pages.length === 0) {
             return oldData;
           }
 
-          const newData = {
+          const newData: InfiniteData<Kline[]> = {
             ...oldData,
-            pages: oldData.pages.map((page) => ({
-              klines: [...page.klines],
-            })),
+            pages: oldData.pages.map((page) => [...page]),
           };
 
           const latestPage = newData.pages[newData.pages.length - 1];
 
-          const existingKlineIndex = latestPage.klines.findIndex(
+          const existingKlineIndex = latestPage.findIndex(
             (k) => k[0] === newKlineTime
           );
 
           if (existingKlineIndex !== -1) {
-            latestPage.klines[existingKlineIndex] = newRawKline;
+            latestPage[existingKlineIndex] = newRawKline;
           } else {
-            latestPage.klines.push(newRawKline);
-            latestPage.klines.sort((a, b) => a[0] - b[0]);
+            latestPage.push(newRawKline);
           }
 
           return newData;
