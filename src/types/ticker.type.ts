@@ -21,3 +21,11 @@ export interface Ticker {
   lastId: number;
   count: number;
 }
+
+export interface DisplayTicker {
+  symbol: string;
+  name: string;
+  logoUrl: string;
+  lastPrice?: string;
+  priceChangePercent?: string;
+}

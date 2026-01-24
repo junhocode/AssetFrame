@@ -1,6 +1,6 @@
-import type { Symbol } from "@/types/symbol.type";
+import type { DisplayTicker } from "@/types/ticker.type";
 
-export const WHITELISTED_CRYPTOS: Symbol[] = [
+export const WHITELISTED_CRYPTOS: DisplayTicker[] = [
   {
     symbol: "BTCUSDT",
     name: "Bitcoin",
