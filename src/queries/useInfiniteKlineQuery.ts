@@ -32,21 +32,15 @@ export const useInfiniteKlinesQuery = (
     },
 
     getNextPageParam: (lastPage) => {
-      if (
-        typeof params.limit !== "number" ||
-        lastPage.length < params.limit
-      ) {
+      if (!params.limit || lastPage.length < params.limit) {
         return undefined;
       }
 
-      const sortedCandles = [...lastPage].sort((a, b) => a[0] - b[0]);
-      const oldestCandleTime = sortedCandles[0]?.[0];
+      const oldestCandle = lastPage[0];
 
-      if (!oldestCandleTime) {
-        return undefined;
-      }
+      if (!oldestCandle) return undefined;
 
-      return oldestCandleTime - 1;
+      return oldestCandle[0] - 1;
     },
 
     initialPageParam: undefined,
