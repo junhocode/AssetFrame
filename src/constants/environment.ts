@@ -1,1 +1,0 @@
-export const WS_URL = import.meta.env.VITE_BINANCE_WS_URL;
