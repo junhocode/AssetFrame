@@ -5,7 +5,7 @@ import { themeAtom } from "@/atoms/themeAtom";
 import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
-import { useRealTimeTrade } from "@/hooks/useRealTimeTrade";
+import { useRealTimeTrade } from "@/ws/useTrade";
 import { stringToColor } from "@/utils/stringToColor";
 import {
   CANDLESTICK_SERIES_OPTIONS,

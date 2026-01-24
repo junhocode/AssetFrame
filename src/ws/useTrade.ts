@@ -1,12 +1,10 @@
-import useWebSocket from "react-use-websocket";
 import { useRef } from "react";
+import useWebSocket from "react-use-websocket";
+import { WS_ENDPOINTS } from "@/constants/ws";
 
-const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
-
-export const useRealTimeTrade = (symbol: string) => {
+export const useTrade = (symbol: string) => {
   const latestPriceRef = useRef<number | null>(null);
-
-  const wsUrl = symbol ? `${WS_BASE_URL}/${symbol.toLowerCase()}@trade` : null;
+  const wsUrl = symbol ? WS_ENDPOINTS.trade(symbol) : null;
 
   useWebSocket(wsUrl, {
     onMessage: (event) => {
