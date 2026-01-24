@@ -1,6 +1,6 @@
 import type { Symbol } from "@/types/symbol.type";
 
-export const COIN_WHITELIST: Symbol[] = [
+export const WHITELISTED_CRYPTOS: Symbol[] = [
   {
     symbol: "BTCUSDT",
     name: "Bitcoin",
@@ -28,6 +28,6 @@ export const COIN_WHITELIST: Symbol[] = [
   },
 ];
 
-export const WHITELISTED_SYMBOLS: string[] = COIN_WHITELIST.map(
+export const WHITELISTED_SYMBOLS: string[] = WHITELISTED_CRYPTOS.map(
   (coin) => coin.symbol
 );

@@ -1,6 +1,6 @@
-import type { BinanceRestKline, BinanceWSKline } from "@/types/kline.type";
+import type { Kline, WSKline } from "@/types/kline.type";
 
-export const parseKline = (wsKline: BinanceWSKline["k"]): BinanceRestKline => {
+export const parseKline = (wsKline: WSKline["k"]): Kline => {
   return [
     wsKline.t,
     wsKline.o,

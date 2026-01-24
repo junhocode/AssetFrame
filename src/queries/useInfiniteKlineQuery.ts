@@ -2,16 +2,15 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getKlines } from "@/apis/klines.api";
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import type { QueryKey, InfiniteData, UseInfiniteQueryOptions } from "@tanstack/react-query";
-import type { GetKlinesParams } from "@/types/kline.type";
-import type { KlinesData } from "@/types/kline.type";
+import type { Kline, KlinesParams } from "@/types/kline.type";
 
 export const useInfiniteKlinesQuery = (
-  params: GetKlinesParams,
+  params: KlinesParams,
   options?: Omit<
     UseInfiniteQueryOptions<
-      KlinesData,
+      Kline[],
       Error,
-      InfiniteData<KlinesData>,
+      InfiniteData<Kline[]>,
       QueryKey,
       number | undefined
     >,
@@ -19,9 +18,9 @@ export const useInfiniteKlinesQuery = (
   >
 ) => {
   return useInfiniteQuery<
-    KlinesData,
+    Kline[],
     Error,
-    InfiniteData<KlinesData>,
+    InfiniteData<Kline[]>,
     QueryKey,
     number | undefined
   >({
@@ -29,20 +28,19 @@ export const useInfiniteKlinesQuery = (
 
     queryFn: async ({ pageParam }) => {
       const rawData = await getKlines({ ...params, endTime: pageParam });
-      return { klines: rawData };
+      return rawData;
     },
 
     getNextPageParam: (lastPage) => {
-      const lastCandles = lastPage.klines;
-
       if (
         typeof params.limit !== "number" ||
-        lastCandles.length < params.limit
+        lastPage.length < params.limit
       ) {
         return undefined;
       }
 
-      const oldestCandleTime = lastCandles.sort((a, b) => a[0] - b[0])[0]?.[0];
+      const sortedCandles = [...lastPage].sort((a, b) => a[0] - b[0]);
+      const oldestCandleTime = sortedCandles[0]?.[0];
 
       if (!oldestCandleTime) {
         return undefined;

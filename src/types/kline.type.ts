@@ -1,6 +1,6 @@
 import type { CandlestickData, HistogramData, Time } from "lightweight-charts";
 
-export type BinanceRestKline = [
+export type Kline = [
   number, // Kline open time
   string, // Open price
   string, // High price
@@ -15,7 +15,7 @@ export type BinanceRestKline = [
   string // Unused field, ignore.
 ];
 
-export interface BinanceWSKline {
+export interface WSKline {
   e: string;
   E: number;
   s: string;
@@ -40,7 +40,7 @@ export interface BinanceWSKline {
   };
 }
 
-export interface GetKlinesParams {
+export interface KlinesParams {
   symbol: string;
   interval: string;
   endTime?: number;
@@ -52,7 +52,3 @@ export type CandleData = CandlestickData<Time> & {
 };
 
 export type VolumeData = HistogramData<Time>;
-
-export interface KlinesData {
-  klines: BinanceRestKline[];
-}

@@ -1,17 +1,17 @@
 import { useMemo } from "react";
 import type { InfiniteData } from "@tanstack/react-query";
 import type { CandlestickData, HistogramData, UTCTimestamp } from "lightweight-charts";
-import type { KlinesData } from "@/types/kline.type";
+import type { Kline } from "@/types/kline.type";
 
 export const useFormattedChartData = (
-  data: InfiniteData<KlinesData> | undefined
+  data: InfiniteData<Kline[]> | undefined
 ) => {
   const formattedData = useMemo(() => {
     if (!data?.pages || data.pages.length === 0) {
       return { candlestickData: [], volumeData: [] };
     }
 
-    const combinedRawKlines = data.pages.flatMap((page) => page.klines);
+    const combinedRawKlines = data.pages.flatMap((page) => page);
 
     combinedRawKlines.sort((a, b) => a[0] - b[0]);
 

@@ -3,14 +3,14 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { parseKline } from "@/utils/parseKline";
-import type { GetKlinesParams, KlinesData } from "@/types/kline.type";
+import type { KlinesParams, Kline } from "@/types/kline.type";
 
 const WS_BASE_URL = import.meta.env.VITE_BINANCE_WS_URL;
 
 const getWsUrl = (symbol: string, interval: string) =>
   `${WS_BASE_URL}/${symbol.toLowerCase()}@kline_${interval}`;
 
-export const useRealtimeChartData = (params: GetKlinesParams) => {
+export const useRealtimeChartData = (params: KlinesParams) => {
   const queryClient = useQueryClient();
   const wsUrl = params.symbol ? getWsUrl(params.symbol, params.interval) : null;
 
@@ -22,7 +22,7 @@ export const useRealtimeChartData = (params: GetKlinesParams) => {
       const newRawKline = parseKline(message.k);
       const newKlineTime = newRawKline[0];
 
-      queryClient.setQueryData<InfiniteData<KlinesData>>(
+      queryClient.setQueryData<InfiniteData<Kline>>(
         QUERY_KEYS.klines.list(params),
         (oldData) => {
           if (!oldData || !oldData.pages || oldData.pages.length === 0) {

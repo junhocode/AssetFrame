@@ -8,7 +8,7 @@ interface RateLimits {
   count: number;
 }
 
-export interface OrderBookResponse {
+export interface OrderBook {
   lastUpdateId: number;
   bids: OrderBookEntry[];
   asks: OrderBookEntry[];

@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { useAtom } from 'jotai/react'
-import { darkModeAtom } from '@/atoms/themeAtom'
+import { themeAtom } from '@/atoms/themeAtom';
 import { MoonStar, SunMedium } from 'lucide-react';
 import { Button } from '../ui/button';
 import * as S from "./ThemeSwitcher.styles"
 
 export const ThemeSwitcher = () => {
-  const [isDark, setIsDark] = useAtom(darkModeAtom)
+  const [isDark, setIsDark] = useAtom(themeAtom)
 
   const toggleTheme = () => {
     setIsDark((prev) => !prev)

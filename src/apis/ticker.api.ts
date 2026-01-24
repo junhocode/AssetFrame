@@ -1,11 +1,11 @@
 import fetcher from "./fetcher.api";
 import { ENDPOINT } from "./url.api";
-import type { BinanceTicker } from "@/types/ticker.type";
+import type { Ticker } from "@/types/ticker.type";
 
-export const getTickers = async (symbols: string[]): Promise<BinanceTicker[]> => {
+export const getTickers = async (symbols: string[]): Promise<Ticker[]> => {
   const symbolsParam = JSON.stringify(symbols);
 
-  return fetcher.get<BinanceTicker[]>({
+  return fetcher.get<Ticker[]>({
     url: ENDPOINT.TICKER,
     params: { symbols: symbolsParam }
   });

@@ -3,11 +3,11 @@ import { useAtomValue } from "jotai/react";
 import { Header } from "./Header/Header";
 import { Main } from "./Main/Main";
 import { Footer } from "./Footer/Footer";
-import { darkModeAtom } from "@/atoms/themeAtom";
+import { themeAtom } from "@/atoms/themeAtom";
 import * as S from "./Layout.styles";
 
 export const Layout = () => {
-  const isDark = useAtomValue(darkModeAtom);
+  const isDark = useAtomValue(themeAtom);
 
   useEffect(() => {
     const root = window.document.documentElement;

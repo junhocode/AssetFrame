@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { createChart } from "lightweight-charts";
 import { useAtomValue } from "jotai/react";
-import { darkModeAtom } from "@/atoms/themeAtom";
+import { themeAtom } from "@/atoms/themeAtom";
 import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
 import { useFormattedChartData } from "@/hooks/useFormattedChartData";
 import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
@@ -36,7 +36,7 @@ export const Chart = ({
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
 
-  const isDark = useAtomValue(darkModeAtom);
+  const isDark = useAtomValue(themeAtom);
 
   const OSCILLATORS = ["RSI", "MACD", "Stochastic", "ATR", "OBV"];
 
@@ -138,7 +138,7 @@ export const Chart = ({
     volumeSeriesRef.current.setData(volumeData);
 
     if (visibleRangeRef.current && data?.pages) {
-      const addedDataCount = data.pages[0]?.klines.length ?? 0;
+      const addedDataCount = data.pages[0]?.length ?? 0;
       const newFrom = visibleRangeRef.current.from + addedDataCount;
       const newTo = visibleRangeRef.current.to + addedDataCount;
 
