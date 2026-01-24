@@ -21,6 +21,7 @@ export const useInfiniteKlinesQuery = (params: KlinesParams) => {
       if (lastPage.length === 0) return undefined;
 
       const oldestCandle = lastPage[0];
+
       if (!oldestCandle) return undefined;
 
       return oldestCandle[0] - 1;

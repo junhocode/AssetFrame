@@ -21,6 +21,11 @@ export const VOLUME_SCALE_OPTIONS: DeepPartial<PriceScaleOptions> = {
   scaleMargins: { top: 0.8, bottom: 0 },
 };
 
+export const VOLUME_COLORS = {
+  UP: "rgba(0, 150, 136, 0.8)",
+  DOWN: "rgba(255, 82, 82, 0.8)",
+};
+
 export const FETCHPAGE_THRESHOLD = 20;
 
 export const INTERVALS = ["1s", "1m", "15m", "1h", "4h", "1d", "1w", "1M"];
