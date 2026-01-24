@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { SlidingNumber } from "@/components/ui/sliding-number";
-import { useRealtimeOrderBook } from "@/hooks/useRealTimeOrderBookData";
+import { useRealtimeOrderBook } from "@/ws/useOrderBook";
 import { useOrderBookQuery } from "@/queries/useOrderBookQuery";
 import { cn } from "@/lib/utils";
 import { parseNumber } from "@/utils/parseNumber";
