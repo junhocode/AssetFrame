@@ -5,7 +5,7 @@ export const logoContainer =
   "flex items-center gap-2 font-bold text-lg text-foreground";
 
 export const slogan =
-  "text-yellow-600 dark:text-yellow-300 text-xs";
+  "text-brand text-xs";
 
 export const actionsContainer =
   "flex items-center gap-3";

@@ -29,7 +29,7 @@ export const middleBar =
   "shrink-0 h-[40px] min-h-[40px] border-y border-border bg-muted/30 flex items-center justify-center z-20 select-none";
 
 export const middlePriceWrapper = 
-  "flex text-lg font-bold text-yellow-600 dark:text-yellow-300 items-center";
+  "flex text-lg font-bold text-brand items-center";
 
 export const dollarSign = 
   "mr-1";
