@@ -1,5 +1,5 @@
 export const container =
-  "flex items-center gap-1 text-xs font-medium font-mono tabular-nums slashed-zero";
+  "flex items-center gap-0.5 text-xs font-medium font-mono tabular-nums slashed-zero";
 
 export const neutralColor = 
   "text-neutral-500";

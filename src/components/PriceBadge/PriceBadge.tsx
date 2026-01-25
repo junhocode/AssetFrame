@@ -1,13 +1,13 @@
 import { ArrowDown, ArrowUp, Minus } from "lucide-react";
 import { SlidingNumber } from "@/components/ui/sliding-number";
 import { cn } from "@/lib/utils";
-import type { PriceChangeBadgeProps } from "@/types/selector.type";
-import * as S from "./PriceChangeBadge.styles";
+import type { PriceBadgeProps } from "@/types/selector.type";
+import * as S from "./PriceBadge.styles";
 
-export const PriceChangeBadge = ({
+export const PriceBadge = ({
   value,
   className,
-}: PriceChangeBadgeProps) => {
+}: PriceBadgeProps) => {
   const numValue = Number(value);
 
   const isPositive = numValue > 0;

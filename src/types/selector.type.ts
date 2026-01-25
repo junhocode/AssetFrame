@@ -12,7 +12,7 @@ export interface VirtualListProps<T> {
   containerClassName?: string;
 }
 
-export interface PriceChangeBadgeProps {
+export interface PriceBadgeProps {
   value: number | string;
   className?: string;
 }
