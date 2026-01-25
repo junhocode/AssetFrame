@@ -35,7 +35,6 @@ export const INDICATORS = [
   { value: "BollingerBands", label: "Bollinger Bands (BB)" },
   { value: "EMA", label: "Exponential Moving Average (EMA)" },
   { value: "MACD", label: "Moving Average Convergence Divergence (MACD)" },
-  { value: "OBV", label: "On Balance Volume (OBV)" },
   { value: "RSI", label: "Relative Strength Index (RSI)" },
   { value: "SMA", label: "Simple Moving Average (SMA)" },
   { value: "Stochastic", label: "Stochastic Oscillator (KD)" },
