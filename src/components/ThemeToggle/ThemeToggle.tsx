@@ -1,25 +1,25 @@
-import { useEffect } from 'react';
-import { useAtom } from 'jotai/react'
-import { themeAtom } from '@/atoms/themeAtom';
-import { MoonStar, SunMedium } from 'lucide-react';
-import { Button } from '../ui/button';
-import * as S from "./ThemeSwitcher.styles"
+import { useEffect } from "react";
+import { useAtom } from "jotai/react"
+import { themeAtom } from "@/atoms/themeAtom";
+import { MoonStar, SunMedium } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import * as S from "./ThemeToggle.styles"
 
-export const ThemeSwitcher = () => {
+export const ThemeToggle = () => {
   const [isDark, setIsDark] = useAtom(themeAtom)
 
   const toggleTheme = () => {
     setIsDark((prev) => !prev)
   }
-  
+
   useEffect(() => {
     const root = window.document.documentElement;
     if (isDark) {
-        root.classList.add('dark')
+      root.classList.add("dark")
     } else {
-        root.classList.remove('dark')
+      root.classList.remove("dark")
     }
-  },[isDark])
+  }, [isDark])
 
   return (
     <Button
