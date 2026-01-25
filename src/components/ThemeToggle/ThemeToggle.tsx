@@ -1,7 +1,7 @@
 import { useEffect } from "react";
+import { MoonStar, SunMedium } from "lucide-react";
 import { useAtom } from "jotai/react"
 import { themeAtom } from "@/atoms/themeAtom";
-import { MoonStar, SunMedium } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as S from "./ThemeToggle.styles"
 
