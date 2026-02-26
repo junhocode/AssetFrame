@@ -1,9 +1,4 @@
-import type {
-  IChartApi,
-  CandlestickData,
-  LineData,
-  Time,
-} from "lightweight-charts";
+import type { IChartApi, CandlestickData, LineData, Time } from "lightweight-charts";
 import type { InfiniteData } from "@tanstack/react-query";
 import type { Kline } from "@/types/kline.type";
 

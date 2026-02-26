@@ -52,3 +52,4 @@ export type CandleData = CandlestickData<Time> & {
 };
 
 export type VolumeData = HistogramData<Time>;
+

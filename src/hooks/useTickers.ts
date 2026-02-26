@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTickersQuery } from "@/queries/useTickersQuery";
+import { useTickersQuery } from "@/queries/useTickerQuery";
 import { WHITELISTED_CRYPTOS } from "@/constants/whiteList";
 import type { DisplayTicker } from "@/types/ticker.type";
 

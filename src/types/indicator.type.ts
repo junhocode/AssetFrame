@@ -1,11 +1,4 @@
-export type AllowedIndicator =
-  | "SMA"
-  | "EMA"
-  | "RSI"
-  | "MACD"
-  | "BollingerBands"
-  | "ATR"
-  | "Stochastic";
+export type AllowedIndicator = "SMA" | "EMA" | "RSI" | "MACD" | "BollingerBands" | "ATR" | "Stochastic";
 
 export interface Indicator {
   id: string;
