@@ -6,12 +6,6 @@ export const useOrderBookQuery = (symbol: string) => {
   return useQuery({
     queryKey: QUERY_KEYS.orderBook.detail(symbol),
     
-    queryFn: () => getOrderBooks(symbol),
-    
-    refetchInterval: false,
-
-    staleTime: 4000,
-
-    refetchOnWindowFocus: true,
+    queryFn: () => getOrderBooks(symbol)
   });
 };
