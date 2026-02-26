@@ -14,7 +14,7 @@ export const fetching =
   "absolute inset-0 z-10 flex flex-col justify-center items-center gap-2 bg-black/50 backdrop-blur-sm bg-background text-foreground";
 
 export const chartContainer = 
-  "relative flex-1 w-full min-h-0 transition-opacity duration-300";
+  "relative flex-1 w-full min-h-0 transition-opacity";
 
 export const orderBookContainer = 
   "flex flex-col justify-center w-[300px] p-2 h-full";

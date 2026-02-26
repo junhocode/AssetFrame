@@ -60,7 +60,7 @@ function Counter({
           onClick={handleDecrement}
           disabled={ disabled || number < min }
           className={cn(
-            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-2xl font-light pb-[3px] hover:text-brand dark:hover:text-brand transition-colors duration-300 ease-in-out',
+            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-2xl font-light pb-[3px] hover:text-brand dark:hover:text-brand',
             buttonProps?.className,
           )}
         >
@@ -81,7 +81,7 @@ function Counter({
           onClick={handleIncrement}
           disabled={ disabled || number > max }
           className={cn(
-            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-2xl font-light pb-[3px] hover:text-brand dark:hover:text-brand transition-colors duration-300 ease-in-out',
+            'bg-white dark:bg-neutral-950 hover:bg-white/70 dark:hover:bg-neutral-950/70 text-neutral-950 dark:text-white text-2xl font-light pb-[3px] hover:text-brand dark:hover:text-brand',
             buttonProps?.className,
           )}
         >

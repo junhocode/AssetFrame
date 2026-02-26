@@ -1,5 +1,5 @@
 export const header =
-  "flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-4 z-50 transition-colors duration-300";
+  "flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-4 z-50";
 
 export const logoContainer =
   "flex items-center gap-2 font-bold text-lg text-foreground";

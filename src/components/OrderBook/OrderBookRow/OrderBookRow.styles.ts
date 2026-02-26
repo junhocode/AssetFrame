@@ -14,7 +14,7 @@ export const rowContainer =
   "relative flex w-full h-[25px] min-h-[25px] max-h-[25px] shrink-0 cursor-pointer items-center px-1 hover:bg-muted/50 select-none";
 
 export const rowBgBase = 
-  "absolute right-0 top-0 bottom-0 z-0 transition-all duration-300";
+  "absolute right-0 top-0 bottom-0 z-0";
 
 export const rowBgAsk = 
   "bg-red-500/15 dark:bg-red-500/20";
