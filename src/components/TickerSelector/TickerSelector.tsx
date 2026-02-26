@@ -1,25 +1,22 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { VirtualList } from "@/components/VirtualList/VirtualList";
-import { PriceChangeBadge } from "@/components/PriceChangeBadge/PriceChangeBadge";
+import { PriceBadge } from "@/components/PriceBadge/PriceBadge";
 import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandInput } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useSymbols } from "@/hooks/useSymbols";
+import { useTickerSearch } from "@/hooks/useTickerSearch";
 import type { SelectorProps } from "@/types/selector.type";
-import * as S from "./SymbolSelector.styles";
+import * as S from "./TickerSelector.styles";
 
-export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
+export const TickerSelector = ({ value, onChange }: SelectorProps) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { allSymbols, filteredSymbols, isLoading, isError } =
-    useSymbols(searchQuery);
+  const { filteredTickers, isLoading, isError } = useTickerSearch(searchQuery);
 
-  const selectedSymbol = useMemo(() => {
-    if (!value || !allSymbols) return null;
-    return allSymbols.find((s) => s.symbol === value);
-  }, [allSymbols, value]);
+  const selectedTicker = value 
+    ? filteredTickers.find((t) => t.symbol === value) 
+    : null;
 
   const handleSelect = (symbolValue: string) => {
     onChange(symbolValue.toUpperCase());
@@ -52,15 +49,15 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
           className={S.combobox}
         >
           <div className={S.selectedSymbolContainer}>
-            {selectedSymbol ? (
+            {selectedTicker ? (
               <>
                 <img
-                  src={selectedSymbol.logoUrl}
-                  alt={selectedSymbol.name}
+                  src={selectedTicker.logoUrl}
+                  alt={selectedTicker.name}
                   className={S.logoIcon}
                 />
-                <span className="pr-4">{selectedSymbol.name}</span>
-                <PriceChangeBadge value={selectedSymbol.priceChangePercent ?? 0} />
+                <span className="pr-4">{selectedTicker.name}</span>
+                <PriceBadge value={selectedTicker.priceChangePercent ?? 0} />
               </>
             ) : (
               "Select crypto..."
@@ -76,31 +73,31 @@ export const SymbolSelector = ({ value, onChange }: SelectorProps) => {
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
-          <div className={S.virtualList}>
-            {filteredSymbols.length > 0 ? (
-              <VirtualList
-                items={filteredSymbols}
-                estimateSize={32}
-                renderItem={(symbol) => (
-                  <div
+          <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
+            {filteredTickers.length > 0 ? (
+              <CommandGroup>
+                {filteredTickers.map((ticker) => (
+                  <CommandItem
+                    key={ticker.symbol}
+                    value={ticker.symbol}
+                    onSelect={() => handleSelect(ticker.symbol)}
                     className={S.virtualItem}
-                    onClick={() => handleSelect(symbol.symbol)}
                   >
                     <img
-                      src={symbol.logoUrl}
-                      alt={symbol.name}
+                      src={ticker.logoUrl}
+                      alt={ticker.name}
                       className={S.logoIconInList}
                     />
-                    <span className="grow">{symbol.name}</span>
-                    <PriceChangeBadge value={symbol.priceChangePercent ?? 0} />
+                    <span className="grow">{ticker.name}</span>
+                    <PriceBadge value={ticker.priceChangePercent ?? 0} />
                     <Check
-                      className={S.getCheckIconStyles(value, symbol.symbol)}
+                      className={S.getCheckIconStyles(value, ticker.symbol)}
                     />
-                  </div>
-                )}
-              />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
             ) : (
-              <CommandEmpty>No crypto found.</CommandEmpty>
+              <CommandEmpty>No ticker found.</CommandEmpty>
             )}
           </div>
         </Command>
