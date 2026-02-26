@@ -3,9 +3,9 @@ import { createChart } from "lightweight-charts";
 import { useAtomValue } from "jotai/react";
 import { themeAtom } from "@/atoms/themeAtom";
 import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
-import { useFormattedChartData } from "@/hooks/useFormattedChartData";
+import { useChartData } from "@/hooks/useChartData";
 import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
-import { useRealTimeTrade } from "@/ws/useTrade";
+import { useTradePrice } from "@/ws/useTradePrice";
 import { stringToColor } from "@/utils/stringToColor";
 import {
   CANDLESTICK_SERIES_OPTIONS,
@@ -45,7 +45,7 @@ export const Chart = ({
     INITIAL_TOOLTIP_STATE
   );
 
-  const { candlestickData, volumeData } = useFormattedChartData(data);
+  const { candlestickData, volumeData } = useChartData(data);
   const { handleVisibleLogicalRangeChange, visibleRangeRef, scrollLockRef } =
     useChartInfiniteScroll({
       chartRef,
@@ -54,7 +54,7 @@ export const Chart = ({
       isFetchingNextPage,
     });
 
-  const latestPriceRef = useRealTimeTrade(params.symbol);
+  const { latestPriceRef } = useTradePrice(params.symbol);
 
   useEffect(() => {
     if (!chartContainerRef.current || chartRef.current) return;

@@ -1,5 +1,5 @@
 import { SystemStatus } from "@/components/SystemStatus/SystemStatus";
-import { ThemeSwitcher } from "@/components/ThemeSwitcher/ThemeSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle/ThemeToggle";
 import { GitHubButton } from "@/components/GitHubButton/GitHubButton";
 import * as S from "./Header.styles";
 
@@ -17,7 +17,7 @@ export const Header = () => {
         <SystemStatus />
         <div className={S.divider} />
         <GitHubButton />
-        <ThemeSwitcher />
+        <ThemeToggle />
       </div>
     </header>
   );

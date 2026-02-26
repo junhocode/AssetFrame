@@ -1,21 +1,21 @@
 import * as React from "react";
 import { useState } from "react";
-import { keepPreviousData } from "@tanstack/react-query";
 import { IndicatorSelector } from "@/components/IndicatorSelector/IndicatorSelector";
 import { Chart } from "@/components/Chart/Chart";
 import { OrderBook } from "@/components/OrderBook/OrderBook";
 import { PeriodCounter } from "@/components/PeriodCounter/PeriodCounter";
-import { SymbolSelector } from "@/components/SymbolSelector/SymbolSelector";
+import { TickerSelector } from "@/components/TickerSelector/TickerSelector";
 import { IntervalSelector } from "@/components/IntervalSelector/IntervalSelector";
 import { Spinner } from "@/components/ui/spinner";
-import { useFormattedChartData } from "@/hooks/useFormattedChartData";
-import { useRealtimeChartData } from "@/hooks/useRealtimeChartData";
+import { useTickers } from "@/hooks/useTickers";
+import { useChartData } from "@/hooks/useChartData";
 import { useInfiniteKlinesQuery } from "@/queries/useInfiniteKlineQuery";
 import type { LineData } from "lightweight-charts";
 import * as S from "./Main.styles";
+import { useKline } from "@/ws/useKline";
 
 export const Main = () => {
-  const [symbol, setSymbol] = useState<string>("BTCUSDT");
+  const [ticker, setTicker] = useState<string>("BTCUSDT");
   const [timeScale, setTimeScale] = useState<string>("1m");
   const [indicatorData, setIndicatorData] = useState<{
     [key: string]: LineData[];
@@ -23,7 +23,7 @@ export const Main = () => {
   const [period, setPeriod] = React.useState<number>(20);
 
   const chartParams = {
-    symbol: symbol,
+    symbol: ticker, 
     interval: timeScale,
     limit: 500,
   };
@@ -36,13 +36,13 @@ export const Main = () => {
     isFetchingNextPage,
     isLoading,
     isError,
-  } = useInfiniteKlinesQuery(chartParams, {
-    placeholderData: keepPreviousData,
-  });
+  } = useInfiniteKlinesQuery(chartParams);
 
-  const { candlestickData } = useFormattedChartData(data);
+  const { candlestickData } = useChartData(data);
 
-  useRealtimeChartData(chartParams);
+  useTickers();
+
+  useKline(chartParams);
 
   React.useEffect(() => {
     if (!candlestickData || candlestickData.length === 0) {
@@ -58,12 +58,12 @@ export const Main = () => {
       maximumFractionDigits: 2,
     });
 
-    document.title = `AssetFrame | ${symbol} ${formattedPrice}`;
+    document.title = `AssetFrame | ${ticker} ${formattedPrice}`;
 
-  }, [candlestickData, symbol]);
+  }, [candlestickData, ticker]);
 
-  const handleSymbolChange = (symbol: string) => {
-    setSymbol(symbol);
+  const handleTickerChange = (newTicker: string) => {
+    setTicker(newTicker);
   };
 
   const handleTimeScaleChange = (timeScale: string) => {
@@ -94,7 +94,7 @@ export const Main = () => {
       <div className={S.container}>
         <div className={S.set}>
           <div className={S.selectors}>
-            <SymbolSelector value={symbol} onChange={handleSymbolChange} />
+            <TickerSelector value={ticker} onChange={handleTickerChange} />
             <IntervalSelector
               value={timeScale}
               onChange={handleTimeScaleChange}
@@ -117,7 +117,7 @@ export const Main = () => {
             }`}
           >
             <Chart
-              key={symbol}
+              key={ticker}
               data={data}
               fetchNextPage={fetchNextPage}
               hasNextPage={hasNextPage}
@@ -134,7 +134,7 @@ export const Main = () => {
         </div>
 
         <div className={S.orderBookContainer}>
-          <OrderBook symbol={symbol} />
+          <OrderBook symbol={ticker} />
         </div>
       </div>
     );
