@@ -1,6 +1,6 @@
 import { useTickers } from "./useTickers";
 
-export const useSearchTicker = (searchQuery: string) => {
+export const useTickerSearch = (searchQuery: string) => {
   const { allTickers = [], isLoading, isError } = useTickers();
 
   const query = searchQuery.trim().toLowerCase();

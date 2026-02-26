@@ -15,6 +15,7 @@ export const useChartInfiniteScroll = ({
   const handleVisibleLogicalRangeChange = useCallback(
     (logicalRange: LogicalRange | null) => {
       if (scrollLockRef.current) return;
+
       if (!logicalRange || !chartRef.current) return;
 
       const isNearLeftEdge = logicalRange.from < FETCHPAGE_THRESHOLD;
