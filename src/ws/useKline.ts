@@ -1,12 +1,11 @@
-import { useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/constants/queryKeys";
-import { WS_ENDPOINTS } from "@/constants/ws";
+import { WS_ENDPOINTS } from "@/ws/url.ws";
 import { parseKline } from "@/utils/parseKline";
 import type { KlinesParams, Kline } from "@/types/kline.type";
 
-export const useChartSync = (params: KlinesParams) => {
+export const useKline = (params: KlinesParams) => {
   const queryClient = useQueryClient();
   const wsUrl = params.symbol ? WS_ENDPOINTS.chartData(params.symbol, params.interval) : null;
 
@@ -21,10 +20,13 @@ export const useChartSync = (params: KlinesParams) => {
       queryClient.setQueryData<InfiniteData<Kline[]>>(
         QUERY_KEYS.klines.list(params),
         (oldData) => {
+
+          // 기존 데이터를 Rest로 받지 않은 상태라면, 새로 받은 Kline을 무시한다.
           if (!oldData || !oldData.pages || oldData.pages.length === 0) {
-            return oldData;
+            return;
           }
 
+          // 새로 받은 데이터를 넣어 새 Kline[] 객체를 복사생성한다.
           const newData: InfiniteData<Kline[]> = {
             ...oldData,
             pages: oldData.pages.map((page) => [...page]),
@@ -32,10 +34,11 @@ export const useChartSync = (params: KlinesParams) => {
 
           const latestPage = newData.pages[newData.pages.length - 1];
 
+          // 방금 받은 데이터가 새로운 캔들인지, 기존 생성된 캔들의 업데이트인지 확인한다.
           const existingKlineIndex = latestPage.findIndex(
             (k) => k[0] === newKlineTime
           );
-
+          
           if (existingKlineIndex !== -1) {
             latestPage[existingKlineIndex] = newRawKline;
           } else {
@@ -47,6 +50,7 @@ export const useChartSync = (params: KlinesParams) => {
       );
     },
     shouldReconnect: () => true,
+
     reconnectInterval: 3000,
 
     heartbeat: {
@@ -54,13 +58,8 @@ export const useChartSync = (params: KlinesParams) => {
       returnMessage: "pong",
       timeout: 5000,
       interval: 3000,
-    },
+    }
   });
-
-  useEffect(() => {
-    const status = readyState === ReadyState.OPEN;
-    queryClient.setQueryData(["ws-status"], status);
-  }, [readyState, queryClient]);
 
   const isConnected = readyState === ReadyState.OPEN;
 

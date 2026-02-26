@@ -1,7 +1,7 @@
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/constants/queryKeys";
-import { WS_ENDPOINTS } from "@/constants/ws";
+import { WS_ENDPOINTS } from "@/ws/url.ws";
 import type { OrderBook } from "@/types/orderBook.type";
 
 export const useOrderBook = (symbol: string) => {
@@ -29,11 +29,11 @@ export const useOrderBook = (symbol: string) => {
     shouldReconnect: () => true,
 
     reconnectInterval: 3000,
-    
-    filter: () => !!symbol,
+
+    filter: () => !!symbol
   });
 
   const isConnected = readyState === ReadyState.OPEN;
 
   return { isConnected };
-};
+}
