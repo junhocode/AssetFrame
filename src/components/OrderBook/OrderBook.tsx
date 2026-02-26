@@ -1,67 +1,14 @@
 import { useMemo } from "react";
 import { SlidingNumber } from "@/components/ui/sliding-number";
-import { useRealtimeOrderBook } from "@/ws/useOrderBook";
+import { OrderBookRow } from "@/components/OrderBook/OrderBookRow/OrderBookRow";
 import { useOrderBookQuery } from "@/queries/useOrderBookQuery";
-import { cn } from "@/lib/utils";
-import { parseNumber } from "@/utils/parseNumber";
-import type { OrderBookRowProps } from "@/types/orderBook.type";
 import * as S from "./OrderBook.styles";
-
-const OrderBookRow = ({ price, amount, maxQty, type }: OrderBookRowProps) => {
-  const priceNum = parseFloat(price);
-  const amountNum = parseFloat(amount);
-  const total = priceNum * amountNum;
-
-  const widthPercent = `${Math.min((amountNum / maxQty) * 100, 100)}%`;
-  const isAsk = type === "ask";
-
-  return (
-    <div className={S.rowContainer}>
-      <div
-        className={cn(
-          S.rowBgBase,
-          isAsk ? S.rowBgAsk : S.rowBgBid
-        )}
-        style={{ width: widthPercent }}
-      />
-
-      <span
-        className={cn(
-          S.colPrice,
-          S.rowTextBase,
-          isAsk ? S.rowTextAsk : S.rowTextBid
-        )}
-      >
-        {priceNum.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-        })}
-      </span>
-
-      <span
-        className={cn(
-          S.colAmount,
-          S.rowTextSecondary
-        )}
-      >
-        {amountNum.toFixed(4)}
-      </span>
-
-      <span
-        className={cn(
-          S.colTotal,
-          S.rowTextSecondary
-        )}
-      >
-        {parseNumber(total)}
-      </span>
-    </div>
-  );
-};
+import { useOrderBook } from "@/ws/useOrderBook";
 
 export const OrderBook = ({ symbol }: { symbol: string }) => {
   const { data, isLoading } = useOrderBookQuery(symbol);
 
-  useRealtimeOrderBook(symbol);
+  useOrderBook(symbol);
 
   const maxQuantity = useMemo(() => {
     if (!data) return 0;
