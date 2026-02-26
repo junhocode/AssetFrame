@@ -1,14 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
+import { wsStatusAtom } from "@/atoms/wsStatusAtom";
 import * as S from "./SystemStatus.styles";
 
 export const SystemStatus = () => {
-  const { data: isConnected } = useQuery({
-    queryKey: ['ws-status'],
-    queryFn: () => false,
-    initialData: false,
-    staleTime: Infinity,
-    gcTime: Infinity
-  })
+  const isConnected = useAtomValue(wsStatusAtom);
+
 
   return (
     <div className={S.statusContainer}>

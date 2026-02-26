@@ -1,13 +1,17 @@
+import { useEffect } from "react"; 
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
+import { useSetAtom } from "jotai"; 
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { WS_ENDPOINTS } from "@/ws/url.ws";
 import { parseKline } from "@/utils/parseKline";
+import { wsKlineAtom } from "@/atoms/wsStatusAtom"; 
 import type { KlinesParams, Kline } from "@/types/kline.type";
 
 export const useKline = (params: KlinesParams) => {
   const queryClient = useQueryClient();
-  const wsUrl = params.symbol ? WS_ENDPOINTS.chartData(params.symbol, params.interval) : null;
+  const setKlineStatus = useSetAtom(wsKlineAtom); 
+  const wsUrl = params.symbol ? WS_ENDPOINTS.kline(params.symbol, params.interval) : null;
 
   const { readyState } = useWebSocket(wsUrl, {
     onMessage: (event) => {
@@ -63,5 +67,7 @@ export const useKline = (params: KlinesParams) => {
 
   const isConnected = readyState === ReadyState.OPEN;
 
-  return { isConnected };
+  useEffect(() => {
+    setKlineStatus(isConnected);
+  }, [isConnected, setKlineStatus]);
 };
