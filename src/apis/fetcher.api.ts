@@ -5,58 +5,56 @@ interface RequestProps {
   url: string;
   method?: "GET" | "POST" | "DELETE" | "PATCH" | "PUT";
   errorMessage?: string;
-  body?: any;
+  body?: unknown;
   headers?: Record<string, string>;
-  params?: Record<string, any>;
+  params?: Record<string, unknown>;
 }
 
+const api = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true,
+});
+
 const fetcher = {
-  async request<T = any>({
+  async request<T = unknown>({
     url,
-    method = "GET",
+    method,
     body,
     headers,
     params,
     errorMessage,
   }: RequestProps): Promise<T> {
     try {
-      const config: AxiosRequestConfig = {
+      const response = await api({
         url,
         method,
         headers,
         data: body,
         params,
-      };
-
-      const api = axios.create({
-        baseURL: BASE_URL,
-        withCredentials: true,
-      });
-
-      const response = await api(config);
+      } satisfies AxiosRequestConfig);
       return response.data as T;
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMsg =
-        error?.response?.data?.message ||
-        errorMessage ||
-        "Error occurred during api process.";
+        (axios.isAxiosError(error) ? error.response?.data?.message : undefined)
+        ?? errorMessage
+        ?? "Error occurred during api process.";
       throw new Error(errorMsg);
     }
   },
 
-  get<T = any>(props: Omit<RequestProps, "method" | "body">) {
+  get<T = unknown>(props: Omit<RequestProps, "method" | "body">) {
     return this.request<T>({ ...props, method: "GET" });
   },
-  post<T = any>(props: Omit<RequestProps, "method">) {
+  post<T = unknown>(props: Omit<RequestProps, "method">) {
     return this.request<T>({ ...props, method: "POST" });
   },
-  delete<T = any>(props: Omit<RequestProps, "method">) {
+  delete<T = unknown>(props: Omit<RequestProps, "method">) {
     return this.request<T>({ ...props, method: "DELETE" });
   },
-  patch<T = any>(props: Omit<RequestProps, "method">) {
+  patch<T = unknown>(props: Omit<RequestProps, "method">) {
     return this.request<T>({ ...props, method: "PATCH" });
   },
-  put<T = any>(props: Omit<RequestProps, "method">) {
+  put<T = unknown>(props: Omit<RequestProps, "method">) {
     return this.request<T>({ ...props, method: "PUT" });
   },
 };
