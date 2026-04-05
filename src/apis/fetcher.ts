@@ -1,5 +1,4 @@
 import axios, { type AxiosRequestConfig } from "axios";
-import { BASE_URL } from "./url.api";
 
 interface RequestProps {
   url: string;
@@ -7,12 +6,11 @@ interface RequestProps {
   errorMessage?: string;
   body?: unknown;
   headers?: Record<string, string>;
-  params?: Record<string, unknown>;
+  params?: object;
 }
 
 const api = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
+  withCredentials: true
 });
 
 const fetcher = {
