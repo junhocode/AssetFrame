@@ -1,15 +1,16 @@
-export const parseNumber = (num: number, decimals: number = 2) => {
+export const parseNumber = (num: number, decimals: number = 2): string => {
+  if (!Number.isFinite(num)) return "N/A";
   if (num === 0) return "0";
 
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(decimals) + "M";
-  }
-  if (num >= 1000) {
-    return (num / 1000).toFixed(decimals) + "K";
-  }
+  const format = (value: number, suffix: string) =>
+    parseFloat(value.toFixed(decimals)) + suffix;
+
+  if (num >= 1_000_000_000) return format(num / 1_000_000_000, "B");
+  if (num >= 1_000_000) return format(num / 1_000_000, "M");
+  if (num >= 1_000) return format(num / 1_000, "K");
 
   return num.toLocaleString("en-US", {
     maximumFractionDigits: decimals,
-    minimumFractionDigits: decimals,
+    minimumFractionDigits: 0,
   });
 };
