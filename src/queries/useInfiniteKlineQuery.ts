@@ -7,23 +7,23 @@ export const useInfiniteKlinesQuery = (params: KlinesParams) => {
   return useInfiniteQuery({
     queryKey: QUERY_KEYS.klines.list(params),
 
-    queryFn: ({ pageParam }: { pageParam: number | undefined }) => {
-      return getKlines({ 
-        ...params, 
-        endTime: pageParam 
+    queryFn: ({ pageParam }) => {
+      return getKlines({
+        ...params,
+        endTime: pageParam,
       });
     },
 
     getNextPageParam: (lastPage) => {
       const limit = params.limit ?? 500;
-  
       if (!lastPage || lastPage.length < limit) return undefined;
-      
       return lastPage[0][0] - 1;
     },
 
-    initialPageParam: undefined,
-    
-    enabled: Boolean(params.symbol)
+    initialPageParam: undefined as number | undefined,
+
+    staleTime: Infinity,
+
+    enabled: Boolean(params.symbol),
   });
 };
