@@ -1,4 +1,4 @@
-import fetcher from "./fetcher.api";
+import fetcher from "./fetcher";
 import { ENDPOINT } from "./url.api";
 import type { OrderBook } from "@/types/orderBook.type";
 
