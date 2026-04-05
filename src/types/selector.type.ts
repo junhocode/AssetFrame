@@ -5,13 +5,6 @@ export interface SelectorProps {
   onChange: (value: string) => void;
 }
 
-export interface VirtualListProps<T> {
-  items: T[];
-  renderItem: (item: T) => React.ReactNode;
-  estimateSize: number;
-  containerClassName?: string;
-}
-
 export interface PriceBadgeProps {
   value: number | string;
   className?: string;
