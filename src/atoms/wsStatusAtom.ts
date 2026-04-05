@@ -1,13 +1,18 @@
-import { atom } from 'jotai';
+import { atom } from "jotai";
 
-export const wsOrderBookAtom = atom(false);
-export const wsTradeAtom = atom(false);
-export const wsKlineAtom = atom(false);
+type WsStatus = "connecting" | "connected" | "error";
+
+export const wsAtom = atom({
+  orderBook: "connecting" as WsStatus,
+  trade: "connecting" as WsStatus,
+  kline: "connecting" as WsStatus,
+});
 
 export const wsStatusAtom = atom((get) => {
-  const isOrderBookReady = get(wsOrderBookAtom);
-  const isTradeReady = get(wsTradeAtom);
-  const isKlineReady = get(wsKlineAtom);
+  const ws = get(wsAtom);
+  const values = Object.values(ws);
   
-  return isOrderBookReady && isTradeReady && isKlineReady;
+  if (values.every((s) => s === "connected")) return "connected";
+  if (values.some((s) => s === "error")) return "error";
+  return "connecting";
 });
