@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { MoonStar, SunMedium } from "lucide-react";
 import { useAtom } from "jotai/react"
 import { themeAtom } from "@/atoms/themeAtom";
@@ -11,15 +10,6 @@ export const ThemeToggle = () => {
   const toggleTheme = () => {
     setIsDark((prev) => !prev)
   }
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (isDark) {
-      root.classList.add("dark")
-    } else {
-      root.classList.remove("dark")
-    }
-  }, [isDark])
 
   return (
     <Button
