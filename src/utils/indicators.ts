@@ -1,31 +1,24 @@
 import { SMA, EMA, RSI, MACD, BollingerBands, ATR, Stochastic } from "technicalindicators";
 import type { CandleData } from "@/types/kline.type";
-import type { Indicator, IndicatorHandler, SeriesData, IndicatorResults, MarketInput } from "@/types/indicator.type";
+import type { Indicator, IndicatorHandler, IndicatorResults, MarketInput } from "@/types/indicator.type";
 
-const padDataWithNull = (data: any[], totalLength: number): SeriesData => {
+const padDataWithNull = <T>(data: T[], totalLength: number): (T | null)[] => {
   const missingCount = totalLength - data.length;
   if (missingCount <= 0) return data;
   return [...new Array(missingCount).fill(null), ...data];
 };
 
-const handleSMA: IndicatorHandler = (config, input, len) => {
-  const res = SMA.calculate({ period: config.period!, values: input.close });
-  return { [config.id]: padDataWithNull(res, len) };
-};
-
-const handleEMA: IndicatorHandler = (config, input, len) => {
-  const res = EMA.calculate({ period: config.period!, values: input.close });
-  return { [config.id]: padDataWithNull(res, len) };
-};
-
-const handleRSI: IndicatorHandler = (config, input, len) => {
-  const res = RSI.calculate({ period: config.period!, values: input.close });
+const createSimpleHandler = (
+  Calculator: { calculate: (input: { period: number; values: number[] }) => number[] }
+): IndicatorHandler => (config, input, len) => {
+  const period = config.period ?? 14;
+  const res = Calculator.calculate({ period, values: input.close });
   return { [config.id]: padDataWithNull(res, len) };
 };
 
 const handleATR: IndicatorHandler = (config, input, len) => {
   const res = ATR.calculate({
-    period: config.period!,
+    period: config.period ?? 14,
     high: input.high,
     low: input.low,
     close: input.close,
@@ -36,31 +29,31 @@ const handleATR: IndicatorHandler = (config, input, len) => {
 const handleMACD: IndicatorHandler = (config, input, len) => {
   const raw = MACD.calculate({
     values: input.close,
-    fastPeriod: config.fastPeriod!,
-    slowPeriod: config.slowPeriod!,
-    signalPeriod: config.signalPeriod!,
+    fastPeriod: config.fastPeriod ?? 12,
+    slowPeriod: config.slowPeriod ?? 26,
+    signalPeriod: config.signalPeriod ?? 9,
     SimpleMAOscillator: false,
     SimpleMASignal: false,
   });
   const aligned = padDataWithNull(raw, len);
   return {
-    [`${config.id}_macd`]: aligned.map((v: any) => v?.MACD ?? null),
-    [`${config.id}_signal`]: aligned.map((v: any) => v?.signal ?? null),
-    [`${config.id}_histogram`]: aligned.map((v: any) => v?.histogram ?? null),
+    [`${config.id}_macd`]: aligned.map((v) => v?.MACD ?? null),
+    [`${config.id}_signal`]: aligned.map((v) => v?.signal ?? null),
+    [`${config.id}_histogram`]: aligned.map((v) => v?.histogram ?? null),
   };
 };
 
 const handleBollinger: IndicatorHandler = (config, input, len) => {
   const raw = BollingerBands.calculate({
-    period: config.period!,
-    stdDev: config.stdDev || 2,
+    period: config.period ?? 20,
+    stdDev: config.stdDev ?? 2,
     values: input.close,
   });
   const aligned = padDataWithNull(raw, len);
   return {
-    [`${config.id}_upper`]: aligned.map((v: any) => v?.upper ?? null),
-    [`${config.id}_middle`]: aligned.map((v: any) => v?.middle ?? null),
-    [`${config.id}_lower`]: aligned.map((v: any) => v?.lower ?? null),
+    [`${config.id}_upper`]: aligned.map((v) => v?.upper ?? null),
+    [`${config.id}_middle`]: aligned.map((v) => v?.middle ?? null),
+    [`${config.id}_lower`]: aligned.map((v) => v?.lower ?? null),
   };
 };
 
@@ -69,20 +62,20 @@ const handleStochastic: IndicatorHandler = (config, input, len) => {
     high: input.high,
     low: input.low,
     close: input.close,
-    period: config.period || 14,
-    signalPeriod: config.signalPeriod || 3,
+    period: config.period ?? 14,
+    signalPeriod: config.signalPeriod ?? 3,
   });
   const aligned = padDataWithNull(raw, len);
   return {
-    [`${config.id}_k`]: aligned.map((v: any) => v?.k ?? null),
-    [`${config.id}_d`]: aligned.map((v: any) => v?.d ?? null),
+    [`${config.id}_k`]: aligned.map((v) => v?.k ?? null),
+    [`${config.id}_d`]: aligned.map((v) => v?.d ?? null),
   };
 };
 
 const INDICATOR_STRATEGIES: Record<string, IndicatorHandler> = {
-  SMA: handleSMA,
-  EMA: handleEMA,
-  RSI: handleRSI,
+  SMA: createSimpleHandler(SMA),
+  EMA: createSimpleHandler(EMA),
+  RSI: createSimpleHandler(RSI),
   MACD: handleMACD,
   BollingerBands: handleBollinger,
   ATR: handleATR,
@@ -103,17 +96,13 @@ export const calculateIndicators = (
 
   return configs.reduce<IndicatorResults>((acc, config) => {
     const handler = INDICATOR_STRATEGIES[config.type];
-
-    if (!handler) {
-      return acc;
-    }
+    if (!handler) return acc;
 
     try {
-      const result = handler(config, input, len);
-      return { ...acc, ...result };
+      Object.assign(acc, handler(config, input, len));
     } catch (e) {
-      console.error(e);
-      return acc;
+      console.error(`Indicator ${config.id} failed:`, e);
     }
+    return acc;
   }, {});
 };
