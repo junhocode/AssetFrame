@@ -42,4 +42,7 @@ export const INDICATORS = [
   { value: "Stochastic", label: "Stochastic Oscillator (KD)" },
 ];
 
+// 인디케이터 중 OSC 타입은 차트 ui를 분할하기 때문에 따로 종류를 포함한 상수를 만든다
+export const OSCILLATOR_TYPES = ["RSI", "MACD", "Stochastic", "ATR", "OBV"];
+
 export const INTERVALS = ["1s", "1m", "15m", "1h", "4h", "1d", "1w", "1M"];
