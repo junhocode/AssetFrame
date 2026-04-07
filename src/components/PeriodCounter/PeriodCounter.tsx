@@ -8,36 +8,30 @@ export const PeriodCounter = ({
   setPeriod,
   isDisabled,
 }: PeriodCounterProps) => {
+  const counter = (
+    <Counter
+      number={period}
+      setNumber={setPeriod}
+      disabled={isDisabled}
+      min={1}
+      max={60}
+      className={isDisabled ? S.counter : undefined}
+    />
+  );
+
   return (
     <div className={S.wrapper}>
       {isDisabled ? (
         <HoverCard openDelay={100} closeDelay={50}>
-          <HoverCardTrigger asChild>
-            <Counter
-              number={period}
-              setNumber={setPeriod}
-              disabled={isDisabled}
-              min={1}
-              max={60}
-              className={S.counter}
-            />
-          </HoverCardTrigger>
+          <HoverCardTrigger asChild>{counter}</HoverCardTrigger>
           <HoverCardContent side="top">
-            <div>
-              <span className={S.disabledMessage}>
-                Period can be chosen after one or more indicator is activated.
-              </span>
-            </div>
+            <span className={S.disabledMessage}>
+              Period can be chosen after at least one indicator is activated.
+            </span>
           </HoverCardContent>
         </HoverCard>
       ) : (
-        <Counter
-          number={period}
-          setNumber={setPeriod}
-          disabled={isDisabled}
-          min={1}
-          max={60}
-        />
+        counter
       )}
     </div>
   );
