@@ -1,25 +1,16 @@
-import { useRef, useEffect, useState } from "react";
-import { createChart } from "lightweight-charts";
+import { useRef, useEffect } from "react";
 import { useAtomValue } from "jotai/react";
 import { themeAtom } from "@/atoms/themeAtom";
 import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
 import { useChartData } from "@/hooks/useChartData";
 import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
+import { useChartInit } from "@/hooks/useChartInit";
+import { useChartTooltip } from "@/hooks/useChartTooltip";
+import { useChartIndicators } from "@/hooks/useChartIndicators";
+import { useTradePriceUpdate } from "@/hooks/useTradePriceUpdate";
 import { useTradePrice } from "@/ws/useTradePrice";
-import { stringToColor } from "@/utils/stringToColor";
-import {
-  VOLUME_SERIES_OPTIONS,
-  VOLUME_SCALE_OPTIONS,
-  VOLUME_PRICE_SCALE_ID,
-  INITIAL_TOOLTIP_STATE,
-} from "@/constants/configs";
-import type {
-  IChartApi,
-  ISeriesApi,
-  CandlestickData,
-  LineWidth
-} from "lightweight-charts";
-import type { ChartTooltipProps, ChartProps } from "@/types/chart.type";
+import type { IChartApi } from "lightweight-charts";
+import type { ChartProps } from "@/types/chart.type";
 import * as S from "./Chart.styles";
 
 export const Chart = ({
@@ -32,17 +23,7 @@ export const Chart = ({
 }: ChartProps) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
-  const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
-  const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
-
   const isDark = useAtomValue(themeAtom);
-
-  const OSCILLATORS = ["RSI", "MACD", "Stochastic", "ATR", "OBV"];
-
-  const indicatorSeriesRef = useRef(new Map<string, ISeriesApi<"Line">>());
-  const [tooltipState, setTooltipState] = useState<ChartTooltipProps>(
-    INITIAL_TOOLTIP_STATE
-  );
 
   const { candlestickData, volumeData } = useChartData(data);
   const { handleVisibleLogicalRangeChange, visibleRangeRef, scrollLockRef } =
@@ -53,83 +34,26 @@ export const Chart = ({
       isFetchingNextPage,
     });
 
+  const { candleSeriesRef, volumeSeriesRef } = useChartInit(
+    chartContainerRef,
+    chartRef,
+    S.chartOptions(isDark),
+    handleVisibleLogicalRangeChange
+  );
+
+  const tooltipState = useChartTooltip(chartContainerRef, chartRef, candleSeriesRef);
   const { latestPriceRef } = useTradePrice(params.symbol);
 
-  useEffect(() => {
-    if (!chartContainerRef.current || chartRef.current) return;
+  useChartIndicators(chartRef, indicatorData);
+  useTradePriceUpdate(candleSeriesRef, candlestickData, latestPriceRef);
 
-    const chart = createChart(
-      chartContainerRef.current,
-      S.chartOptions(isDark)
-    );
-    chart
-      .timeScale()
-      .subscribeVisibleLogicalRangeChange(handleVisibleLogicalRangeChange);
-
-    new ResizeObserver(entries => {
-        if (entries.length === 0 || entries[0].target !== chartContainerRef.current) { return; }
-        const newRect = entries[0].contentRect;
-        chart.applyOptions({ height: newRect.height, width: newRect.width });
-      }).observe(chartContainerRef.current);  
-
-    const candleSeries = chart.addCandlestickSeries();
-    const volumeSeries = chart.addHistogramSeries(VOLUME_SERIES_OPTIONS);
-    chart.priceScale(VOLUME_PRICE_SCALE_ID).applyOptions(VOLUME_SCALE_OPTIONS);
-
-    chartRef.current = chart;
-    candleSeriesRef.current = candleSeries;
-    volumeSeriesRef.current = volumeSeries;
-
-    chart.subscribeCrosshairMove((param) => {
-      const container = chartContainerRef.current;
-      const series = candleSeriesRef.current;
-      if (!container || !series || !param.point || !param.time) {
-        setTooltipState((prev) => ({ ...prev, visible: false }));
-        return;
-      }
-
-      const candle = param.seriesData.get(series) as CandlestickData;
-      if (!candle) {
-        setTooltipState((prev) => ({ ...prev, visible: false }));
-        return;
-      }
-
-      const chartRect = container.getBoundingClientRect();
-      const containerWidth = container.clientWidth;
-
-      const tooltipWidth = 210;
-      const tooltipHeight = 70;
-      const margin = 15;
-
-      const isRightSide = param.point.x > containerWidth / 2
-
-      let left;
-      if (isRightSide) {
-        left = chartRect.left + param.point.x - tooltipWidth - margin;
-      } else {
-        left = chartRect.left + param.point.x + margin; 
-      }
-
-      let top = chartRect.top + param.point.y - tooltipHeight - margin;
-      if (top < 0) {
-        top = chartRect.top + param.point.y + margin;
-      }
-
-      setTooltipState({ top, left, candle, time: param.time, visible: true });
-    });
-
-    return () => {
-      chart.remove();
-      chartRef.current = null;
-      indicatorSeriesRef.current.clear(); 
-    };
-  }, [handleVisibleLogicalRangeChange]);
-
+  // 테마 변경
   useEffect(() => {
     if (!chartRef.current) return;
     chartRef.current.applyOptions(S.chartOptions(isDark));
   }, [isDark]);
 
+  // 캔들 + 볼륨 데이터 반영
   useEffect(() => {
     if (!candleSeriesRef.current || !volumeSeriesRef.current) return;
 
@@ -141,9 +65,7 @@ export const Chart = ({
       const newFrom = visibleRangeRef.current.from + addedDataCount;
       const newTo = visibleRangeRef.current.to + addedDataCount;
 
-      chartRef.current
-        ?.timeScale()
-        .setVisibleLogicalRange({ from: newFrom, to: newTo });
+      chartRef.current?.timeScale().setVisibleLogicalRange({ from: newFrom, to: newTo });
       visibleRangeRef.current = null;
 
       setTimeout(() => {
@@ -152,92 +74,10 @@ export const Chart = ({
     }
   }, [candlestickData, volumeData, data, visibleRangeRef, scrollLockRef]);
 
-  useEffect(() => {
-    const chart = chartRef.current;
-    if (!chart) return;
-
-    const currentIndicatorKeys = Object.keys(indicatorData);
-    const seriesMap = indicatorSeriesRef.current;
-
-    seriesMap.forEach((series, key) => {
-      if (!currentIndicatorKeys.includes(key)) {
-        chart.removeSeries(series);
-        seriesMap.delete(key);
-      }
-    });
-
-    const hasOscillator = currentIndicatorKeys.some((key) =>
-      OSCILLATORS.some((type) => key.includes(type))
-    );
-
-    chart.priceScale("right").applyOptions({
-      scaleMargins: {
-        top: 0.1,
-        bottom: hasOscillator ? 0.3 : 0.1,
-      },
-    });
-
-    currentIndicatorKeys.forEach((key) => {
-      const dataForSeries = indicatorData[key];
-      if (!dataForSeries) return;
-
-      const isOscillator = OSCILLATORS.some((type) => key.includes(type));
-
-      const existingSeries = seriesMap.get(key);
-
-      if (existingSeries) {
-        existingSeries.setData(dataForSeries);
-      } else {
-        const seriesOptions = {
-          color: stringToColor(key),
-          lineWidth: 2 as LineWidth,
-          priceScaleId: isOscillator ? "oscillator-scale" : "right",
-        };
-
-        const newSeries = chart.addLineSeries(seriesOptions);
-
-        if (isOscillator) {
-          chart.priceScale("oscillator-scale").applyOptions({
-            scaleMargins: {
-              top: 0.75,
-              bottom: 0,
-            },
-          });
-        }
-
-        newSeries.setData(dataForSeries);
-        seriesMap.set(key, newSeries);
-      }
-    });
-  }, [indicatorData]);
-
-  useEffect(() => {
-    if (!candleSeriesRef.current) return;
-
-    const intervalId = setInterval(() => {
-      const series = candleSeriesRef.current;
-      const lastPrice = latestPriceRef.current;
-
-      if (!lastPrice || candlestickData.length === 0) return;
-
-      const lastCandle = candlestickData[candlestickData.length - 1];
-      const newTick = {
-        time: lastCandle.time,
-        open: lastCandle.open,
-        high: Math.max(lastCandle.high, lastPrice),
-        low: Math.min(lastCandle.low, lastPrice),
-        close: lastPrice,
-      };
-      series?.update(newTick as CandlestickData);
-    }, 200);
-
-    return () => clearInterval(intervalId);
-  }, [candlestickData, latestPriceRef]);
-
   return (
-    <>
+    <div className={S.chartWrapper}>
       <div ref={chartContainerRef} className={S.chart} />
       <ChartTooltip {...tooltipState} />
-    </>
+    </div>
   );
 };

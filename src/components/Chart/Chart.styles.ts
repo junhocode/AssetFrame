@@ -56,3 +56,5 @@ export const errorContainer = `${statusContainer} text-red-500`;
 
 export const chart =
   "relative w-full h-full rounded-lg overflow-hidden shadow-sm";
+
+export const chartWrapper = "relative w-full h-full";
