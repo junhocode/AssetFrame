@@ -2,54 +2,46 @@ import { useMemo } from "react";
 import { SlidingNumber } from "@/components/ui/sliding-number";
 import { OrderBookRow } from "@/components/OrderBook/OrderBookRow/OrderBookRow";
 import { useOrderBookQuery } from "@/queries/useOrderBookQuery";
-import * as S from "./OrderBook.styles";
 import { useOrderBook } from "@/ws/useOrderBook";
+import * as S from "./OrderBook.styles";
 
 export const OrderBook = ({ symbol }: { symbol: string }) => {
   const { data, isLoading } = useOrderBookQuery(symbol);
-
   useOrderBook(symbol);
 
   const maxQuantity = useMemo(() => {
     if (!data) return 0;
-    const maxBid = Math.max(...data.bids.map(([, qty]) => parseFloat(qty)));
-    const maxAsk = Math.max(...data.asks.map(([, qty]) => parseFloat(qty)));
-    return Math.max(maxBid, maxAsk);
+    const quantities = [
+      ...data.bids.map(([, qty]) => parseFloat(qty)),
+      ...data.asks.map(([, qty]) => parseFloat(qty)),
+    ];
+    return quantities.length > 0 ? Math.max(...quantities) : 0;
   }, [data]);
 
-  const asks = data?.asks || [];
-
-  const bids = data?.bids || [];
-
   if (isLoading) {
-    return (
-      <div className={S.loadingContainer}>
-        Loading...
-      </div>
-    );
+    return <div className={S.loadingContainer}>Loading...</div>;
   }
 
   if (!data) {
-    return (
-      <div className={S.errorContainer}>
-        Failed to load
-      </div>
-    );
+    return <div className={S.errorContainer}>Failed to load</div>;
   }
+
+  const { asks, bids } = data;
 
   return (
     <div className={S.container}>
       <div className={S.headerRow}>
-          <span className={S.colPrice}>Price(USDT)</span>
-          <span className={S.colAmount}>Amount</span>
-          <span className={S.colTotal}>Total</span>
-        </div>
+        <span className={S.colPrice}>Price(USDT)</span>
+        <span className={S.colAmount}>Amount</span>
+        <span className={S.colTotal}>Total</span>
+      </div>
+
       <div className={S.asksWrapper}>
-        {asks.map((ask) => (
+        {asks.map(([price, amount]) => (
           <OrderBookRow
-            key={ask[0]}
-            price={ask[0]}
-            amount={ask[1]}
+            key={price}
+            price={price}
+            amount={amount}
             maxQty={maxQuantity}
             type="ask"
           />
@@ -67,11 +59,11 @@ export const OrderBook = ({ symbol }: { symbol: string }) => {
       </div>
 
       <div className={S.bidsWrapper}>
-        {bids.map((bid) => (
+        {bids.map(([price, amount]) => (
           <OrderBookRow
-            key={bid[0]}
-            price={bid[0]}
-            amount={bid[1]}
+            key={price}
+            price={price}
+            amount={amount}
             maxQty={maxQuantity}
             type="bid"
           />
