@@ -1,28 +1,31 @@
-import { useRef, useEffect } from "react";
-import useWebSocket, { ReadyState } from "react-use-websocket";
-import { useSetAtom } from "jotai"; 
+import { useRef } from "react";
+import useWebSocket from "react-use-websocket";
+import { useSetAtom } from "jotai";
 import { WS_ENDPOINTS } from "@/ws/url.ws";
-import { wsTradeAtom } from "@/atoms/wsStatusAtom"; 
+import { wsAtom } from "@/atoms/wsStatusAtom";
 
 export const useTradePrice = (symbol: string) => {
   const latestPriceRef = useRef<number | null>(null);
-  const setTradeStatus = useSetAtom(wsTradeAtom); 
+  const setWs = useSetAtom(wsAtom);
   const wsUrl = symbol ? WS_ENDPOINTS.trade(symbol) : null;
 
-  const { readyState } = useWebSocket(wsUrl, {
+  useWebSocket(wsUrl, {
+    onOpen: () => setWs((prev) => ({ ...prev, trade: "connected" })),
+    onClose: () => setWs((prev) => ({ ...prev, trade: prev.trade === "connected" ? "error" : "connecting" })),
+    onError: () => setWs((prev) => ({ ...prev, trade: "error" })),
     onMessage: (event) => {
       const data = JSON.parse(event.data);
       if (data.e === "trade" && data.p) latestPriceRef.current = parseFloat(data.p);
     },
-
-    shouldReconnect: () => true
+    shouldReconnect: () => true,
+    reconnectInterval: 3000,
+    heartbeat: {
+      message: "ping",
+      returnMessage: "pong",
+      timeout: 5000,
+      interval: 3000,
+    }
   });
 
-  const isConnected = readyState === ReadyState.OPEN;
-
-  useEffect(() => {
-    setTradeStatus(isConnected);
-  }, [isConnected, setTradeStatus]);
-
   return { latestPriceRef };
-}
+};
