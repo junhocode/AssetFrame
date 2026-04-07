@@ -1,4 +1,4 @@
-import { INTERVALS } from "@/constants/configs";
+import { INTERVALS } from "@/constants/whiteList";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { SelectorProps } from "@/types/selector.type";
 import * as S from "./IntervalSelector.styles";
