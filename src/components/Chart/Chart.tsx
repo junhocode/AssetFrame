@@ -8,7 +8,6 @@ import { useChartInfiniteScroll } from "@/hooks/useChartInfiniteScroll";
 import { useTradePrice } from "@/ws/useTradePrice";
 import { stringToColor } from "@/utils/stringToColor";
 import {
-  CANDLESTICK_SERIES_OPTIONS,
   VOLUME_SERIES_OPTIONS,
   VOLUME_SCALE_OPTIONS,
   VOLUME_PRICE_SCALE_ID,
@@ -73,7 +72,7 @@ export const Chart = ({
         chart.applyOptions({ height: newRect.height, width: newRect.width });
       }).observe(chartContainerRef.current);  
 
-    const candleSeries = chart.addCandlestickSeries(CANDLESTICK_SERIES_OPTIONS);
+    const candleSeries = chart.addCandlestickSeries();
     const volumeSeries = chart.addHistogramSeries(VOLUME_SERIES_OPTIONS);
     chart.priceScale(VOLUME_PRICE_SCALE_ID).applyOptions(VOLUME_SCALE_OPTIONS);
 
