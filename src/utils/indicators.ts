@@ -99,7 +99,7 @@ export const calculateIndicators = (
     if (!handler) return acc;
 
     try {
-      Object.assign(acc, handler(config, input, len));
+      return { ...acc, ...handler(config, input, len) };
     } catch (e) {
       console.error(`Indicator ${config.id} failed:`, e);
     }
