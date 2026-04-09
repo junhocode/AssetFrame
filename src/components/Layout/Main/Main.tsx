@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IndicatorSelector } from "@/components/IndicatorSelector/IndicatorSelector";
 import { Chart } from "@/components/Chart/Chart";
 import { OrderBook } from "@/components/OrderBook/OrderBook";
@@ -20,7 +19,7 @@ export const Main = () => {
   const [indicatorData, setIndicatorData] = useState<{
     [key: string]: LineData[];
   }>({});
-  const [period, setPeriod] = React.useState<number>(20);
+  const [period, setPeriod] = useState<number>(20);
 
   const chartParams = {
     symbol: ticker, 
@@ -44,14 +43,14 @@ export const Main = () => {
 
   useKline(chartParams);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!candlestickData || candlestickData.length === 0) {
       document.title = "AssetFrame";
       return;
     }
 
     const lastCandle = candlestickData[candlestickData.length - 1];
-    const price = 'close' in lastCandle ? lastCandle.close : (lastCandle as any).value;
+    const price = lastCandle.close;
 
     const formattedPrice = price.toLocaleString(undefined, {
       minimumFractionDigits: 2,
