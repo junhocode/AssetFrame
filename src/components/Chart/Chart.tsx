@@ -41,7 +41,11 @@ export const Chart = ({
     handleVisibleLogicalRangeChange
   );
 
-  const tooltipState = useChartTooltip(chartContainerRef, chartRef, candleSeriesRef);
+  const { tooltipState, tooltipRef } = useChartTooltip(
+    chartContainerRef,
+    chartRef,
+    candleSeriesRef
+  );
   const { latestPriceRef } = useTradePrice(params.symbol);
 
   useChartIndicators(chartRef, indicatorData);
@@ -77,7 +81,7 @@ export const Chart = ({
   return (
     <div className={S.chartWrapper}>
       <div ref={chartContainerRef} className={S.chart} />
-      <ChartTooltip {...tooltipState} />
+      <ChartTooltip ref={tooltipRef} {...tooltipState} />
     </div>
   );
 };

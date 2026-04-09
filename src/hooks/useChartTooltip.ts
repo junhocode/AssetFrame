@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { INITIAL_TOOLTIP_STATE } from "@/constants/configs";
 import type { IChartApi, ISeriesApi, CandlestickData } from "lightweight-charts";
 import type { ChartTooltipProps } from "@/types/chart.type";
@@ -9,6 +9,7 @@ export const useChartTooltip = (
   candleSeriesRef: React.RefObject<ISeriesApi<"Candlestick"> | null>
 ) => {
   const [tooltipState, setTooltipState] = useState<ChartTooltipProps>(INITIAL_TOOLTIP_STATE);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const chart = chartRef.current;
@@ -28,8 +29,9 @@ export const useChartTooltip = (
         return;
       }
 
-      const tooltipWidth = 210;
-      const tooltipHeight = 70;
+      const tooltip = tooltipRef.current;
+      const tooltipWidth = tooltip?.offsetWidth ?? 210;
+      const tooltipHeight = tooltip?.offsetHeight ?? 70;
       const margin = 15;
       const containerWidth = container.clientWidth;
       const isRightSide = param.point.x > containerWidth / 2;
@@ -48,5 +50,5 @@ export const useChartTooltip = (
     return () => chart.unsubscribeCrosshairMove(handler);
   }, [chartRef, containerRef, candleSeriesRef]);
 
-  return tooltipState;
+  return { tooltipState, tooltipRef };
 };
