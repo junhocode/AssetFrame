@@ -13,7 +13,13 @@ export const useKline = (params: KlinesParams) => {
   const wsUrl = params.symbol ? WS_ENDPOINTS.kline(params.symbol, params.interval) : null;
 
   const handleMessage = (event: MessageEvent) => {
-    const message = JSON.parse(event.data);
+    let message;
+    try {
+      message = JSON.parse(event.data);
+    } catch {
+      return;
+    }
+    if (message.e !== "kline") return;
     if (message.e !== "kline") return;
 
     const newRawKline = parseKline(message.k);

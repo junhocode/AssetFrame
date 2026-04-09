@@ -12,7 +12,12 @@ export const useOrderBook = (symbol: string) => {
   const wsUrl = symbol ? WS_ENDPOINTS.orderBook(symbol) : null;
   
   const handleMessage = (event: MessageEvent) => {
-    const message = JSON.parse(event.data);
+    let message;
+    try {
+      message = JSON.parse(event.data);
+    } catch {
+      return;
+    }
 
     if (message.bids && message.asks) {
       const newOrderBook: OrderBook = {
