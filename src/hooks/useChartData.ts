@@ -10,7 +10,7 @@ export const useChartData = (data: InfiniteData<Kline[]> | undefined) => {
       return { candlestickData: [], volumeData: [] };
     }
 
-    const allKlines = data.pages.flat();
+    const allKlines = [...data.pages.flat()];
 
     allKlines.sort((a, b) => a[0] - b[0]);
 
