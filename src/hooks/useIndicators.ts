@@ -4,10 +4,14 @@ import type { LineData } from "lightweight-charts";
 import type { CandlestickData } from "lightweight-charts";
 import type { AllowedIndicator, Indicator } from "@/types/indicator.type";
 import type { CandleData } from "@/types/kline.type";
+import { INDICATORS } from "@/constants/whiteList";
 
 const DEFAULT_CONFIGS: Record<string, Partial<Indicator>> = {
   MACD: { fastPeriod: 12, slowPeriod: 26, signalPeriod: 9 },
 };
+
+const isAllowedIndicator = (type: string): type is AllowedIndicator =>
+  INDICATORS.some((i) => i.value === type);
 
 export const useIndicators = (
   candlestickData: CandlestickData[] | undefined,
@@ -75,16 +79,18 @@ export const useIndicators = (
 
   const handleSelectionChange = (newSelectedTypes: string[]) => {
     setActiveConfigs((prev) =>
-      newSelectedTypes.map((type) => {
-        const existing = prev.find((c) => c.type === type);
-        if (existing) return existing;
-        return {
-          id: crypto.randomUUID(),
-          type: type as AllowedIndicator,
-          ...DEFAULT_CONFIGS[type],
-          period: type === "MACD" ? undefined : period,
-        } as Indicator;
-      })
+      newSelectedTypes
+        .filter(isAllowedIndicator)
+        .map((type) => {
+          const existing = prev.find((c) => c.type === type);
+          if (existing) return existing;
+          return {
+            id: crypto.randomUUID(),
+            type,
+            ...DEFAULT_CONFIGS[type],
+            period: type === "MACD" ? undefined : period,
+          } as Indicator;
+        })
     );
   };
 
